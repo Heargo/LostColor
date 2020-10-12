@@ -1,15 +1,29 @@
-import abc
-from entity import Entity
+import pygame
+from pygame.locals import *
 
-class Player(Entity):
+class Player():
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0, avatar="./img/monster.png"):
+	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="./img/monster.png"):
 		self.name = name
 		self.x = x
 		self.y = y
-		self.dirX = 0
-		self.dirY = 0
-		self.avatar = avatar
+		self.speed = speed
+		self.image = pygame.image.load(image)
+		self.rect = self.image.get_rect()
+
+		self.rect.x = self.x 
+		self.rect.y = self.y
+
+
+	def move(self,direction):
+		if direction=="UP":
+			self.rect.y-=self.speed
+		elif direction=="DOWN":
+			self.rect.y+=self.speed
+		elif direction =="RIGHT":
+			self.rect.x+=self.speed
+		elif direction=="LEFT":
+			self.rect.x-=self.speed
 
 	def attaque(spell, entity):
 		"""Player attaque entity avec le sort spell"""
