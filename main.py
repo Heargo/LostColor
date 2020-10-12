@@ -1,7 +1,9 @@
 import pygame, sys
 from pygame.locals import *
 from Ennemis import *
-from player import Player
+from Bullet import *
+from player import *
+import math
 
 pygame.init()
 #Definition des FPS
@@ -40,6 +42,9 @@ all_sprites_list = pygame.sprite.LayeredUpdates()
 # Liste de tous les ennemis
 enemy_list = pygame.sprite.Group() 
 
+# Liste des balles
+bullet_list = pygame.sprite.Group()
+
 # --- Creation des Sprites
 #Création du joueur
 player = Player("Test", 0,0,6)
@@ -58,13 +63,16 @@ enemy_list.add(m1)
 
 # Ajout des sprite dans l'ordre d'affichange dans le Group all_sprites_list
 all_sprites_list.add(m1)
+all_sprites_list.add(bullet_list)
 all_sprites_list.add(player)
+
 
 # -------- Main Program Loop -----------
 running=True
-
+score=0
+frame=0
 while running:
-
+	frame+=1
 	# --- Gestion des Event
 	for event in pygame.event.get():
 
@@ -86,12 +94,48 @@ while running:
 		player.move("UP") 
 	if activeKey[K_s]: #bottom
 		player.move("DOWN")
+	#shoot
+	activeMouse=pygame.mouse.get_pressed()
+	#print(activeMouse)
+	if activeMouse[0]==1:
+		if frame%30==0:
+			# position de la souris
+			pos = pygame.mouse.get_pos()
 
+			mouse_x = pos[0]
+			mouse_y = pos[1]
+
+			# Créé la balle
+			bullet = Bullet(player.rect.x, player.rect.y, mouse_x, mouse_y)
+
+			# et l'ajoute a la liste des balles
+			bullet_list.add(bullet)
+			all_sprites_list.add(bullet)
+
+	
+	
 
 	#Detection d'utilisation du clavier pour faire spawner 3 monstres
 	
 
 	# --- Logique du jeu
+
+	for bullet in bullet_list:
+
+		# Si une balle touche un monstre
+		enemy_hit_list = pygame.sprite.spritecollide(bullet, enemy_list, True)
+
+		#Pour chaque monstre touché, un supprime la balle et on augmente le score
+		for mob in enemy_hit_list:
+			bullet_list.remove(bullet)
+			all_sprites_list.remove(bullet)
+			score+=1
+			print(score)
+
+		#On supprime la balle de la liste des sprites si elle sort de l'écran
+		if bullet.rect.y < -10:
+			bullet_list.remove(bullet)
+			all_sprites_list.remove(bullet)
 	
 	# Appelle la méthode update() de tous les Sprites
 	all_sprites_list.update()
@@ -113,5 +157,3 @@ while running:
 
 pygame.quit()
 sys.exit()
-
-

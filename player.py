@@ -1,9 +1,10 @@
 import pygame
 from pygame.locals import *
 
-class Player():
+class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="./img/monster.png"):
+	def __init__(self, name="Coloro",x=0,y=0,speed=0.1, image="./img/monster.png"):
+		super().__init__()
 		self.name = name
 		self.x = x
 		self.y = y
