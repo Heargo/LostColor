@@ -1,19 +1,36 @@
 import pygame
+from constants import *
 from pygame.locals import *
 
 class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0,speed=0.1, image="./img/monster.png"):
+	def __init__(self, name="Coloro",x=0,y=0,speed=0.1, image="img/monster.png"):
 		super().__init__()
 		self.name = name
 		self.x = x
 		self.y = y
-		self.speed = speed
 		self.image = pygame.image.load(image)
+		self.image_temp = pygame.image.load(image)
 		self.rect = self.image.get_rect()
 
 		self.rect.x = self.x 
 		self.rect.y = self.y
+
+		# Statistiques du joueur
+		self.HP_MAX = 100
+		self.HP = self.HP_MAX
+		self.DMG = 12
+		self.tps = 2  # Tire par seconde
+		self.cooldown = FPS // self.tps
+		self.cooldown_max = self.cooldown
+		self.speed = speed
+
+		# Gestion de l'invincibilité apres avoir recus un coup
+		self.get_hit = False
+		self.invicibility_frame = 120
+		self.curent_invicibility_frame = self.invicibility_frame
+		self.filter_on = False
+
 
 
 	def move(self,direction):
@@ -25,6 +42,39 @@ class Player(pygame.sprite.Sprite):
 			self.rect.x+=self.speed
 		elif direction=="LEFT":
 			self.rect.x-=self.speed
+
+	def invicibility_after_getting_hit(self):
+		""""""
+
+		if self.get_hit:
+			self.curent_invicibility_frame -= 1
+
+			if self.curent_invicibility_frame % 10 == 0:
+				self.filter_on = not self.filter_on
+
+
+			if self.filter_on:
+				filtre = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
+				filtre_rect = filtre.get_rect()
+				filtre.fill((255, 255, 255, 100))
+				self.image.blit(filtre, filtre_rect)
+			else:
+				self.image = pygame.image.load("img/monster.png")
+
+
+			if self.curent_invicibility_frame <= 0:
+				self.get_hit = False
+				self.curent_invicibility_frame = self.invicibility_frame
+
+
+
+
+
+	def update(self):
+		""""""
+		self.cooldown += 1
+		self.invicibility_after_getting_hit()
+
 
 	def attaque(spell, entity):
 		"""Player attaque entity avec le sort spell"""
