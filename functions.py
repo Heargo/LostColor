@@ -49,14 +49,35 @@ def spawnNMonsters(N):
 
 
 
-def draw_text(screen,text, font_name, size, color, x, y):
-    """affiche le nom du jeu"""
+def draw_text(screen,text, font_name, size, color, x, y, center):
+    """"""
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
-    text_rect.centerx = x
-    text_rect.centery = y
+    if center:
+        text_rect.centerx = x
+        text_rect.centery = y
+    else:
+        text_rect.x = x
+        text_rect.y = y
+
     screen.blit(text_surface, text_rect)
+
+def draw_HUD(screen):
+    """Head up display : affichage d'information pour le joueur"""
+
+    # Affichage PV
+    draw_text(screen, "PV : " + str(player.HP) + "/" + str(player.HP_MAX), 'fonts/RPGSystem.ttf', 20, BLACK, 10, SCREEN_HEIGHT//2+20, False)
+
+    # Affichage DMG
+    draw_text(screen, "DMG : " + str(player.DMG), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2, False)
+
+    # Affichage TPS
+    draw_text(screen, "TPS : " + str(player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2-20, False)
+
+    # Affichage SPEED
+    draw_text(screen, "SPEED : " + str(player.speed), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2-40, False)
+
 
 def main_menu(screen,fpsClock):
     running = True
@@ -98,7 +119,7 @@ def main_menu(screen,fpsClock):
         #affichage 
         screen.fill((255, 255, 255))
         #affiche le nom du jeu
-        draw_text(screen,'Lost color', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 100)
+        draw_text(screen,'Lost color', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 100, True)
         #affiche les boutons
         b1.draw(screen, mx, my)
         b2.draw(screen, mx, my)
@@ -113,8 +134,6 @@ def main_menu(screen,fpsClock):
 
 
 def game(screen,fpsClock):
-    score = 0
-    cooldown = 30
     playing = True
     while playing:
 
@@ -147,8 +166,8 @@ def game(screen,fpsClock):
         # shoot
         activeMouse = pygame.mouse.get_pressed()
         # print(activeMouse)
-        if activeMouse[0] == 1:
-            if cooldown >= 30:
+        if activeMouse[0] == True:
+            if player.cooldown >= player.cooldown_max:
                 # position de la souris
                 pos = pygame.mouse.get_pos()
 
@@ -162,28 +181,34 @@ def game(screen,fpsClock):
                 bullet_list.add(bullet)
                 all_sprites_list.add(bullet)
                 # Remise à 0 du temps de rechargement de tire
-                cooldown = 0
+                player.cooldown = 0
 
         # --- Logique du jeu
-
-        cooldown += 1
 
         for bullet in bullet_list:
 
             # Si une balle touche un monstre
-            enemy_hit_list = pygame.sprite.spritecollide(bullet, enemy_list, True)
+            enemy_hit_list = pygame.sprite.spritecollide(bullet, enemy_list, False)
 
-            # Pour chaque monstre touché, un supprime la balle et on augmente le score
+            # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre
             for mob in enemy_hit_list:
                 bullet_list.remove(bullet)
                 all_sprites_list.remove(bullet)
-                score += 1
-                print(score)
+                # Lorsqu'un ennemie se fait toucher il perd les dégats du joueur
+                mob.HP -= player.DMG
 
             # On supprime la balle de la liste des sprites si elle sort de l'écran
             if bullet.rect.y < -10:
                 bullet_list.remove(bullet)
                 all_sprites_list.remove(bullet)
+
+        # Colision entre joueur et monstre
+        for mob in enemy_list:
+            if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
+                player.get_hit = True
+                player.HP -= mob.DMG
+
+
 
         # Appelle la méthode update() de tous les Sprites
         all_sprites_list.update()
@@ -195,6 +220,9 @@ def game(screen,fpsClock):
 
         # Dessine tous les sprites (les blits sur screen)
         all_sprites_list.draw(screen)
+
+        # Affichage HUD
+        draw_HUD(screen)
 
         # Met à jour la fenetre de jeu
         pygame.display.update()
