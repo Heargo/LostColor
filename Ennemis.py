@@ -1,6 +1,7 @@
 import pygame, math, random
 from constants import *
 from pygame.locals import *
+from random import randint
 
 class Monstre1(pygame.sprite.Sprite):
     """ Cette classe represente les objets Monstre1"""
@@ -12,8 +13,13 @@ class Monstre1(pygame.sprite.Sprite):
         # Appel du constructeur de la classe mère (Sprite)
         super().__init__()
 
+        #la couleur du monstre est tiré
+        num=randint(0,1)
+        color = [RED,GRAY][num]
+
+
         #Mise en place de l'image du monstre
-        self.image = pygame.image.load('img/blob_0.png')
+        self.image = pygame.image.load('img/blob_'+str(num)+'.png')
 
         # Mise en place de la "hit-box" du monstre
         self.rect = self.image.get_rect()
@@ -30,6 +36,7 @@ class Monstre1(pygame.sprite.Sprite):
         self.HP = self.HP_MAX
         self.DMG = 10
         self.speed = random.uniform(2.0, 3.0)
+        self.colorbuff=color
 
         # Taille bare point de vie :
         self.HP_BAR_WIDTH = self.rect.width

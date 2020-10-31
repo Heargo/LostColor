@@ -1,10 +1,11 @@
 import pygame
 import math
+from constants import *
 
 class Bullet(pygame.sprite.Sprite):
     """ Classe d'une balle """
  
-    def __init__(self, start_x, start_y, dest_x, dest_y):
+    def __init__(self, start_x, start_y, dest_x, dest_y,color):
         """Constructeur"""
  
         # Utilise le constructeur du la classe sprite du pygame
@@ -12,8 +13,8 @@ class Bullet(pygame.sprite.Sprite):
  
         #visuel de la balle
         self.image = pygame.Surface([10, 10])
-        self.image.fill((0,0,0))
- 
+        self.image.fill(color)
+        self.color = color
         self.rect = self.image.get_rect()
  
         #Défini les coordonées
