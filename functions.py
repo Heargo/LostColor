@@ -3,6 +3,7 @@ from constants import *
 from Bullet import *
 from Ennemis import *
 from player import *
+from random import choice
 
 def initSprites():
     global all_sprites_list,enemy_list,bullet_list,player
@@ -79,6 +80,23 @@ def draw_HUD(screen):
     draw_text(screen, "SPEED : " + str(player.speed), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2-40, False)
 
 
+def setNewPolygones():
+    res=[]
+    for p in polygones_list:
+        randomX= randint(0,SCREEN_WIDTH)
+        randomY = randint(0,SCREEN_HEIGHT)
+        newp=[]
+        for point in p:
+            newp+=[((randomX+point[0])/2,(randomY+point[1])/2)]
+        res+=[[newp,choice(COLORS)]]
+
+    return res
+
+def drawPolygones(screen,poly_list):
+    for p in poly_list:
+        pygame.draw.polygon(screen, p[1], p[0],0)
+
+
 def main_menu(screen,fpsClock):
     running = True
     click = False
@@ -135,6 +153,7 @@ def main_menu(screen,fpsClock):
 
 def game(screen,fpsClock):
     playing = True
+    polylist=setNewPolygones()
     while playing:
 
         # --- Gestion des Event
@@ -227,14 +246,16 @@ def game(screen,fpsClock):
 
         # --- Dessiner la frame
         # Clear the screen
-
         screen.fill(WHITE)
-
+        #affiche a nouveau les taches
+        drawPolygones(screen,polylist)
         # Dessine tous les sprites (les blits sur screen)
         all_sprites_list.draw(screen)
 
         # Affichage HUD
         draw_HUD(screen)
+
+
 
         # Met à jour la fenetre de jeu
         pygame.display.update()
