@@ -150,6 +150,10 @@ def game(screen,fpsClock):
                     spawnNMonsters(3)
                 if event.key == K_ESCAPE:
                     playing = False
+                if event.key == K_1:
+                    player.colorbuff=GRAY
+                if event.key == K_2:
+                    player.colorbuff=RED
 
         # Detection d'utilisation du clavier pour déplacer le joueur:
 
@@ -175,7 +179,7 @@ def game(screen,fpsClock):
                 mouse_y = pos[1]
 
                 # Créé la balle
-                bullet = Bullet(player.rect.centerx, player.rect.centery, mouse_x, mouse_y)
+                bullet = Bullet(player.rect.centerx, player.rect.centery, mouse_x, mouse_y,player.colorbuff)
 
                 # et l'ajoute a la liste des balles
                 bullet_list.add(bullet)
@@ -184,18 +188,26 @@ def game(screen,fpsClock):
                 player.cooldown = 0
 
         # --- Logique du jeu
-
         for bullet in bullet_list:
 
             # Si une balle touche un monstre
             enemy_hit_list = pygame.sprite.spritecollide(bullet, enemy_list, False)
 
-            # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre
+            # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre en fonction de la couleur de la balle
             for mob in enemy_hit_list:
-                bullet_list.remove(bullet)
-                all_sprites_list.remove(bullet)
-                # Lorsqu'un ennemie se fait toucher il perd les dégats du joueur
-                mob.HP -= player.DMG
+                dmgDone=False
+                
+                # Lorsqu'un ennemie se fait toucher il perd les dégats du joueur si il n'est pas de la m
+                if bullet.color==GRAY:
+                    mob.HP -= player.DMG*0.5
+                    dmgDone=True
+                elif bullet.color!=mob.colorbuff:
+                    mob.HP -= player.DMG*1.5
+                    dmgDone=True
+
+                if dmgDone:
+                    bullet_list.remove(bullet)
+                    all_sprites_list.remove(bullet)
 
             # On supprime la balle de la liste des sprites si elle sort de l'écran
             if bullet.rect.y < -10:
