@@ -1,7 +1,6 @@
 import pygame
 from constants import *
 from pygame.locals import *
-
 class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
 	def __init__(self, name="Coloro",x=0,y=0,speed=0.1, image="img/monster.png"):
@@ -24,6 +23,7 @@ class Player(pygame.sprite.Sprite):
 		self.cooldown = FPS // self.tps
 		self.cooldown_max = self.cooldown
 		self.speed = speed
+		self.colorbuff= GRAY
 
 		# Gestion de l'invincibilité apres avoir recus un coup
 		self.get_hit = False
@@ -34,13 +34,13 @@ class Player(pygame.sprite.Sprite):
 
 
 	def move(self,direction):
-		if direction=="UP":
+		if direction=="UP" and self.rect.y >0:
 			self.rect.y-=self.speed
-		elif direction=="DOWN":
+		elif direction=="DOWN" and self.rect.y <SCREEN_HEIGHT-self.image.get_height():
 			self.rect.y+=self.speed
-		elif direction =="RIGHT":
+		elif direction =="RIGHT" and self.rect.x <SCREEN_WIDTH-self.image.get_width():
 			self.rect.x+=self.speed
-		elif direction=="LEFT":
+		elif direction=="LEFT"  and self.rect.x >0:
 			self.rect.x-=self.speed
 
 	def invicibility_after_getting_hit(self):
