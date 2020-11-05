@@ -21,7 +21,8 @@ class Player(pygame.sprite.Sprite):
 		self.DMG = 12
 		self.tps = 2  # Tire par seconde
 		self.cooldown = FPS // self.tps
-		self.cooldown_max = self.cooldown
+		self.cooldown_max = FPS // self.tps
+		self.shot_speed = 8
 		self.speed = speed
 		self.colorbuff= GRAY
 
@@ -33,7 +34,7 @@ class Player(pygame.sprite.Sprite):
 
 
 
-	def move(self,direction):
+	def move(self,direction, walls):
 		if direction=="UP" and self.rect.y >0:
 			self.rect.y-=self.speed
 		elif direction=="DOWN" and self.rect.y <SCREEN_HEIGHT-self.image.get_height():
@@ -42,6 +43,20 @@ class Player(pygame.sprite.Sprite):
 			self.rect.x+=self.speed
 		elif direction=="LEFT"  and self.rect.x >0:
 			self.rect.x-=self.speed
+
+		block_hit_list = pygame.sprite.spritecollide(self, walls, False)
+		for block in block_hit_list:
+			# Si le joueur se déplace en direction d'un mur, cela
+			# met le coté du joueur qui touche le mur sur le coté
+			# du mur touché
+			if direction == "RIGHT":
+				self.rect.right = block.rect.left
+			elif direction == "LEFT":
+				self.rect.left = block.rect.right
+			elif direction == "DOWN":
+				self.rect.bottom = block.rect.top
+			elif direction == "UP":
+				self.rect.top = block.rect.bottom
 
 	def invicibility_after_getting_hit(self):
 		""""""
@@ -74,6 +89,8 @@ class Player(pygame.sprite.Sprite):
 		""""""
 		self.cooldown += 1
 		self.invicibility_after_getting_hit()
+		self.cooldown_max = FPS // self.tps
+
 
 
 	def attaque(spell, entity):

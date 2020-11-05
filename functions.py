@@ -2,18 +2,22 @@ from menu import *
 from constants import *
 from Bullet import *
 from Ennemis import *
+from Bonus import *
 from player import *
+from Room import *
 from random import choice
 
+def initPartie():
+    """"""
+    etage = []
+
 def initSprites():
-    global all_sprites_list,enemy_list,bullet_list,player
+    global all_sprites_list,enemy_list,bullet_list,player,rooms,current_room_no,current_room
     # --- Listes de Sprites
     # Ceci est la liste de tous les sprites. Tous les ennemis et le joueur aussi.
     # Un groupe de sprite LayeredUpdates possede en plus un ordre (pour l'affichage)
     all_sprites_list = pygame.sprite.LayeredUpdates()
 
-    # Liste de tous les ennemis
-    enemy_list = pygame.sprite.Group()
 
     # Liste des balles
     bullet_list = pygame.sprite.Group()
@@ -25,16 +29,24 @@ def initSprites():
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
-    # Création d'un monstre
-    m1 = Monstre1(random.randint(0, SCREEN_WIDTH),
-                  random.randint(0, SCREEN_HEIGHT // 3),
-                  player)
+    # Création des salles
+    rooms = []
+    # Ajout de la première salle ("Tuto")
+    room = RoomTuto(player)
+    rooms.append(room)
 
-    # Ajout du monstre sprite dans le Group enemy_list
-    enemy_list.add(m1)
+    # Ajout des salles normales
+    # room = RoomNormal()
+    # rooms.append(room)
+    # A voir
 
-    # Ajout des sprite dans l'ordre d'affichange dans le Group all_sprites_list
-    all_sprites_list.add(m1)
+    # Salle courante (ou est le joueur est)
+    current_room_no = 0
+    current_room = rooms[current_room_no]
+
+
+    # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
+    all_sprites_list.add(current_room.enemy_list)
     all_sprites_list.add(bullet_list)
     all_sprites_list.add(player)
 
@@ -45,7 +57,7 @@ def spawnNMonsters(N):
         monstre = Monstre1(random.randint(0, SCREEN_WIDTH),
                            random.randint(0, SCREEN_HEIGHT // 3),
                            player)
-        enemy_list.add(monstre)
+        current_room.enemy_list.add(monstre)
         all_sprites_list.add(monstre)
 
 
@@ -68,16 +80,19 @@ def draw_HUD(screen):
     """Head up display : affichage d'information pour le joueur"""
 
     # Affichage PV
-    draw_text(screen, "PV : " + str(player.HP) + "/" + str(player.HP_MAX), 'fonts/RPGSystem.ttf', 20, BLACK, 10, SCREEN_HEIGHT//2+20, False)
+    draw_text(screen, "PV : " + str(player.HP) + "/" + str(player.HP_MAX), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT//2+20, False)
 
     # Affichage DMG
-    draw_text(screen, "DMG : " + str(player.DMG), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2, False)
+    draw_text(screen, "DMG : " + str(player.DMG), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2, False)
 
     # Affichage TPS
-    draw_text(screen, "TPS : " + str(player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2-20, False)
+    draw_text(screen, "TPS : " + str(player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 20, False)
 
     # Affichage SPEED
-    draw_text(screen, "SPEED : " + str(player.speed), 'fonts/RPGSystem.ttf', 20, BLACK, 10,SCREEN_HEIGHT // 2-40, False)
+    draw_text(screen, "SPEED : " + str(player.speed), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 40, False)
+
+    # Affichage SPEED
+    draw_text(screen, "SHOT SPEED : " + str(player.shot_speed), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 60, False)
 
 
 def setNewPolygones():
@@ -165,8 +180,26 @@ def game(screen,fpsClock):
                 sys.exit()
             # Detection d'utilisation du clavier pour faire spawner 3 monstres
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_KP5:  # bottom
+                if event.key == pygame.K_KP8:
                     spawnNMonsters(3)
+                if event.key == pygame.K_KP1:
+                    bonus_test = Bonus("dmg", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP2:
+                    bonus_test = Bonus("tps", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP3:
+                    bonus_test = Bonus("shot_speed", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP4:
+                    bonus_test = Bonus("heal", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP5:
+                    bonus_test = Bonus("hp_max", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP6:
+                    bonus_test = Bonus("speed", player)
+                    all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing = False
                 if event.key == K_1:
@@ -179,13 +212,13 @@ def game(screen,fpsClock):
         activeKey = pygame.key.get_pressed()
 
         if activeKey[K_a]:  # left
-            player.move("LEFT")
+            player.move("LEFT", current_room.wall_list)
         if activeKey[K_d]:  # right
-            player.move("RIGHT")
+            player.move("RIGHT", current_room.wall_list)
         if activeKey[K_w]:  # top
-            player.move("UP")
+            player.move("UP", current_room.wall_list)
         if activeKey[K_s]:  # bottom
-            player.move("DOWN")
+            player.move("DOWN", current_room.wall_list)
         # shoot
         activeMouse = pygame.mouse.get_pressed()
         # print(activeMouse)
@@ -198,7 +231,7 @@ def game(screen,fpsClock):
                 mouse_y = pos[1]
 
                 # Créé la balle
-                bullet = Bullet(player.rect.centerx, player.rect.centery, mouse_x, mouse_y,player.colorbuff)
+                bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
 
                 # et l'ajoute a la liste des balles
                 bullet_list.add(bullet)
@@ -210,7 +243,7 @@ def game(screen,fpsClock):
         for bullet in bullet_list:
 
             # Si une balle touche un monstre
-            enemy_hit_list = pygame.sprite.spritecollide(bullet, enemy_list, False)
+            enemy_hit_list = pygame.sprite.spritecollide(bullet, current_room.enemy_list, False)
 
             # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre en fonction de la couleur de la balle
             for mob in enemy_hit_list:
@@ -234,7 +267,7 @@ def game(screen,fpsClock):
                 all_sprites_list.remove(bullet)
 
         # Colision entre joueur et monstre
-        for mob in enemy_list:
+        for mob in current_room.enemy_list:
             if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
                 player.get_hit = True
                 player.HP -= mob.DMG
@@ -244,6 +277,9 @@ def game(screen,fpsClock):
         # Appelle la méthode update() de tous les Sprites
         all_sprites_list.update()
 
+        # Méthode update de la salle courante pour la gestion des portes
+        current_room.update()
+
         # --- Dessiner la frame
         # Clear the screen
         screen.fill(WHITE)
@@ -251,6 +287,9 @@ def game(screen,fpsClock):
         drawPolygones(screen,polylist)
         # Dessine tous les sprites (les blits sur screen)
         all_sprites_list.draw(screen)
+        # Dessine les murs et portes de la salle courante
+        current_room.wall_list.draw(screen)
+        current_room.door_list.draw(screen)
 
         # Affichage HUD
         draw_HUD(screen)
