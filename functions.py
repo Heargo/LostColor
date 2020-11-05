@@ -303,7 +303,7 @@ def game(screen,fpsClock):
         fpsClock.tick(FPS)
         
         
- def estDansPolygone(x,y,polygone):
+def estDansPolygone(x,y,polygone):
     bool = True
     n = len(polygone)
     a = polygone[n-1][0] - x
