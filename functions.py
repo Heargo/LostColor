@@ -301,3 +301,32 @@ def game(screen,fpsClock):
 
         # --- Limite le jeu à 60 images par seconde
         fpsClock.tick(FPS)
+        
+        
+ def estDansPolygone(x,y,polygone):
+    bool = True
+    n = len(polygone)
+    a = polygone[n-1][0] - x
+    b = polygone[n-1][1] - y
+    c = polygone[0][0] - polygone[n-1][0]
+    d = polygone[0][1] - polygone[n-1][1]
+    z = a*d - b*c
+    if z < 0:
+        s = -1
+    elif z > 0:
+        s = 1
+    else :
+        s = 0
+    if s!=0:
+        for i in (0, n-2):
+            a = polygone[i][0] - x
+            b = polygone[i][1] - y
+            c = polygone[i+1][0] - polygone[i][0]
+            d= polygone[i+1][1] - polygone[i][1]
+            z = a*d - b*c
+            if z == 0:
+                break
+            if z * s < 0:
+                bool = False
+                break
+    return bool
