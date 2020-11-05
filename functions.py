@@ -330,3 +330,23 @@ def estDansPolygone(x,y,polygone):
                 bool = False
                 break
     return bool
+
+
+def estDansCercle(Cercle, M):
+    a = Cercle[0][0] - M[0]
+    b = Cercle[0][1] - M[1]
+    c=sqrt(a**2 + b**2)
+    if c <= C[1]:
+        bool = True
+    else:
+        bool = False
+    return bool
+
+def estDansEnsembleCercles(ensemble,M):
+    n = len(ensemble)
+    bool = False
+    for i in range(n-1):
+        if estDansCercle(ensemble[i], M):
+            bool = True
+            break
+    return bool
