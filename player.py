@@ -32,7 +32,9 @@ class Player(pygame.sprite.Sprite):
 		self.curent_invicibility_frame = self.invicibility_frame
 		self.filter_on = False
 
+	def pos(self):
 
+		return(self.rect.x+0.5*self.rect.width,self.rect.y+0.5*self.rect.height)
 
 	def move(self,direction, walls):
 		if direction=="UP" and self.rect.y >0:
