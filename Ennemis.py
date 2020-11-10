@@ -38,6 +38,9 @@ class Monstre1(pygame.sprite.Sprite):
         self.speed = random.uniform(2.0, 3.0)
         self.colorbuff=color
 
+        #si il est boost
+        self.isboosted=False
+
         # Taille bare point de vie :
         self.HP_BAR_WIDTH = self.rect.width
         self.HP_BAR_HEIGHT = self.rect.height / 4

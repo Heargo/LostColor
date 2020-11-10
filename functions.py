@@ -224,6 +224,9 @@ def game(screen,fpsClock):
 
         #on change la couleur du joueur en fonction de la position 
         setColorPlayerFromPosition(taches,player)
+
+        #on met a jour les stats des monstres en fonction de la couleur du joueur
+        updateMobsStats(current_room.enemy_list,player.colorbuff)
         # shoot
         activeMouse = pygame.mouse.get_pressed()
         # print(activeMouse)
@@ -307,6 +310,15 @@ def game(screen,fpsClock):
         # --- Limite le jeu à 60 images par seconde
         fpsClock.tick(FPS)
         
+
+def updateMobsStats(mobs_lists,color):
+    for mob in mobs_lists:
+        if mob.colorbuff == color and not mob.isboosted and color!=GRAY:
+            mob.DMG*=2
+            mob.speed+=3
+            mob.isboosted=True
+
+
         
 def estDansPolygone(x,y,polygone):
     bool = True
