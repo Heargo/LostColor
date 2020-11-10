@@ -317,6 +317,10 @@ def updateMobsStats(mobs_lists,color):
             mob.DMG*=2
             mob.speed+=3
             mob.isboosted=True
+        elif mob.colorbuff != color and mob.isboosted:
+            mob.DMG/=2
+            mob.speed-=3
+            mob.isboosted=False
 
 
         
