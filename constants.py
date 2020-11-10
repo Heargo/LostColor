@@ -9,7 +9,7 @@ GRAY = (127, 127, 127)
 BROWN = (58, 29, 0)
 
 #couleurs des taches et des monstres
-COLORS=[GREEN,BLUE,RED]
+COLORS=[RED,GREEN,BLUE]
 
 #taille de l'écran
 SCREEN_WIDTH = 1280

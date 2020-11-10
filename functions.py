@@ -52,12 +52,14 @@ def initSprites():
     all_sprites_list.add(player)
 
 
-def spawnNMonsters(N):
+def spawnNMonsters(N,color="none"):
     """Cette fonction fait appraitre N enemies"""
     for i in range(0, N):
         monstre = Monstre1(random.randint(0, SCREEN_WIDTH),
                            random.randint(0, SCREEN_HEIGHT // 3),
                            player)
+        if color!="none":
+            monstre.setColor(color)
         current_room.enemy_list.add(monstre)
         all_sprites_list.add(monstre)
 
@@ -171,6 +173,7 @@ def game(screen,fpsClock):
     playing = True
     n=random.randint(3,10)
     taches=createNTaches(n,(6,20))
+    cd=0
     while playing:
 
         # --- Gestion des Event
@@ -226,6 +229,9 @@ def game(screen,fpsClock):
         setColorPlayerFromPosition(taches,player)
 
         #on met a jour les stats des monstres en fonction de la couleur du joueur
+        if cd ==120:
+            manageWhiteMobs(current_room.enemy_list)
+            cd=0
         updateMobsStats(current_room.enemy_list,player.colorbuff)
         # shoot
         activeMouse = pygame.mouse.get_pressed()
@@ -303,7 +309,7 @@ def game(screen,fpsClock):
         draw_HUD(screen)
 
 
-
+        cd+=1
         # Met à jour la fenetre de jeu
         pygame.display.update()
 
@@ -313,7 +319,7 @@ def game(screen,fpsClock):
 
 def updateMobsStats(mobs_lists,color):
     for mob in mobs_lists:
-        if mob.colorbuff == color and not mob.isboosted and color!=GRAY:
+        if mob.colorbuff == color and not mob.isboosted:
             mob.DMG*=2
             mob.speed+=3
             mob.isboosted=True
@@ -321,6 +327,16 @@ def updateMobsStats(mobs_lists,color):
             mob.DMG/=2
             mob.speed-=3
             mob.isboosted=False
+
+def manageWhiteMobs(mobs_lists):
+    is_colored_mob=False
+
+    for mob in mobs_lists:
+        if mob.colorbuff != GRAY:
+            is_colored_mob=True
+
+    if is_colored_mob:
+        spawnNMonsters(1,GRAY)
 
 
         
