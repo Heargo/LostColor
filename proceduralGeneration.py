@@ -47,8 +47,32 @@ def createPrimaryPath(n):
 	return allRooms
 
 
-primaryPath=createPrimaryPath(4)
-for i in primaryPath:
-	print(primaryPath[i].id)
-	print(primaryPath[i].doors)
-	print("-----------------")
+
+def ExtendPath(primaryPath):
+	"""Etend le primaryPath avec de nouvelles salles"""
+	bossRoomID=len(primaryPath)-1
+	idUsable=len(primaryPath)
+	extends={}
+	for salle in primaryPath.values():
+		#on regarde quelles sont les portes fermées
+		lsDoorposssibleToOpen=salle.doorsPossibleToOpen()
+		#on en choisi 0,1 ou 2 à ouvrir si ce n'est la salle du boss
+		if salle.id !=bossRoomID:
+			nbdoorsChoosed=random.randint(0,2)
+			random.shuffle(lsDoorposssibleToOpen)
+			doorsChoosed=lsDoorposssibleToOpen[0:nbdoorsChoosed]
+			#on créer une salle après chaque porte choisi
+			for door in doorsChoosed:
+				salle.doors[door]=idUsable
+				extends[idUsable]=Room(idUsable)
+				extends[idUsable].openDoorFromPreviousRoom(salle)
+				idUsable+=1
+
+	primaryPath.update(extends)
+
+#tests
+# path=createPrimaryPath(8)
+# ExtendPath(path)
+# for salle in path.values():
+# 	print(salle.id)
+# 	print(salle.doors)
