@@ -3,6 +3,7 @@ from pygame.locals import *
 import random
 from math import sqrt
 from constants import *
+from proceduralGeneration import createPrimaryPath, ExtendPath, drawMap
 # import matplotlib.pyplot as plt
 # import PIL.ImageDraw as ImageDraw
 # import PIL.Image as Image
@@ -221,6 +222,15 @@ bary=()
 taches=[]
 running = True
 notPressedBefore=True
+
+n=40
+path,allRoomsCoordinates=createPrimaryPath(n)
+#affichage des données
+# for salle in path.values():
+# 	print(salle.id)
+# 	print(salle.doors)
+allRoomsCoordinates=ExtendPath(path,allRoomsCoordinates)
+#print(allRoomsCoordinates)
 # -------- Main Program Loop -----------
 while running:
 	click=False
@@ -308,6 +318,7 @@ while running:
 
 	#affichage 
 	screen.fill((255, 255, 255))
+
 	#draw points
 	for p in poly:
 		pygame.draw.circle(screen, (255,0,0), p, 2)
@@ -329,6 +340,9 @@ while running:
 		#draw lignes
 		for i in range(0,len(poly)):
 			pygame.draw.line(screen, (0,0,255), poly[i-1], poly[i], 2)
+
+
+	drawMap(screen,path,allRoomsCoordinates,n)
 
 	pygame.display.update()
 	fpsClock.tick(60)
