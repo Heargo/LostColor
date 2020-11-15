@@ -128,13 +128,13 @@ class Room(object):
         elif difficulty == "ultra_easy":
             num_of_monsters = 1
         elif difficulty == "easy":
-            num_of_monsters = randint(2, 5)
+            num_of_monsters = 2
         elif difficulty == "medium":
-            num_of_monsters = randint(6, 10)
+            num_of_monsters = 3
         elif difficulty == "hard":
-            num_of_monsters = randint(10, 20)
+            num_of_monsters = randint(5, 9)
         elif difficulty == "ultra_hard":
-            num_of_monsters = randint(20, 30)
+            num_of_monsters = randint(12, 20)
         else:
             num_of_monsters = 0 + N
 

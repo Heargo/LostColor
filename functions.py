@@ -200,7 +200,7 @@ def game(screen,fpsClock):
                     mapOn=True
 
 
-        if not mapOn:
+        if not mapOn and player.HP >0:
             # Detection d'utilisation du clavier pour déplacer le joueur:
             activeKey = pygame.key.get_pressed()
 
@@ -344,13 +344,18 @@ def game(screen,fpsClock):
             draw_HUD(screen)
 
         #si il y a la map
-        else:
+        if mapOn and player.HP >0:
             activeKey = pygame.key.get_pressed()
             if not activeKey[K_TAB]:
                 mapOn=False
             # Clear the screen
             screen.fill(WHITE)
             drawMap(screen,floor,allRoomsCoordinates,current_room.id)
+
+        #si le jouer est mort
+        if player.HP <=0:
+            screen.fill(WHITE)
+            draw_text(screen,'GAME OVER...', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 200, True)
         
 
         # Met à jour la fenetre de jeu
@@ -358,6 +363,7 @@ def game(screen,fpsClock):
 
         # --- Limite le jeu à 60 images par seconde
         fpsClock.tick(FPS)
+
         
 
 def updateMobsStats(mobs_lists,color):
