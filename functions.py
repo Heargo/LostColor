@@ -167,6 +167,7 @@ def game(screen,fpsClock):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP8:
                     current_room.spawnMonsters("exact_number", player, 3)
+                    all_sprites_list.add(current_room.enemy_list)
                 if event.key == pygame.K_KP9:
                     print(all_sprites_list)
                 if event.key == pygame.K_KP1:
