@@ -14,6 +14,7 @@ class Bonus(pygame.sprite.Sprite):
         self.rect.centery = y
         self.bonus_type = bonus_type
         self.gatherer = gatherer
+        self.taken = False
 
     def piked_up(self):
         """"""
@@ -34,6 +35,7 @@ class Bonus(pygame.sprite.Sprite):
             elif (self.bonus_type == "tps"):
                 self.gatherer.tps += 0.5
 
+            self.taken = True
             self.kill()
 
 

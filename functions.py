@@ -7,13 +7,14 @@ from player import *
 from Room import *
 import random
 from math import sqrt
+from proceduralGeneration import *
 
 def initPartie():
     """"""
     etage = []
 
 def initSprites():
-    global all_sprites_list,enemy_list,bullet_list,player,rooms,current_room_no,current_room
+    global all_sprites_list,enemy_list,bullet_list,player,current_room_no,current_room,floor
     # --- Listes de Sprites
     # Ceci est la liste de tous les sprites. Tous les ennemis et le joueur aussi.
     # Un groupe de sprite LayeredUpdates possede en plus un ordre (pour l'affichage)
@@ -31,37 +32,16 @@ def initSprites():
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
     # Création des salles
-    rooms = []
-    # Ajout de la première salle ("Tuto")
-    room = RoomTuto(player)
-    rooms.append(room)
-
-    # Ajout des salles normales
-    # room = RoomNormal()
-    # rooms.append(room)
-    # A voir
+    floor = createPrimaryPath(10, player)
 
     # Salle courante (ou est le joueur est)
-    current_room_no = 0
-    current_room = rooms[current_room_no]
+    current_room = floor[player.current_room_id]
 
 
     # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
     all_sprites_list.add(current_room.enemy_list)
     all_sprites_list.add(bullet_list)
     all_sprites_list.add(player)
-
-
-def spawnNMonsters(N,color="none"):
-    """Cette fonction fait appraitre N enemies"""
-    for i in range(0, N):
-        monstre = Monstre1(random.randint(0, SCREEN_WIDTH),
-                           random.randint(0, SCREEN_HEIGHT // 3),
-                           player)
-        if color!="none":
-            monstre.setColor(color)
-        current_room.enemy_list.add(monstre)
-        all_sprites_list.add(monstre)
 
 
 
@@ -170,10 +150,10 @@ def main_menu(screen,fpsClock):
 
 
 def game(screen,fpsClock):
+    global current_room
     playing = True
-    n=random.randint(3,10)
-    taches=createNTaches(n,(6,20))
-    cd=0
+    white_mob_spawn_delay = 0
+
     while playing:
 
         # --- Gestion des Event
@@ -186,7 +166,9 @@ def game(screen,fpsClock):
             # Detection d'utilisation du clavier pour faire spawner 3 monstres
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP8:
-                    spawnNMonsters(3)
+                    current_room.spawnMonsters("exact_number", player, 3)
+                if event.key == pygame.K_KP9:
+                    print(all_sprites_list)
                 if event.key == pygame.K_KP1:
                     bonus_test = Bonus("dmg", player)
                     all_sprites_list.add(bonus_test)
@@ -225,17 +207,23 @@ def game(screen,fpsClock):
         if activeKey[K_s]:  # bottom
             player.move("DOWN", current_room.wall_list)
 
-        #on change la couleur du joueur en fonction de la position 
-        setColorPlayerFromPosition(taches,player)
+        # on change la couleur du joueur en fonction de la position
+        setColorPlayerFromPosition(current_room.taches, player)
 
-        #on met a jour les stats des monstres en fonction de la couleur du joueur
-        if cd ==120:
-            manageWhiteMobs(current_room.enemy_list)
-            cd=0
-        updateMobsStats(current_room.enemy_list,player.colorbuff)
-        # shoot
+
+        # Si la salle contient des monstres de couleurs et que le delai d'aparition est bon on fait aparaitre
+        # un monstre blanc
+        if white_mob_spawn_delay >= 120:
+            manageWhiteMobs(current_room.enemy_list, current_room, player)
+            all_sprites_list.add(current_room.enemy_list)
+            white_mob_spawn_delay = 0
+
+        # on met a jour les stats des monstres en fonction de la couleur du joueur
+        updateMobsStats(current_room.enemy_list, player.colorbuff)
+
+
+        # Detection de la souris et du cooldown pour tirer
         activeMouse = pygame.mouse.get_pressed()
-        # print(activeMouse)
         if activeMouse[0] == True:
             if player.cooldown >= player.cooldown_max:
                 # position de la souris
@@ -254,6 +242,44 @@ def game(screen,fpsClock):
                 player.cooldown = 0
 
         # --- Logique du jeu
+        # Bonus a la fin des salles
+        if len(current_room.enemy_list) == 0 and (not current_room.bonus.taken):
+            all_sprites_list.add(current_room.bonus)
+
+        # Gestions du changement de salle
+        if player.rect.x < -player.rect.width:  # Le joueur va à gauche
+            player.current_room_id = current_room.doors_id["left"]
+            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+            current_room = floor[player.current_room_id]
+            player.rect.x = SCREEN_WIDTH - player.rect.width - wall_size
+            all_sprites_list.add(current_room.enemy_list)
+
+        if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
+            player.current_room_id = current_room.doors_id["right"]
+            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+            current_room = floor[player.current_room_id]
+            player.rect.x = player.rect.width + wall_size
+            all_sprites_list.add(current_room.enemy_list)
+
+        if player.rect.y < -player.rect.height:  # Le joueur va en haut
+            player.current_room_id = current_room.doors_id["top"]
+            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+            current_room = floor[player.current_room_id]
+            player.rect.y = SCREEN_HEIGHT - player.rect.height - wall_size
+            all_sprites_list.add(current_room.enemy_list)
+
+        if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
+            player.current_room_id = current_room.doors_id["bottom"]
+            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+            current_room = floor[player.current_room_id]
+            player.rect.y = player.rect.height + wall_size
+            all_sprites_list.add(current_room.enemy_list)
+
+        # Gestions des balles
         for bullet in bullet_list:
 
             # Si une balle touche un monstre
@@ -286,6 +312,9 @@ def game(screen,fpsClock):
                 player.get_hit = True
                 player.HP -= mob.DMG
 
+        # Incrementation du delai d'aparition des monstre blanc
+        white_mob_spawn_delay += 1
+
 
 
         # Appelle la méthode update() de tous les Sprites
@@ -297,8 +326,8 @@ def game(screen,fpsClock):
         # --- Dessiner la frame
         # Clear the screen
         screen.fill(WHITE)
-        #affiche a nouveau les taches
-        drawAllTaches(screen,taches)
+        # Dessine les taches de couleur
+        drawAllTaches(screen, current_room.taches)
         # Dessine tous les sprites (les blits sur screen)
         all_sprites_list.draw(screen)
         # Dessine les murs et portes de la salle courante
@@ -308,8 +337,6 @@ def game(screen,fpsClock):
         # Affichage HUD
         draw_HUD(screen)
 
-
-        cd+=1
         # Met à jour la fenetre de jeu
         pygame.display.update()
 
@@ -328,7 +355,7 @@ def updateMobsStats(mobs_lists,color):
             mob.speed-=3
             mob.isboosted=False
 
-def manageWhiteMobs(mobs_lists):
+def manageWhiteMobs(mobs_lists, current_room, player):
     is_colored_mob=False
 
     for mob in mobs_lists:
@@ -336,7 +363,7 @@ def manageWhiteMobs(mobs_lists):
             is_colored_mob=True
 
     if is_colored_mob:
-        spawnNMonsters(1,GRAY)
+        current_room.spawnMonsters("exact_number", player, 1, GRAY)
 
 
         
@@ -401,96 +428,3 @@ def setColorPlayerFromPosition(taches,player):
             color=taches[i][1]
         i+=1
     player.colorbuff = color
-
-
-
-########################################
-###############ALGO 2 ##################
-########################################
- 
-def randomPoints(n,size):
-    """renvoie une liste de points tiré aléatoirement dans un rectangle de taile size"""
-    lsPoints=[]
-    h=size[1]
-    w=size[0]
-    for i in range(n):
-        x=random.randint(0,w)
-        y=random.randint(0,h)
-        lsPoints+=[(x,y)]
-    return lsPoints
-
-def distPlusProche(p,pts):
-    """Renvoie la distance entre le point p et le point le plus proche parmis les points"""
-    points=pts[::]
-
-    #on enleve p de la liste des points en cas de répétition
-    if p in points:
-        points.remove(p)
-    #on initialise mini avec la distance au premier point de la liste des points
-    mini=sqrt((p[0]-points[0][0])**2+(p[1]-points[0][1])**2)
-    #on compare chaque point avec p pour trouver la plus petite distance
-    for p2 in points:
-        dist=sqrt((p2[0]-p[0])**2+(p2[1]-p[1])**2)
-        if dist<mini:
-            mini=dist
-
-    return round(mini)
-
-
-def randomHomogenePoints(n):
-    """renvoie une liste de points qui sont répartis homogénement (a plus de 300px les uns des autres) mais aléatoirement """
-    res=[]
-    lsbase=[]
-    for i in range(n):
-        randomX= random.randint(0,SCREEN_WIDTH)
-        randomY = random.randint(0,SCREEN_HEIGHT)
-        if len(lsbase)>1:
-            while distPlusProche((randomX,randomY),lsbase) < 300:
-                randomX= random.randint(0,SCREEN_WIDTH)
-                randomY = random.randint(0,SCREEN_HEIGHT)
-
-        lsbase+=[(randomX,randomY)]
-    return lsbase
-
-def drawTache(screen,tache):
-    #draw circles
-    for cercle in tache[0]:
-        centre=cercle[0]
-        rayon=cercle[1]
-        pygame.draw.circle(screen, tache[1], centre, rayon)
-
-
-
-
-def createTache(taille):
-    n= random.randint(taille[0],taille[1])
-    lsCenters=randomPoints(n,(200,200))
-    lsCircles=[]
-    tot=(0,0)
-    for c in lsCenters:
-        rayon=distPlusProche(c,lsCenters)
-        tot=(tot[0]+c[0],tot[1]+c[1])
-        lsCircles+=[[c,rayon]]
-    color=random.choice(COLORS)
-    return [lsCircles,color]
-
-def createNTaches(n,taille):
-    lsTaches=[]
-    #on créer les taches
-    for i in range(n):
-        lsTaches+=[createTache(taille)]
-    #on créer une disposition aléatoire sur la map
-    points=randomHomogenePoints(n)
-    #on applique cette position a chaque tache
-    for i in range(len(lsTaches)):
-        tache=lsTaches[i][0]
-        pos=points[i]
-        for cercle in tache:
-            cercle[0] =(cercle[0][0]+pos[0],cercle[0][1]+pos[1])
-        lsTaches[i][0]=tache    
-
-    return lsTaches
-
-def drawAllTaches(screen,taches):
-    for tache in taches:
-        drawTache(screen,tache)

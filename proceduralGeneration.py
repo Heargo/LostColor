@@ -1,78 +1,30 @@
-import random
-
-class Room():
-	"""docstring for room"""
-	def __init__(self, id, top=-1, bottom=-1, left=-1, right=-1, difficulty="none"):
-		self.id = id
-		self.doors={"top":top,"bottom":bottom,"left":left,"right":right}
-		self.difficulty=difficulty
+from Room import *
+from random import choices
 
 
-	def doorsPossibleToOpen(self):
-		lsDoors=[]
-		for k in self.doors.keys():
-			if self.doors[k]==-1:
-				lsDoors+=[k]
-		return lsDoors
-
-
-	def openDoorFromPreviousRoom(self,previousRoom):
-		res="none"
-		for k in previousRoom.doors:
-			if previousRoom.doors[k]==self.id:
-				res=k
-		relationDoors={"top":"bottom","bottom":"top","left":"right","right":"left"}
-		self.doors[relationDoors[res]]=previousRoom.id
-
-
-
-
-def createPrimaryPath(n):
+def createPrimaryPath(n, player):
 	allRooms={}
 	for i in range(n):
-		#on init la salle
-		currentroom=Room(i)
+		if i == 0: # Pour la première salle (Tuto)
+			currentroom = Room(player, i, difficulty="ultra_easy")
+		else:
+			random_difficulty = choices(DIFFICULTIES, weights = [20, 1, 4, 50, 20, 5])[0]
+			currentroom = Room(player, i, difficulty=random_difficulty)
+
 		#on ouvre sa porte en fonction de la salle précédente
-		if i >0:
+		if i > 0:
 			previousRoom=allRooms[i-1]
 			currentroom.openDoorFromPreviousRoom(previousRoom)
+			currentroom.walls_creation()
+			currentroom.doors_creation()
 
 		#on ouvre une nouvelle porte si ce n'est pas la dernière salle
 		if i < n-1:
 			alea=random.choice(currentroom.doorsPossibleToOpen())
-			currentroom.doors[alea]=i+1
+			currentroom.doors_id[alea]=i+1
+			currentroom.walls_creation()
+			currentroom.doors_creation()
 
 		allRooms[i]=currentroom
 
 	return allRooms
-
-
-
-def ExtendPath(primaryPath):
-	"""Etend le primaryPath avec de nouvelles salles"""
-	bossRoomID=len(primaryPath)-1
-	idUsable=len(primaryPath)
-	extends={}
-	for salle in primaryPath.values():
-		#on regarde quelles sont les portes fermées
-		lsDoorposssibleToOpen=salle.doorsPossibleToOpen()
-		#on en choisi 0,1 ou 2 à ouvrir si ce n'est la salle du boss
-		if salle.id !=bossRoomID:
-			nbdoorsChoosed=random.randint(0,2)
-			random.shuffle(lsDoorposssibleToOpen)
-			doorsChoosed=lsDoorposssibleToOpen[0:nbdoorsChoosed]
-			#on créer une salle après chaque porte choisi
-			for door in doorsChoosed:
-				salle.doors[door]=idUsable
-				extends[idUsable]=Room(idUsable)
-				extends[idUsable].openDoorFromPreviousRoom(salle)
-				idUsable+=1
-
-	primaryPath.update(extends)
-
-#tests
-# path=createPrimaryPath(8)
-# ExtendPath(path)
-# for salle in path.values():
-# 	print(salle.id)
-# 	print(salle.doors)

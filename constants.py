@@ -26,3 +26,12 @@ polygones_list=[
 [(254, 432), (294, 410), (330, 368), (364, 408), (331, 405), (346, 444)]
 ]
 
+# Taille des portes et murs du jeu
+wall_size = 20
+door_length = 100
+
+# Type de bonus :
+BONUS_TYPE = ("dmg", "tps", "heal", "hp_max", "shot_speed", "speed")
+
+# Liste des difficultés
+DIFFICULTIES = ["peaceful", "ultra_easy", "easy", "medium", "hard", "ultra_hard"]

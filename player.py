@@ -32,18 +32,21 @@ class Player(pygame.sprite.Sprite):
 		self.curent_invicibility_frame = self.invicibility_frame
 		self.filter_on = False
 
+		# Gestion salle
+		self.current_room_id = 0
+
 	def pos(self):
 
 		return(self.rect.x+0.5*self.rect.width,self.rect.y+0.5*self.rect.height)
 
 	def move(self,direction, walls):
-		if direction=="UP" and self.rect.y >0:
+		if direction=="UP":
 			self.rect.y-=self.speed
-		elif direction=="DOWN" and self.rect.y <SCREEN_HEIGHT-self.image.get_height():
+		elif direction=="DOWN":
 			self.rect.y+=self.speed
-		elif direction =="RIGHT" and self.rect.x <SCREEN_WIDTH-self.image.get_width():
+		elif direction =="RIGHT":
 			self.rect.x+=self.speed
-		elif direction=="LEFT"  and self.rect.x >0:
+		elif direction=="LEFT":
 			self.rect.x-=self.speed
 
 		block_hit_list = pygame.sprite.spritecollide(self, walls, False)
@@ -83,17 +86,11 @@ class Player(pygame.sprite.Sprite):
 				self.get_hit = False
 				self.curent_invicibility_frame = self.invicibility_frame
 
-
-
-
-
 	def update(self):
 		""""""
 		self.cooldown += 1
 		self.invicibility_after_getting_hit()
 		self.cooldown_max = FPS // self.tps
-
-
 
 	def attaque(spell, entity):
 		"""Player attaque entity avec le sort spell"""
