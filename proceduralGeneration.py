@@ -199,9 +199,9 @@ def drawMap(screen,mapdico,allRoomsCoordinates,n):
 	
 
 #tests
-#path,allRoomsCoordinates=createPrimaryPath(8)
-#allRoomsCoordinates=ExtendPath(path,allRoomsCoordinates)
-#affichage des données
+# path,allRoomsCoordinates=createPrimaryPath(8)
+# allRoomsCoordinates=ExtendPath(path,allRoomsCoordinates)
+# affichage des données
 # for salle in path.values():
 # 	print(salle.id)
 # 	print(salle.doors)
