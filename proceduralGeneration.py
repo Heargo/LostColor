@@ -126,7 +126,7 @@ def ExtendPath(primaryPath,allRoomsCoordinates,player):
 
 	return allRoomsCoordinates
 
-def drawMap(screen,mapdico,allRoomsCoordinates,n):
+def drawMap(screen,mapdico,allRoomsCoordinates,salleID):
 	center=[0,0]
 	#point en haut a gauche
 	minX=allRoomsCoordinates[0][0]
@@ -150,43 +150,35 @@ def drawMap(screen,mapdico,allRoomsCoordinates,n):
 	transx=16-center[0]
 	transy=8-center[1]
 
-
-	# pygame.draw.rect(screen, (255,0,255), ((minX+transx)*40,(-maxY+transy)*40,20,20))
-	# pygame.draw.rect(screen, (0,0,255), ((maxX+transx)*40,(-minY+transy)*40,20,20))
-	# pygame.draw.rect(screen, (255,255,0), ((center[0]+transx)*40,(center[1]+transy)*40,20,20))
-
 	for roomid in mapdico.keys():
 		room=mapdico[roomid]
-		#draw salle
-		x=(allRoomsCoordinates[roomid][0]+transx)*40 # 500 et 300 centre le 0 0 au milieu environ
-		y=(-allRoomsCoordinates[roomid][1]+transy)*40
-		color=GRAY
-		if roomid==n-1:#salle du boss en rouge
-			color=RED
-		if roomid<n-1:#main path
-			color=BLUE
-		if roomid==0:#première salle en vert
-			color=GREEN
-		pygame.draw.rect(screen, color, (x,y,20,20))
-		#draw line 
-		#on trouve on on vas
-		relationDoors={"top":1,"bottom":-1,"left":-1,"right":1}
-		for porte in room.doors_id:
-				if room.doors_id[porte]!=-1:
-					#on calcul les coordonée de currentroom
-					if porte=="top":
-						origine=(x+9,y)
-						fin=(x+9,y-20)
-					elif porte=="bottom":
-						origine=(x+9,y+20)
-						fin=(x+9,y+40)
-					elif porte=="left":
-						origine=(x,y+9)
-						fin=(x-20,y+9)
-					else: #right
-						origine=(x+20,y+9)
-						fin=(x+40,y+9)
-					pygame.draw.line(screen, GRAY, origine, fin, 2)
+		if room.visited:
+			#draw salle
+			x=(allRoomsCoordinates[roomid][0]+transx)*40 # 500 et 300 centre le 0 0 au milieu environ
+			y=(-allRoomsCoordinates[roomid][1]+transy)*40
+			color=GRAY
+			if roomid==salleID:#salle du joueur
+				color=GREEN
+			pygame.draw.rect(screen, color, (x,y,20,20))
+			#draw line 
+			#on trouve on on vas
+			relationDoors={"top":1,"bottom":-1,"left":-1,"right":1}
+			for porte in room.doors_id:
+					if room.doors_id[porte]!=-1:
+						#on calcul les coordonée de currentroom
+						if porte=="top":
+							origine=(x+9,y)
+							fin=(x+9,y-20)
+						elif porte=="bottom":
+							origine=(x+9,y+20)
+							fin=(x+9,y+40)
+						elif porte=="left":
+							origine=(x,y+9)
+							fin=(x-20,y+9)
+						else: #right
+							origine=(x+20,y+9)
+							fin=(x+40,y+9)
+						pygame.draw.line(screen, GRAY, origine, fin, 2)
 
 	
 

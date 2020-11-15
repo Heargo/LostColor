@@ -68,7 +68,7 @@ class Room(object):
         self.id = id
         self.doors_id = {"top": top, "bottom": bottom, "left": left, "right": right}
         self.difficulty = difficulty
-
+        self.visited=False
         # Bonus de la salle
         self.bonus = Bonus(BONUS_TYPE[randint(0, 5)], player)
         # Création d'un monstre

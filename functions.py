@@ -157,7 +157,7 @@ def game(screen,fpsClock):
     white_mob_spawn_delay = 0
 
     while playing:
-
+        current_room.visited=True
         # --- Gestion des Event
         for event in pygame.event.get():
 
@@ -350,7 +350,7 @@ def game(screen,fpsClock):
                 mapOn=False
             # Clear the screen
             screen.fill(WHITE)
-            drawMap(screen,floor,allRoomsCoordinates,10)
+            drawMap(screen,floor,allRoomsCoordinates,current_room.id)
         
 
         # Met à jour la fenetre de jeu
