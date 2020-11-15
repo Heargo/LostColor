@@ -3,7 +3,7 @@ from constants import *
 from pygame.locals import *
 class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0,speed=0.1, image="img/monster.png"):
+	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="img/monster.png"):
 		super().__init__()
 		self.name = name
 		self.x = x
@@ -15,6 +15,9 @@ class Player(pygame.sprite.Sprite):
 		self.rect.x = self.x 
 		self.rect.y = self.y
 
+		self.initStats(speed)
+
+	def initStats(self,speed):
 		# Statistiques du joueur
 		self.HP_MAX = 100
 		self.HP = self.HP_MAX
@@ -91,7 +94,5 @@ class Player(pygame.sprite.Sprite):
 		self.cooldown += 1
 		self.invicibility_after_getting_hit()
 		self.cooldown_max = FPS // self.tps
+		
 
-	def attaque(spell, entity):
-		"""Player attaque entity avec le sort spell"""
-		print("J'attaque")

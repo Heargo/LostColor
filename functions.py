@@ -10,8 +10,21 @@ from math import sqrt
 from proceduralGeneration import *
 
 def initPartie():
-    """"""
-    etage = []
+    """Initialise une partie"""
+    global player,current_room,floor, allRoomsCoordinates
+
+    # Création du joueur
+    player.initStats(6)
+
+    player.rect.centerx = 2 * SCREEN_WIDTH // 3
+    player.rect.centery = 2 * SCREEN_HEIGHT // 3
+
+    # Création des salles
+    floor,allRoomsCoordinates = createPrimaryPath(10, player)
+    allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
+
+    # Salle courante (ou est le joueur est)
+    current_room = floor[player.current_room_id]
 
 def initSprites():
     global all_sprites_list,enemy_list,bullet_list,player,current_room_no,current_room,floor, allRoomsCoordinates
@@ -155,8 +168,8 @@ def game(screen,fpsClock):
     playing = True
     mapOn=False
     white_mob_spawn_delay = 0
-
     while playing:
+        click=False
         current_room.visited=True
         # --- Gestion des Event
         for event in pygame.event.get():
@@ -165,6 +178,10 @@ def game(screen,fpsClock):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            #click sur le bouton lors de la mort du joueur
+            if event.type == MOUSEBUTTONDOWN and player.HP <=0:
+                    if event.button == 1:
+                        click = True
             # Detection d'utilisation du clavier pour faire spawner 3 monstres
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP8:
@@ -354,8 +371,27 @@ def game(screen,fpsClock):
 
         #si le jouer est mort
         if player.HP <=0:
+            #créer le bouton de restart
+            replay_bouton = Bouton(SCREEN_WIDTH // 2, 400, 'RESTART', RED)               
+            #on recupère les coordonnées de la souris
+            mx, my = pygame.mouse.get_pos()
+
+            #Si l'utilisateur clique sur le bouton, on retourne au menu
+            if replay_bouton.hoover(mx, my):
+                if click:
+                    all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                    all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                    initPartie()
+                    playing=False
+
+            #affichage
             screen.fill(WHITE)
+            
             draw_text(screen,'GAME OVER...', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 200, True)
+            replay_bouton.draw(screen, mx, my)
+            
+
+            
         
 
         # Met à jour la fenetre de jeu
