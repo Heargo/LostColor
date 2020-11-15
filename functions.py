@@ -14,7 +14,7 @@ def initPartie():
     etage = []
 
 def initSprites():
-    global all_sprites_list,enemy_list,bullet_list,player,current_room_no,current_room,floor
+    global all_sprites_list,enemy_list,bullet_list,player,current_room_no,current_room,floor, allRoomsCoordinates
     # --- Listes de Sprites
     # Ceci est la liste de tous les sprites. Tous les ennemis et le joueur aussi.
     # Un groupe de sprite LayeredUpdates possede en plus un ordre (pour l'affichage)
@@ -32,7 +32,8 @@ def initSprites():
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
     # Création des salles
-    floor = createPrimaryPath(10, player)
+    floor,allRoomsCoordinates = createPrimaryPath(10, player)
+    allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
 
     # Salle courante (ou est le joueur est)
     current_room = floor[player.current_room_id]
@@ -152,6 +153,7 @@ def main_menu(screen,fpsClock):
 def game(screen,fpsClock):
     global current_room
     playing = True
+    mapOn=False
     white_mob_spawn_delay = 0
 
     while playing:
@@ -194,149 +196,162 @@ def game(screen,fpsClock):
                     player.colorbuff=GRAY
                 if event.key == K_2:
                     player.colorbuff=RED
-
-        # Detection d'utilisation du clavier pour déplacer le joueur:
-
-        activeKey = pygame.key.get_pressed()
-
-        if activeKey[K_a]:  # left
-            player.move("LEFT", current_room.wall_list)
-        if activeKey[K_d]:  # right
-            player.move("RIGHT", current_room.wall_list)
-        if activeKey[K_w]:  # top
-            player.move("UP", current_room.wall_list)
-        if activeKey[K_s]:  # bottom
-            player.move("DOWN", current_room.wall_list)
-
-        # on change la couleur du joueur en fonction de la position
-        setColorPlayerFromPosition(current_room.taches, player)
+                if event.key == K_TAB :
+                    mapOn=True
 
 
-        # Si la salle contient des monstres de couleurs et que le delai d'aparition est bon on fait aparaitre
-        # un monstre blanc
-        if white_mob_spawn_delay >= 120:
-            manageWhiteMobs(current_room.enemy_list, current_room, player)
-            all_sprites_list.add(current_room.enemy_list)
-            white_mob_spawn_delay = 0
+        if not mapOn:
+            # Detection d'utilisation du clavier pour déplacer le joueur:
+            activeKey = pygame.key.get_pressed()
 
-        # on met a jour les stats des monstres en fonction de la couleur du joueur
-        updateMobsStats(current_room.enemy_list, player.colorbuff)
+            if activeKey[K_a]:  # left
+                player.move("LEFT", current_room.wall_list)
+            if activeKey[K_d]:  # right
+                player.move("RIGHT", current_room.wall_list)
+            if activeKey[K_w]:  # top
+                player.move("UP", current_room.wall_list)
+            if activeKey[K_s]:  # bottom
+                player.move("DOWN", current_room.wall_list)
+
+            # on change la couleur du joueur en fonction de la position
+            setColorPlayerFromPosition(current_room.taches, player)
 
 
-        # Detection de la souris et du cooldown pour tirer
-        activeMouse = pygame.mouse.get_pressed()
-        if activeMouse[0] == True:
-            if player.cooldown >= player.cooldown_max:
-                # position de la souris
-                pos = pygame.mouse.get_pos()
+            # Si la salle contient des monstres de couleurs et que le delai d'aparition est bon on fait aparaitre
+            # un monstre blanc
+            if white_mob_spawn_delay >= 120:
+                manageWhiteMobs(current_room.enemy_list, current_room, player)
+                all_sprites_list.add(current_room.enemy_list)
+                white_mob_spawn_delay = 0
 
-                mouse_x = pos[0]
-                mouse_y = pos[1]
+            # on met a jour les stats des monstres en fonction de la couleur du joueur
+            updateMobsStats(current_room.enemy_list, player.colorbuff)
 
-                # Créé la balle
-                bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
 
-                # et l'ajoute a la liste des balles
-                bullet_list.add(bullet)
-                all_sprites_list.add(bullet)
-                # Remise à 0 du temps de rechargement de tire
-                player.cooldown = 0
+            # Detection de la souris et du cooldown pour tirer
+            activeMouse = pygame.mouse.get_pressed()
+            if activeMouse[0] == True:
+                if player.cooldown >= player.cooldown_max:
+                    # position de la souris
+                    pos = pygame.mouse.get_pos()
 
-        # --- Logique du jeu
-        # Bonus a la fin des salles
-        if len(current_room.enemy_list) == 0 and (not current_room.bonus.taken):
-            all_sprites_list.add(current_room.bonus)
+                    mouse_x = pos[0]
+                    mouse_y = pos[1]
 
-        # Gestions du changement de salle
-        if player.rect.x < -player.rect.width:  # Le joueur va à gauche
-            player.current_room_id = current_room.doors_id["left"]
-            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
-            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
-            current_room = floor[player.current_room_id]
-            player.rect.x = SCREEN_WIDTH - player.rect.width - wall_size
-            all_sprites_list.add(current_room.enemy_list)
+                    # Créé la balle
+                    bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
 
-        if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
-            player.current_room_id = current_room.doors_id["right"]
-            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
-            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
-            current_room = floor[player.current_room_id]
-            player.rect.x = player.rect.width + wall_size
-            all_sprites_list.add(current_room.enemy_list)
+                    # et l'ajoute a la liste des balles
+                    bullet_list.add(bullet)
+                    all_sprites_list.add(bullet)
+                    # Remise à 0 du temps de rechargement de tire
+                    player.cooldown = 0
 
-        if player.rect.y < -player.rect.height:  # Le joueur va en haut
-            player.current_room_id = current_room.doors_id["top"]
-            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
-            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
-            current_room = floor[player.current_room_id]
-            player.rect.y = SCREEN_HEIGHT - player.rect.height - wall_size
-            all_sprites_list.add(current_room.enemy_list)
+            # --- Logique du jeu
+            # Bonus a la fin des salles
+            if len(current_room.enemy_list) == 0 and (not current_room.bonus.taken):
+                all_sprites_list.add(current_room.bonus)
 
-        if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
-            player.current_room_id = current_room.doors_id["bottom"]
-            all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
-            all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
-            current_room = floor[player.current_room_id]
-            player.rect.y = player.rect.height + wall_size
-            all_sprites_list.add(current_room.enemy_list)
+            # Gestions du changement de salle
+            if player.rect.x < -player.rect.width:  # Le joueur va à gauche
+                player.current_room_id = current_room.doors_id["left"]
+                all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                current_room = floor[player.current_room_id]
+                player.rect.x = SCREEN_WIDTH - player.rect.width - wall_size
+                all_sprites_list.add(current_room.enemy_list)
 
-        # Gestions des balles
-        for bullet in bullet_list:
+            if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
+                player.current_room_id = current_room.doors_id["right"]
+                all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                current_room = floor[player.current_room_id]
+                player.rect.x = player.rect.width + wall_size
+                all_sprites_list.add(current_room.enemy_list)
 
-            # Si une balle touche un monstre
-            enemy_hit_list = pygame.sprite.spritecollide(bullet, current_room.enemy_list, False)
+            if player.rect.y < -player.rect.height:  # Le joueur va en haut
+                player.current_room_id = current_room.doors_id["top"]
+                all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                current_room = floor[player.current_room_id]
+                player.rect.y = SCREEN_HEIGHT - player.rect.height - wall_size
+                all_sprites_list.add(current_room.enemy_list)
 
-            # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre en fonction de la couleur de la balle
-            for mob in enemy_hit_list:
-                dmgDone=False
-                
-                # Lorsqu'un ennemie se fait toucher il perd les dégats du joueur si il n'est pas de la m
-                if bullet.color==GRAY:
-                    mob.HP -= player.DMG*0.5
-                    dmgDone=True
-                elif bullet.color!=mob.colorbuff:
-                    mob.HP -= player.DMG*1.5
-                    dmgDone=True
+            if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
+                player.current_room_id = current_room.doors_id["bottom"]
+                all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                current_room = floor[player.current_room_id]
+                player.rect.y = player.rect.height + wall_size
+                all_sprites_list.add(current_room.enemy_list)
 
-                if dmgDone:
+            # Gestions des balles
+            for bullet in bullet_list:
+
+                # Si une balle touche un monstre
+                enemy_hit_list = pygame.sprite.spritecollide(bullet, current_room.enemy_list, False)
+
+                # Pour chaque monstre touché, on supprime la balle et on fait perdre de la vie au monstre en fonction de la couleur de la balle
+                for mob in enemy_hit_list:
+                    dmgDone=False
+                    
+                    # Lorsqu'un ennemie se fait toucher il perd les dégats du joueur si il n'est pas de la m
+                    if bullet.color==GRAY:
+                        mob.HP -= player.DMG*0.5
+                        dmgDone=True
+                    elif bullet.color!=mob.colorbuff:
+                        mob.HP -= player.DMG*1.5
+                        dmgDone=True
+
+                    if dmgDone:
+                        bullet_list.remove(bullet)
+                        all_sprites_list.remove(bullet)
+
+                # On supprime la balle de la liste des sprites si elle sort de l'écran
+                if bullet.rect.y < -10:
                     bullet_list.remove(bullet)
                     all_sprites_list.remove(bullet)
 
-            # On supprime la balle de la liste des sprites si elle sort de l'écran
-            if bullet.rect.y < -10:
-                bullet_list.remove(bullet)
-                all_sprites_list.remove(bullet)
+            # Colision entre joueur et monstre
+            for mob in current_room.enemy_list:
+                if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
+                    player.get_hit = True
+                    player.HP -= mob.DMG
 
-        # Colision entre joueur et monstre
-        for mob in current_room.enemy_list:
-            if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
-                player.get_hit = True
-                player.HP -= mob.DMG
-
-        # Incrementation du delai d'aparition des monstre blanc
-        white_mob_spawn_delay += 1
+            # Incrementation du delai d'aparition des monstre blanc
+            white_mob_spawn_delay += 1
 
 
 
-        # Appelle la méthode update() de tous les Sprites
-        all_sprites_list.update()
+            # Appelle la méthode update() de tous les Sprites
+            all_sprites_list.update()
 
-        # Méthode update de la salle courante pour la gestion des portes
-        current_room.update()
+            # Méthode update de la salle courante pour la gestion des portes
+            current_room.update()
+        
+            # --- Dessiner la frame
+            # Clear the screen
+            screen.fill(WHITE)
+            # Dessine les taches de couleur
+            drawAllTaches(screen, current_room.taches)
+            # Dessine tous les sprites (les blits sur screen)
+            all_sprites_list.draw(screen)
+            # Dessine les murs et portes de la salle courante
+            current_room.wall_list.draw(screen)
+            current_room.door_list.draw(screen)
 
-        # --- Dessiner la frame
-        # Clear the screen
-        screen.fill(WHITE)
-        # Dessine les taches de couleur
-        drawAllTaches(screen, current_room.taches)
-        # Dessine tous les sprites (les blits sur screen)
-        all_sprites_list.draw(screen)
-        # Dessine les murs et portes de la salle courante
-        current_room.wall_list.draw(screen)
-        current_room.door_list.draw(screen)
+            # Affichage HUD
+            draw_HUD(screen)
 
-        # Affichage HUD
-        draw_HUD(screen)
+        #si il y a la map
+        else:
+            activeKey = pygame.key.get_pressed()
+            if not activeKey[K_TAB]:
+                mapOn=False
+            # Clear the screen
+            screen.fill(WHITE)
+            drawMap(screen,floor,allRoomsCoordinates,10)
+        
 
         # Met à jour la fenetre de jeu
         pygame.display.update()

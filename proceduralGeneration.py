@@ -1,45 +1,26 @@
 import pygame, sys
 import random
 from constants import *
-class Room():
-	"""docstring for room"""
-	def __init__(self, id, top=-1, bottom=-1, left=-1, right=-1, difficulty="none"):
-		self.id = id
-		self.doors={"top":top,"bottom":bottom,"left":left,"right":right}
-		self.difficulty=difficulty
+from Room import *
 
-
-	def doorsPossibleToOpen(self):
-		lsDoors=[]
-		for k in self.doors.keys():
-			if self.doors[k]==-1:
-				lsDoors+=[k]
-		return lsDoors
-
-
-	def openDoorFromPreviousRoom(self,previousRoom):
-		res="none"
-		for k in previousRoom.doors:
-			if previousRoom.doors[k]==self.id:
-				res=k
-		relationDoors={"top":"bottom","bottom":"top","left":"right","right":"left"}
-		self.doors[relationDoors[res]]=previousRoom.id
-
-
-
-
-def createPrimaryPathWithError(n):
+def createPrimaryPathWithError(n,player):
 	allRooms={}
 	allRoomsCoordinates={}
 	for i in range(n):
 		#on init la salle
-		currentroom=Room(i)
+		if i == 0: # Pour la première salle (Tuto)
+			currentroom = Room(player, i, difficulty="ultra_easy")
+		else:
+			random_difficulty = random.choices(DIFFICULTIES, weights = [20, 1, 4, 50, 20, 5])[0]
+			currentroom = Room(player, i, difficulty=random_difficulty)
 		coordo=[0,0]
 		#on ouvre sa porte en fonction de la salle précédente
 		if i >0:
 			previousRoom=allRooms[i-1]
 			currentroom.openDoorFromPreviousRoom(previousRoom)
 			coordo=calcCoordinates(previousRoom,currentroom.id,allRoomsCoordinates)
+		
+
 		allRoomsCoordinates[i]=coordo
 		
 		#on ouvre une nouvelle porte si ce n'est pas la dernière salle et si 
@@ -51,16 +32,20 @@ def createPrimaryPathWithError(n):
 				doorsPossible=doorsPossibleToOpenWithCoords(currentroom,i+1,allRoomsCoordinates)
 				#si il y a aucune porte possible, une erreur fait crash l'algo
 				alea=random.choice(doorsPossible)
-			currentroom.doors[alea]=i+1
+			currentroom.doors_id[alea]=i+1
 		allRooms[i]=currentroom
 	return allRooms,allRoomsCoordinates
 
 
-def createPrimaryPath(n):
+
+
+
+
+def createPrimaryPath(n,player):
 	generer=False
 	while not generer:
 		try:
-			allRooms,allRoomsCoordinates = createPrimaryPathWithError(n)
+			allRooms,allRoomsCoordinates = createPrimaryPathWithError(n,player)
 			generer=True
 		except:
 			print("On ressaye de généré")
@@ -69,8 +54,8 @@ def createPrimaryPath(n):
 
 def calcCoordinates(previousRoom,currentroomID,allRoomsCoordinates):
 	#on trouve depuis on on vient
-	for k in previousRoom.doors:
-			if previousRoom.doors[k]==currentroomID:
+	for k in previousRoom.doors_id:
+			if previousRoom.doors_id[k]==currentroomID:
 				fromdoor=k
 	relationDoors={"top":1,"bottom":-1,"left":-1,"right":1}
 	#on calcul les coordonée de currentroom
@@ -86,12 +71,12 @@ def calcCoordinates(previousRoom,currentroomID,allRoomsCoordinates):
 
 def doorsPossibleToOpenWithCoords(currentroom,futurRoomID,allRoomsCoordinates):
 	res=[]
-	for door in currentroom.doors:
+	for door in currentroom.doors_id:
 		#si la porte n'existe pas 
-		if currentroom.doors[door]==-1:
+		if currentroom.doors_id[door]==-1:
 			working=True
 			#on créer une porte vers l'emplacement de la futur salle
-			currentroom.doors[door]=futurRoomID
+			currentroom.doors_id[door]=futurRoomID
 			#on calcul les coordonée de la futur salle
 			coordoFuturRoom=calcCoordinates(currentroom,futurRoomID,allRoomsCoordinates)
 			#on regarde si les coordonnées de la futur salle ne sont pas déjà les coordonnées d'une autre salle
@@ -101,13 +86,13 @@ def doorsPossibleToOpenWithCoords(currentroom,futurRoomID,allRoomsCoordinates):
 				if coordo==coordoFuturRoom:
 					working=False
 			#on supprime la porte
-			currentroom.doors[door]=-1
+			currentroom.doors_id[door]=-1
 			#si les coordonnées sont libres alors on ajoute la possibilité de porte a la liste des possibilités
 			if working:
 				res+=[door]
 	return res
 
-def ExtendPath(primaryPath,allRoomsCoordinates):
+def ExtendPath(primaryPath,allRoomsCoordinates,player):
 	"""Etend le primaryPath avec de nouvelles salles"""
 	bossRoomID=len(primaryPath)-1
 	idUsable=len(primaryPath)
@@ -124,13 +109,20 @@ def ExtendPath(primaryPath,allRoomsCoordinates):
 			doorsChoosed=lsDoorposssibleToOpen[0:nbdoorsChoosed]
 			#on créer une salle après chaque porte choisi
 			for door in doorsChoosed:
-				salle.doors[door]=idUsable
-				extends[idUsable]=Room(idUsable)
+				salle.doors_id[door]=idUsable
+				#on créer la salle
+				random_difficulty = random.choices(DIFFICULTIES, weights = [20, 1, 4, 50, 20, 5])[0]
+				currentroom = Room(player, idUsable, difficulty=random_difficulty)
+				extends[idUsable]=currentroom
 				allRoomsCoordinates[idUsable]=calcCoordinates(salle,idUsable,allRoomsCoordinates)
 				extends[idUsable].openDoorFromPreviousRoom(salle)
 				idUsable+=1
 
 	primaryPath.update(extends)
+	for salle in primaryPath.values():
+		#on créer les murs et les portes
+		salle.walls_creation()
+		salle.doors_creation()
 
 	return allRoomsCoordinates
 
@@ -179,8 +171,8 @@ def drawMap(screen,mapdico,allRoomsCoordinates,n):
 		#draw line 
 		#on trouve on on vas
 		relationDoors={"top":1,"bottom":-1,"left":-1,"right":1}
-		for porte in room.doors:
-				if room.doors[porte]!=-1:
+		for porte in room.doors_id:
+				if room.doors_id[porte]!=-1:
 					#on calcul les coordonée de currentroom
 					if porte=="top":
 						origine=(x+9,y)
@@ -199,8 +191,8 @@ def drawMap(screen,mapdico,allRoomsCoordinates,n):
 	
 
 #tests
-# path,allRoomsCoordinates=createPrimaryPath(8)
-# allRoomsCoordinates=ExtendPath(path,allRoomsCoordinates)
+# path,allRoomsCoordinates=createPrimaryPath(8,player)
+# allRoomsCoordinates=ExtendPath(path,allRoomsCoordinates,player)
 # affichage des données
 # for salle in path.values():
 # 	print(salle.id)
