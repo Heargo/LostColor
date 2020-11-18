@@ -3,7 +3,7 @@ from constants import *
 from pygame.locals import *
 class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="img/monster.png"):
+	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="img/player/player.png"):
 		super().__init__()
 		self.name = name
 		self.x = x
@@ -82,7 +82,7 @@ class Player(pygame.sprite.Sprite):
 				filtre.fill((255, 255, 255, 100))
 				self.image.blit(filtre, filtre_rect)
 			else:
-				self.image = pygame.image.load("img/monster.png")
+				self.image = pygame.image.load("img/player/player.png")
 
 
 			if self.curent_invicibility_frame <= 0:
