@@ -8,10 +8,13 @@ from Room import *
 import random
 from math import sqrt
 from proceduralGeneration import *
+from inventaire import invetoryScreen, Item
 
 def initPartie():
     """Initialise une partie"""
     global player,current_room,floor, allRoomsCoordinates
+
+
 
     # Création du joueur
     player.initStats(6)
@@ -43,6 +46,22 @@ def initSprites():
 
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
+
+
+    #test
+    #items
+    item1=Item(True,"head","helmet","./img/items/helmet.png")
+    item2=Item(True,"belt","belt","./img/items/belt.png")
+    item3=Item(True,"earrings","earrings","./img/items/earrings.png")
+    item4=Item(True,"chest","chestplate","./img/items/armor.png")
+    item5=Item(True,"weapon","wand","./img/items/wand.png")
+    item6=Item(False,-1,"cake au cerise","./img/items/cake.png")
+    item7=Item(False,-1,"tomato","./img/items/tomato.png")
+
+    itemmss =[item1,item2,item3,item4,item5,item6,item7]
+    for item in itemmss:
+        player.inventaire.add(item)
+
 
     # Création des salles
     floor,allRoomsCoordinates = createPrimaryPath(10, player)
@@ -215,6 +234,8 @@ def game(screen,fpsClock):
                     player.colorbuff=RED
                 if event.key == K_TAB :
                     mapOn=True
+                if event.key == K_i:
+                    invetoryScreen(screen,fpsClock,player.inventaire)
 
 
         if not mapOn and player.HP >0:
