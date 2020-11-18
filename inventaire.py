@@ -27,9 +27,13 @@ def draw_text(screen,text, font_name, size, color, x, y, center):
 
 class Item(pygame.sprite.Sprite):
 	"""docstring for Item"""
-	def __init__(self,equipable,slotequipable,name,image="./img/items/item.png"):
+	def __init__(self,equipable,slotequipable,name,shortName="none",image="./img/items/item.png"):
 		super().__init__()
 		self.name=name
+		if shortName=="none":
+			self.shortName=name
+		else:
+			self.shortName = shortName
 		self.x = 0
 		self.y = 0
 		self.slot=-1
@@ -254,6 +258,25 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire):
 			spriteLocked.move(spritePosBeforeLock)
 
 
+
+def checkRightClick(inventaire):
+	mx, my = pygame.mouse.get_pos()
+	for item in inventaire.items:
+		#si on est dessus
+		if item != False and item.hoover(mx,my) and item.slotequipable in inventaire.equipement.keys():
+			#si son emplacement est deja  rempli on switch
+			if inventaire.equipement[item.slotequipable]!=False:
+				switch(item ,inventaire.equipement[item.slotequipable],inventaire)
+			#sinon on le met direct
+			else:
+				#on l'enleve de la ou il était
+				inventaire.remove(item)
+				inventaire.equipement[item.slotequipable] = item
+				item.slot=item.slotequipable
+				item.move((inventaire.equipementSlots[item.slot].rect.x,inventaire.equipementSlots[item.slot].rect.y))
+				
+
+
 def drawInventory(screen):
 	#on dessine les background
 	#inventaire fond
@@ -272,16 +295,51 @@ def drawInventory(screen):
 	draw_text(screen,'Profil', 'fonts/No_Color.ttf', 30, BLACK, 300, 80, True)
 
 
+def drawItemOverlay(screen,mx, my,itemlist,inventaire):
+	
+	hoverAnItem=False
+	for item in itemlist:
+		if item.hoover(mx, my):
+			itemHoover=item
+			hoverAnItem=True
 
+	if hoverAnItem:
+		width=200
+		height=300
 
+		if itemHoover.slot in inventaire.equipement.keys():
+			decalX=0
+			decalXText = 360
+			#on dessine le cadre
+			border = pygame.Rect(mx,my,width+10,height+10)
+			fond = (mx+5,my+5,width,height)
+		else:
+			decalX = -200
+			decalXText = -200
+			#on dessine le cadre
+			border =(mx+decalX-5,my-5,width+10,height+10)
+			fond = (mx+decalX,my,width,height)
+		
+		
+		#on dessine le cadre
+		pygame.draw.rect(screen,(100,64,31),border)
+		pygame.draw.rect(screen,(164,131,80),fond)
 
-# pygame.init()
-# # Definition des FPS
-# fpsClock = pygame.time.Clock()
+		#on recupère l'image du l'item
+		img = pygame.transform.scale(itemHoover.image,(50,50))
+		#on la resize
+		rect = img.get_rect()
+		#on la place en haut à gauche du cadre
+		rect = rect.move((mx+decalX+10, my+10))
+		screen.blit(img, rect)
 
-# # --- Création de la fenetre
-# screen = pygame.display.set_mode((1280, 720))
-# pygame.display.set_caption("test inventaire")
+		#on dessine le nom (titre):
+		if len(itemHoover.name) > 10:
+			txt=itemHoover.shortName
+		else:
+			txt=itemHoover.name
+		draw_text(screen,txt, 'fonts/No_Color.ttf', 20, BLACK, mx+(0.75*(decalXText//2)), my+30, True)
+
 
 
 def invetoryScreen(screen,fpsClock,inventaire):
@@ -352,6 +410,10 @@ def invetoryScreen(screen,fpsClock,inventaire):
 				if event.key == pygame.K_i:
 					inventaireOn=False
 
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not locked:
+				checkRightClick(inventaire)
+				
+
 		# Detection du clic gauche la souris et de sa position
 		activeMouse = pygame.mouse.get_pressed()
 		mx, my = pygame.mouse.get_pos()
@@ -391,5 +453,10 @@ def invetoryScreen(screen,fpsClock,inventaire):
 		drawInventory(screen)
 		# Dessine tous les sprites (les blits sur screen)
 		all_sprites.draw(screen)
+
+		#si besoin on dessine l'overlay de l'item
+		if activeMouse[0] == False:
+			drawItemOverlay(screen,mx, my,itemlist,inventaire)
+
 		pygame.display.update()
 		fpsClock.tick(60)

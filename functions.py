@@ -50,13 +50,13 @@ def initSprites():
 
     #test
     #items
-    item1=Item(True,"head","helmet","./img/items/helmet.png")
-    item2=Item(True,"belt","belt","./img/items/belt.png")
-    item3=Item(True,"earrings","earrings","./img/items/earrings.png")
-    item4=Item(True,"chest","chestplate","./img/items/armor.png")
-    item5=Item(True,"weapon","wand","./img/items/wand.png")
-    item6=Item(False,-1,"cake au cerise","./img/items/cake.png")
-    item7=Item(False,-1,"tomato","./img/items/tomato.png")
+    item1=Item(True,"head","helmet",image="./img/items/helmet.png")
+    item2=Item(True,"belt","belt",image="./img/items/belt.png")
+    item3=Item(True,"earrings","earrings",image="./img/items/earrings.png")
+    item4=Item(True,"chest","chestplate",image="./img/items/armor.png")
+    item5=Item(True,"weapon","wand",image="./img/items/wand.png")
+    item6=Item(False,-1,"cake au cerise",shortName="Cake",image="./img/items/cake.png")
+    item7=Item(False,-1,"tomato",image="./img/items/tomato.png")
 
     itemmss =[item1,item2,item3,item4,item5,item6,item7]
     for item in itemmss:
