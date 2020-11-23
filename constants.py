@@ -7,6 +7,10 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 GRAY = (127, 127, 127)
 BROWN = (58, 29, 0)
+RED2 = (225, 40, 30)
+GREEN2 = (40, 215, 50)
+BLUE2 = (40, 30, 215)
+
 
 #couleurs des taches et des monstres
 COLORS=[RED,GREEN,BLUE]
