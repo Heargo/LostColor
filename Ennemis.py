@@ -80,8 +80,8 @@ class Monstre1(pygame.sprite.Sprite):
     def hp_bar(self):
         """"""
         HP_BAR_STATE = (self.HP * self.rect.width) / self.HP_MAX
-        pygame.draw.rect(self.image, RED, (0, 0, self.HP_BAR_WIDTH, self.HP_BAR_HEIGHT))
-        pygame.draw.rect(self.image, GREEN, (0, 0, HP_BAR_STATE, self.HP_BAR_HEIGHT))
+        pygame.draw.rect(self.image, RED2, (0, 0, self.HP_BAR_WIDTH, self.HP_BAR_HEIGHT))
+        pygame.draw.rect(self.image, GREEN2, (0, 0, HP_BAR_STATE, self.HP_BAR_HEIGHT))
 
 
     def update(self):
