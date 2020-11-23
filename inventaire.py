@@ -327,7 +327,7 @@ def switch(item1,item2,inventaire):
 
 
 
-def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemliste,all_sprites,inventaire):
+def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all_sprites,inventaire):
 	"""verifie si c'est possible de poser l'item la ou il est. Si c'est possible on deplace l'item (ou les items si on inverse de place)
 	ENTREE : 
 	- spriteLocked [Item]
@@ -375,7 +375,7 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemliste,al
 					hoverASlot=True
 		else:
 			inventaire.remove(spriteLocked)
-			itemliste.remove(spriteLocked)
+			itemlist.remove(spriteLocked)
 			all_sprites.remove(spriteLocked)
 
 	if not hoverASlot:
@@ -383,7 +383,7 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemliste,al
 
 
 
-def checkRightClick(inventaire):
+def checkRightClick(inventaire,player,itemlist,all_sprites):
 	mx, my = pygame.mouse.get_pos()
 	#on regarde pour les objets de l'inventaire
 	for item in inventaire.items:
@@ -399,6 +399,15 @@ def checkRightClick(inventaire):
 				inventaire.equipement[item.slotequipable] = item
 				item.slot=item.slotequipable
 				item.move((inventaire.equipementSlots[item.slot].rect.x,inventaire.equipementSlots[item.slot].rect.y))
+		elif item != False and item.hoover(mx,my) and "heal" in item.stats.keys():
+			inventaire.remove(item)
+			itemlist.remove(item)
+			all_sprites.remove(item)
+			#on soigne le joueur
+			player.HP += item.stats["heal"]
+			if player.HP > player.HP_MAX:
+				player.HP = player.HP_MAX
+
 	#on regarde pour les objets de l'equipement
 	for item in inventaire.equipement.values():
 		#si on est dessus
@@ -475,7 +484,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 
 
 
-def invetoryScreen(screen,fpsClock,inventaire):
+def invetoryScreen(screen,fpsClock,inventaire,player):
 	#liste des slots
 	slotslist=pygame.sprite.Group()
 	#liste des items
@@ -548,7 +557,7 @@ def invetoryScreen(screen,fpsClock,inventaire):
 					inventaireOn=False
 
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not locked:
-				checkRightClick(inventaire)
+				checkRightClick(inventaire,player,itemlist,all_sprites)
 				
 
 		# Detection du clic gauche la souris et de sa position

@@ -219,7 +219,7 @@ def game(screen,fpsClock):
                 if event.key == K_TAB :
                     mapOn=True
                 if event.key == K_i:
-                    invetoryScreen(screen,fpsClock,player.inventaire)
+                    invetoryScreen(screen,fpsClock,player.inventaire,player)
 
 
         if not mapOn and player.HP >0:
