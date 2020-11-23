@@ -174,6 +174,7 @@ def switch(item1,item2,inventaire):
 			#on met l'item 1 à la place de l'item 2 
 			item1.slot = slot2
 			item2.slot = slot1
+			print(slot1,slot2)
 			if slot1 in inventaire.equipement.keys():
 				inventaire.items[slot2] = item1
 				item1.move((inventaire.slots[slot2].rect.x,inventaire.slots[slot2].rect.y))
@@ -231,8 +232,8 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire):
 					spriteLocked.slot=slot.id
 					spriteLocked.move((slot.rect.x,slot.rect.y))
 					hoverASlot=True
-			#si on est au dessus du slot et qu'il est plein
-			elif slot.hoover(mx,my) and inventaire.equipement[slot.id]!=False:
+			#si on est au dessus du slot et qu'il est plein et que ce n'est pas le même item
+			elif slot.hoover(mx,my) and inventaire.equipement[slot.id]!=False and spriteLocked!=inventaire.equipement[slot.id]:
 				switched = switch(spriteLocked, inventaire.equipement[slot.id],inventaire)
 				if not switched:
 					spriteLocked.move(spritePosBeforeLock)
@@ -261,6 +262,7 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire):
 
 def checkRightClick(inventaire):
 	mx, my = pygame.mouse.get_pos()
+	#on regarde pour les objets de l'inventaire
 	for item in inventaire.items:
 		#si on est dessus
 		if item != False and item.hoover(mx,my) and item.slotequipable in inventaire.equipement.keys():
@@ -274,6 +276,15 @@ def checkRightClick(inventaire):
 				inventaire.equipement[item.slotequipable] = item
 				item.slot=item.slotequipable
 				item.move((inventaire.equipementSlots[item.slot].rect.x,inventaire.equipementSlots[item.slot].rect.y))
+	#on regarde pour les objets de l'equipement
+	for item in inventaire.equipement.values():
+		#si on est dessus
+		if item != False and item.hoover(mx,my):
+			#si il reste un emplacement vide on l'équipe
+			if inventaire.equipement[item.slotequipable]!=False:
+				inventaire.remove(item)
+				inventaire.add(item)
+
 				
 
 
