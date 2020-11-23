@@ -2,32 +2,11 @@ import pygame, sys
 from pygame.locals import *
 #from functions import draw_text
 from constants import *
-
-
-
-
-
-
-
-def draw_text(screen,text, font_name, size, color, x, y, center):
-    """"""
-    font = pygame.font.Font(font_name, size)
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    if center:
-        text_rect.centerx = x
-        text_rect.centery = y
-    else:
-        text_rect.x = x
-        text_rect.y = y
-
-    screen.blit(text_surface, text_rect)
-
-
+from random import choice, choices, randint
 
 class Item(pygame.sprite.Sprite):
 	"""docstring for Item"""
-	def __init__(self,equipable,slotequipable,name,shortName="none",image="./img/items/item.png"):
+	def __init__(self,equipable,slotequipable,name,shortName="none",image="./img/items/item.png",grade="commun",price=0.1,stats={},description="none"):
 		super().__init__()
 		self.name=name
 		if shortName=="none":
@@ -47,6 +26,11 @@ class Item(pygame.sprite.Sprite):
 		self.rect.x = self.x 
 		self.rect.y = self.y
 
+		#caractéristiques
+		self.grade = grade
+		self.price = price
+		self.stats = stats
+		self.description = description
 
 	def hoover(self, mx, my):
 		if self.rect.collidepoint(mx, my):
@@ -61,6 +45,134 @@ class Item(pygame.sprite.Sprite):
 	def move(self,pos):
 		self.rect.x = pos[0]
 		self.rect.y = pos[1]
+
+
+	def info(self):
+		infos=("Nom : {0}\nLevel : {1}\nGrade : {9}\nprix : {2}\nstackable : {3}\nStatistiques : {4}\nDurabilité : {5}/{6}\ndescription : {7}\neffet : {8}")
+		print(infos.format(self.name,self.lvl,to_gold(self.price),self.stackable,self.stats,self.durabilite[0],self.durabilite[1],self.description,self.effect,self.grade))
+		return infos
+
+	def minimalInfo(self):
+		infos=f" *Lvl {self.lvl}*\n**Stats :** {self.stats}\n**Durabilité :** {self.durabilite[0]}/{self.durabilite[1]}\n**effet :** {self.effect}\n"
+		return infos
+
+
+
+
+
+def to_gold(price,lang="fr",emojis="none"):
+	"""converted a float with 4 decimal max into gold, silver and bronze
+	1.4586 = 1 gold 45 silver and 86 bronze"""
+	gold = int(price//1)
+	silver = int(100*(price%1))
+	copper = round(((100*(price%1))%1)*100)
+	#print(gold,"gold",silver,"silver and",copper,"copper")
+	if lang=="fr":
+		res = str(gold)+" or "+str(silver)+" argent "+str(copper)+" cuivre "
+	elif lang=="eng":
+		res = str(gold)+" gold "+str(silver)+" silver "+str(copper)+" copper "
+	elif lang=="discord":
+		res = f"{gold} {emojis[0]}  {silver} {emojis[1]}  {copper} {emojis[2]}"
+	return res
+
+def random_key(dico):
+	"""pick a random key of a dictionary"""
+	liste=[]
+	for k in dico.keys():
+		liste+=[k]
+	return random.choice(liste)
+
+def createRandomItem():
+	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":1,"tps":1,},description="Une baguette magique...")
+		]
+	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":1,"shot_speed":1},description="Une orbe magique...")
+	]
+	#"weaponbis":WEAPONSBIS,
+	DICOEQUIPEMENT={
+			"weapon":WEAPONS,
+			"head": [Item(equipable=True,slotequipable="head",name="casque",shortName="casque",image="./img/items/head_commun.png",grade="commun",price=0.1,stats={"hp":1},description="Un casque...")],
+			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=0.1,stats={"hp":1},description="Un plastron...")],
+			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=0.1,stats={"hp":1,"tps":1},description="Une paire de gants...")],
+			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=0.1,stats={"hp":1,"speed":1},description="Des bottes...")],
+			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=0.1,stats={"dmg":1},description="Un casque...")],
+			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=0.1,stats={"shot_speed":1},description="Un casque...")]
+			}
+	#on choisi si l'item sera un item equipable ou pas
+	equipable=choices([True,False], weights=[10,90])[0]
+	if equipable:
+		slotequipable=choice(["head","chest","glove","boot","weapon","earrings","belt"])
+
+	#si il est equipable
+	if equipable:
+		basicStats={"hp":100,"dmg":12,"speed":6,"tps":2,"shot_speed":8}
+		#on prend un item de référence
+		item = choice(DICOEQUIPEMENT[slotequipable])
+
+		#on choisi un grade
+		grade = choices(["commun","rare","mythique","légendaire"], weights = [50,45,4,1])[0]
+
+		#en fonction du grade on modifie les stats
+		gradeFactor = {"commun":1,"rare":1.5,"mythique":2,"légendaire":3}
+		for k in item.stats.keys():
+			item.stats[k] = gradeFactor[grade] * item.stats[k]
+		#en fonction du grade on modifie le prix
+		gradeFactor ={"commun":1,"rare":8,"mythique":16,"légendaire":32}
+		for k in item.stats:
+			item.price = gradeFactor[grade] * item.price
+		#en fonction du grade on change l'image
+		if item.slotequipable not in ["weapon","weaponbis"]:
+			item.image = pygame.image.load("./img/items/"+item.slotequipable+"_"+grade+".png")
+		else:
+			item.image = pygame.image.load("./img/items/"+item.shortName+"_"+grade+".png")
+	#si il n'est pas equipable
+	else:
+		lsPlants=[]
+		for i in range(1,49):
+			lsPlants+=[str(i)]
+		dicNameImg={
+		"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
+		"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
+		"plants":lsPlants
+		}
+		categorie=choice(["food","misc","plants"])
+		itemname=choice(dicNameImg[categorie])
+		#on set le prix
+		prix=randint(1,50)/100
+		#on set les stats si possible
+		if categorie=="food":
+			stats={"heal":5}
+		else:
+			stats={}
+
+		item = Item(equipable=False,slotequipable=-1,name=itemname,shortName=itemname,image="./img/"+categorie+"/"+itemname+".png",grade="commun",price=prix,stats=stats,description="Un item pouvant s'avérer utile")
+
+		if categorie=="plants":
+			#on recupère l'image du l'item
+			item.image = pygame.transform.scale(item.image,(64,64))
+			#on la resize
+			item.rect = item.image.get_rect()
+
+
+	return item
+
+
+
+def draw_text(screen,text, font_name, size, color, x, y, center):
+    """"""
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    if center:
+        text_rect.centerx = x
+        text_rect.centery = y
+    else:
+        text_rect.x = x
+        text_rect.y = y
+
+    screen.blit(text_surface, text_rect)
+
+
+
 
 
 class Slot(pygame.sprite.Sprite):
@@ -153,6 +265,12 @@ class Inventory(object):
 			else:
 				self.equipementSlots[slot].image =  pygame.image.load("./img/slots/"+slot+".png")
 
+	def numOfItems(self):
+		res=0
+		for i in self.items:
+			if i !=False:
+				res+=1
+		return res
 
 
 
@@ -209,7 +327,7 @@ def switch(item1,item2,inventaire):
 
 
 
-def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire):
+def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemliste,all_sprites,inventaire):
 	"""verifie si c'est possible de poser l'item la ou il est. Si c'est possible on deplace l'item (ou les items si on inverse de place)
 	ENTREE : 
 	- spriteLocked [Item]
@@ -220,40 +338,45 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire):
 	hoverASlot=False
 	#on regarde chaque slot
 	for slot in slotslist:
-		#si c'est un slot de l'equipement
-		if slot.id in inventaire.equipementSlots.keys():
-			#si on est au dessus du slot et qu'il est vide
-			if slot.hoover(mx,my) and inventaire.equipement[slot.id]==False:
-				#si il est equipable sur ce slot
-				if spriteLocked.equipable and spriteLocked.slotequipable==slot.id:
+		if slot.id !="bin":
+			#si c'est un slot de l'equipement
+			if slot.id in inventaire.equipementSlots.keys():
+				#si on est au dessus du slot et qu'il est vide
+				if slot.hoover(mx,my) and inventaire.equipement[slot.id]==False:
+					#si il est equipable sur ce slot
+					if spriteLocked.equipable and spriteLocked.slotequipable==slot.id:
+						#on l'enleve de la ou il était
+						inventaire.remove(spriteLocked)
+						inventaire.equipement[slot.id] = spriteLocked
+						spriteLocked.slot=slot.id
+						spriteLocked.move((slot.rect.x,slot.rect.y))
+						hoverASlot=True
+				#si on est au dessus du slot et qu'il est plein et que ce n'est pas le même item
+				elif slot.hoover(mx,my) and inventaire.equipement[slot.id]!=False and spriteLocked!=inventaire.equipement[slot.id]:
+					switched = switch(spriteLocked, inventaire.equipement[slot.id],inventaire)
+					if not switched:
+						spriteLocked.move(spritePosBeforeLock)
+					hoverASlot=True
+			else:
+				#si on est au dessus du slot et qu'il est vide
+				if slot.hoover(mx,my) and inventaire.items[slot.id]==False:
 					#on l'enleve de la ou il était
 					inventaire.remove(spriteLocked)
-					inventaire.equipement[slot.id] = spriteLocked
+					inventaire.items[slot.id] = spriteLocked
 					spriteLocked.slot=slot.id
 					spriteLocked.move((slot.rect.x,slot.rect.y))
 					hoverASlot=True
-			#si on est au dessus du slot et qu'il est plein et que ce n'est pas le même item
-			elif slot.hoover(mx,my) and inventaire.equipement[slot.id]!=False and spriteLocked!=inventaire.equipement[slot.id]:
-				switched = switch(spriteLocked, inventaire.equipement[slot.id],inventaire)
-				if not switched:
-					spriteLocked.move(spritePosBeforeLock)
-				hoverASlot=True
-		else:
-			#si on est au dessus du slot et qu'il est vide
-			if slot.hoover(mx,my) and inventaire.items[slot.id]==False:
-				#on l'enleve de la ou il était
-				inventaire.remove(spriteLocked)
-				inventaire.items[slot.id] = spriteLocked
-				spriteLocked.slot=slot.id
-				spriteLocked.move((slot.rect.x,slot.rect.y))
-				hoverASlot=True
 
-			#si on est au dessus du slot et qu'il est plein
-			elif slot.hoover(mx,my) and inventaire.items[slot.id]!=False:
-				switched = switch(spriteLocked ,inventaire.items[slot.id],inventaire)
-				if not switched:
-					spriteLocked.move(spritePosBeforeLock)
-				hoverASlot=True
+				#si on est au dessus du slot et qu'il est plein
+				elif slot.hoover(mx,my) and inventaire.items[slot.id]!=False:
+					switched = switch(spriteLocked ,inventaire.items[slot.id],inventaire)
+					if not switched:
+						spriteLocked.move(spritePosBeforeLock)
+					hoverASlot=True
+		else:
+			inventaire.remove(spriteLocked)
+			itemliste.remove(spriteLocked)
+			all_sprites.remove(spriteLocked)
 
 	if not hoverASlot:
 			spriteLocked.move(spritePosBeforeLock)
@@ -294,7 +417,6 @@ def drawInventory(screen):
 	pygame.draw.rect(screen,(164,131,80),(690,40,505,635))
 	#inventaire bords
 	pygame.draw.rect(screen,(100,64,31),(690,40,505,635),5)
-
 	#profil fond
 	pygame.draw.rect(screen,(164,131,80),(50,40,505,635))
 	#profil bords
@@ -375,7 +497,8 @@ def invetoryScreen(screen,fpsClock,inventaire):
 		slotslist.add(slot)
 	for slot in inventaire.equipementSlots.values():
 		slotslist.add(slot)
-
+	binSlot = Slot("bin",1100,100,image="./img/slots/bin.png")
+	slotslist.add(binSlot)
 	#de meme avec les items
 	for item in inventaire.items:
 		if item !=False:
@@ -383,6 +506,7 @@ def invetoryScreen(screen,fpsClock,inventaire):
 	for item in inventaire.equipement.values():
 		if item !=False:
 			itemlist.add(item)
+
 
 
 	######
@@ -413,11 +537,13 @@ def invetoryScreen(screen,fpsClock,inventaire):
 				sys.exit()
 			# Detection d'utilisation du clavier pour faire spawner 3 monstres
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_q:
-					item=Item(True,"head","helmet2","./img/items/helmet.png")
+				if event.key == pygame.K_q and inventaire.numOfItems() < inventaire.size:
+					item=createRandomItem()
 					itemlist.add(item)
 					all_sprites.add(item)
 					inventaire.add(item)
+					print(item.name,item.slot,item.price)
+
 				if event.key == pygame.K_i:
 					inventaireOn=False
 
@@ -449,7 +575,7 @@ def invetoryScreen(screen,fpsClock,inventaire):
 			#si on avait un item
 			if locked : 
 				#on verifie si c'est possible de poser l'item la ou il est. Si c'est possible on deplace l'item (ou les items si on inverse de place)
-				checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,inventaire)
+				checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all_sprites,inventaire)
 				locked=False
 				spritePosBeforeLock=0
 				spriteLocked=-1

@@ -47,22 +47,6 @@ def initSprites():
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
-
-    #test
-    #items
-    item1=Item(True,"head","helmet",image="./img/items/helmet.png")
-    item2=Item(True,"belt","belt",image="./img/items/belt.png")
-    item3=Item(True,"earrings","earrings",image="./img/items/earrings.png")
-    item4=Item(True,"chest","chestplate",image="./img/items/armor.png")
-    item5=Item(True,"weapon","wand",image="./img/items/wand.png")
-    item6=Item(False,-1,"cake au cerise",shortName="Cake",image="./img/items/cake.png")
-    item7=Item(False,-1,"tomato",image="./img/items/tomato.png")
-
-    itemmss =[item1,item2,item3,item4,item5,item6,item7]
-    for item in itemmss:
-        player.inventaire.add(item)
-
-
     # Création des salles
     floor,allRoomsCoordinates = createPrimaryPath(10, player)
     allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
