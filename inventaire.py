@@ -248,7 +248,7 @@ class Inventory(object):
 			if self.items[i] ==False:
 				self.items[i] = item
 				item.slot=i
-				item.move((self.slots[i].rect.x,self.slots[i].rect.y))
+				item.move((self.slots[i].rect.x+5,self.slots[i].rect.y+5))
 				added=True
 			i+=1
 
@@ -399,7 +399,7 @@ def checkRightClick(inventaire,player,itemlist,all_sprites):
 				inventaire.equipement[item.slotequipable] = item
 				item.slot=item.slotequipable
 				item.move((inventaire.equipementSlots[item.slot].rect.x,inventaire.equipementSlots[item.slot].rect.y))
-		elif item != False and item.hoover(mx,my) and "heal" in item.stats.keys():
+		elif item != False and item.hoover(mx,my) and "heal" in item.stats.keys() and player.HP < player.HP_MAX:
 			inventaire.remove(item)
 			itemlist.remove(item)
 			all_sprites.remove(item)

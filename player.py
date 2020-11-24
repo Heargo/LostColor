@@ -4,7 +4,7 @@ from pygame.locals import *
 from inventaire import Inventory
 class Player(pygame.sprite.Sprite):
 	"""docstring for Player"""
-	def __init__(self, name="Coloro",x=0,y=0,speed=3, image="img/player/player.png"):
+	def __init__(self, name="Coloro",x=0,y=0, image="img/player/player.png"):
 		super().__init__()
 		self.name = name
 		self.x = x
@@ -17,19 +17,27 @@ class Player(pygame.sprite.Sprite):
 		self.rect.y = self.y
 
 		self.inventaire = Inventory(64)
-		self.initStats(speed)
+		self.initStats()
 
-	def initStats(self,speed):
+	def initStats(self):
 		# Statistiques du joueur
-		self.HP_MAX = 100
+		self.HP_MAX = PLAYER_HP
 		self.HP = self.HP_MAX
-		self.DMG = 12
-		self.tps = 2  # Tire par seconde
+		self.DMG = PLAYER_DMG
+		self.tps = PLAYER_TPS  # Tire par seconde
 		self.cooldown = FPS // self.tps
 		self.cooldown_max = FPS // self.tps
-		self.shot_speed = 8
-		self.speed = speed
+		self.shot_speed = PLAYER_SHOOT_SPEED
+		self.speed = PLAYER_SPEED
 		self.colorbuff= GRAY
+
+		#bonus
+		self.HP_MAX_bonus = 0
+		self.DMG_bonus = 0
+		self.tps_bonus = 0  # Tire par seconde
+		self.shot_speed_bonus = 0
+		self.speed_bonus = 0
+
 
 		# Gestion de l'invincibilité apres avoir recus un coup
 		self.get_hit = False
@@ -39,6 +47,24 @@ class Player(pygame.sprite.Sprite):
 
 		# Gestion salle
 		self.current_room_id = 0
+
+	def updateStats(self):
+		#on stocke les effets des items équipés
+		effetsItems={"hp":0,"dmg":0,"tps":0,"speed":0,"shot_speed":0}
+		for item in self.inventaire.equipement.values():
+			if item!=False:
+				for stat in item.stats:
+					effetsItems[stat]+=item.stats[stat]
+
+		#on met a jour les stats en prenant en compte les bonus 
+		self.HP_MAX = PLAYER_HP + self.HP_MAX_bonus + effetsItems["hp"]
+		self.DMG = PLAYER_DMG + self.DMG_bonus + effetsItems["dmg"]
+		self.tps = PLAYER_TPS  + self.tps_bonus  +effetsItems["tps"]
+		self.shot_speed = PLAYER_SHOOT_SPEED +self.shot_speed_bonus + effetsItems["shot_speed"]
+		self.speed = PLAYER_SPEED +self.speed_bonus + effetsItems["speed"]
+
+		self.cooldown = FPS // self.tps
+		self.cooldown_max = FPS // self.tps
 
 	def pos(self):
 

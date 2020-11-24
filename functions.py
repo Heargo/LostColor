@@ -17,7 +17,7 @@ def initPartie():
 
 
     # Création du joueur
-    player.initStats(6)
+    player.initStats()
 
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
@@ -42,7 +42,7 @@ def initSprites():
 
     # --- Creation des Sprites
     # Création du joueur
-    player = Player("Test", 0, 0, 6)
+    player = Player("Test", 0, 0)
 
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
@@ -220,6 +220,7 @@ def game(screen,fpsClock):
                     mapOn=True
                 if event.key == K_i:
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
+                    player.updateStats()
 
 
         if not mapOn and player.HP >0:

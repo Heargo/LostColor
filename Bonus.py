@@ -20,21 +20,21 @@ class Bonus(pygame.sprite.Sprite):
         """"""
         if(pygame.sprite.collide_rect(self, self.gatherer)):
             if (self.bonus_type == "dmg"):
-                self.gatherer.DMG += 2
+                self.gatherer.DMG_bonus += 2
             elif (self.bonus_type == "heal"):
                 self.gatherer.HP += 20
                 if self.gatherer.HP > self.gatherer.HP_MAX:
                     self.gatherer.HP = self.gatherer.HP_MAX
             elif (self.bonus_type == "hp_max"):
-                self.gatherer.HP_MAX += 10
-                self.gatherer.HP += 10
+                self.gatherer.HP_MAX_bonus += 10
+                #self.gatherer.HP += 10
             elif (self.bonus_type == "shot_speed"):
-                self.gatherer.shot_speed += 1
+                self.gatherer.shot_speed_bonus += 1
             elif (self.bonus_type == "speed"):
-                self.gatherer.speed += 1
+                self.gatherer.speed_bonus += 1
             elif (self.bonus_type == "tps"):
-                self.gatherer.tps += 0.5
-
+                self.gatherer.tps_bonus += 0.5
+            self.gatherer.updateStats()
             self.taken = True
             self.kill()
 
