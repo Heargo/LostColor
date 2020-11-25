@@ -38,3 +38,6 @@ BONUS_TYPE = ("dmg", "tps", "heal", "hp_max", "shot_speed", "speed")
 # Liste des difficultés
 DIFFICULTIES = ["peaceful", "ultra_easy", "easy", "medium", "hard", "ultra_hard"]
 DIFFICULTIESWEIGHTS=[10,8,6,4,1,1]
+
+#relation couleur/grade
+COLOR_OF_GRADE={"commun":(176, 176, 176),"rare":(123, 212, 220),"mythique":(136, 77, 155),"légendaire":(230, 185, 45)}

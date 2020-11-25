@@ -49,12 +49,8 @@ class Item(pygame.sprite.Sprite):
 
 	def info(self):
 		infos=("Nom : {0}\nLevel : {1}\nGrade : {9}\nprix : {2}\nstackable : {3}\nStatistiques : {4}\nDurabilité : {5}/{6}\ndescription : {7}\neffet : {8}")
-		print(infos.format(self.name,self.lvl,to_gold(self.price),self.stackable,self.stats,self.durabilite[0],self.durabilite[1],self.description,self.effect,self.grade))
 		return infos
-
-	def minimalInfo(self):
-		infos=f" *Lvl {self.lvl}*\n**Stats :** {self.stats}\n**Durabilité :** {self.durabilite[0]}/{self.durabilite[1]}\n**effet :** {self.effect}\n"
-		return infos
+		
 
 
 
@@ -110,7 +106,7 @@ def createRandomItem():
 
 		#on choisi un grade
 		grade = choices(["commun","rare","mythique","légendaire"], weights = [50,45,4,1])[0]
-
+		item.grade=grade
 		#en fonction du grade on modifie les stats
 		gradeFactor = {"commun":1,"rare":1.5,"mythique":2,"légendaire":3}
 		for k in item.stats.keys():
@@ -292,7 +288,6 @@ def switch(item1,item2,inventaire):
 			#on met l'item 1 à la place de l'item 2 
 			item1.slot = slot2
 			item2.slot = slot1
-			print(slot1,slot2)
 			if slot1 in inventaire.equipement.keys():
 				inventaire.items[slot2] = item1
 				item1.move((inventaire.slots[slot2].rect.x,inventaire.slots[slot2].rect.y))
@@ -449,18 +444,27 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 		width=200
 		height=300
 
+		if my > SCREEN_HEIGHT-250:
+			decalY=-300
+		else:
+			decalY=0
+
 		if itemHoover.slot in inventaire.equipement.keys():
 			decalX=0
 			decalXText = 360
+			factTextStat = 0.10
 			#on dessine le cadre
-			border = pygame.Rect(mx,my,width+10,height+10)
-			fond = (mx+5,my+5,width,height)
+			border = pygame.Rect(mx,my+decalY,width+10,height+10)
+			fond = (mx+5,my+5+decalY,width,height)
 		else:
 			decalX = -200
 			decalXText = -200
+			factTextStat = -0.9
 			#on dessine le cadre
-			border =(mx+decalX-5,my-5,width+10,height+10)
-			fond = (mx+decalX,my,width,height)
+			border =(mx+decalX-5,my-5+decalY,width+10,height+10)
+			fond = (mx+decalX,my+decalY,width,height)
+
+
 		
 		
 		#on dessine le cadre
@@ -472,7 +476,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 		#on la resize
 		rect = img.get_rect()
 		#on la place en haut à gauche du cadre
-		rect = rect.move((mx+decalX+10, my+10))
+		rect = rect.move((mx+decalX+10, my+10+decalY))
 		screen.blit(img, rect)
 
 		#on dessine le nom (titre):
@@ -480,7 +484,26 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 			txt=itemHoover.shortName
 		else:
 			txt=itemHoover.name
-		draw_text(screen,txt, 'fonts/No_Color.ttf', 20, BLACK, mx+(0.75*(decalXText//2)), my+30, True)
+		draw_text(screen,txt, 'fonts/No_Color.ttf', 20, BLACK, mx+(0.75*(decalXText//2)), my+30+decalY, True)
+
+		#le grade
+		draw_text(screen,itemHoover.grade, 'fonts/No_Color.ttf', 10, COLOR_OF_GRADE[itemHoover.grade], mx+(0.75*(decalXText//2)), my+50+decalY, True)
+
+		#les stats
+		i=0
+		for stat in itemHoover.stats.keys():
+			txt=stat+" : "+str(itemHoover.stats[stat])
+			color=BLACK
+			if itemHoover.slotequipable in inventaire.equipement.keys():
+				if inventaire.equipement[itemHoover.slotequipable]!=False and inventaire.equipement[itemHoover.slotequipable].stats[stat] < itemHoover.stats[stat]:
+					color = GREEN
+				elif inventaire.equipement[itemHoover.slotequipable]!=False and inventaire.equipement[itemHoover.slotequipable].stats[stat] > itemHoover.stats[stat]:
+					color = RED
+			draw_text(screen,txt, 'fonts/No_Color.ttf', 12, color, mx+(factTextStat*200), my+100+(i*15)+decalY, False)
+			i+=1
+		draw_text(screen,itemHoover.description, 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY, False)
+		
+		
 
 
 
@@ -551,7 +574,6 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 					itemlist.add(item)
 					all_sprites.add(item)
 					inventaire.add(item)
-					print(item.name,item.slot,item.price)
 
 				if event.key == pygame.K_i:
 					inventaireOn=False

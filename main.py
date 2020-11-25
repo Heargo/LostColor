@@ -8,7 +8,6 @@ import math
 pygame.init()
 # Definition des FPS
 fpsClock = pygame.time.Clock()
-
 # --- Création de la fenetre
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('LostColor')
