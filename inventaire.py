@@ -333,6 +333,7 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all
 	hoverASlot=False
 	#on regarde chaque slot
 	for slot in slotslist:
+
 		if slot.id !="bin":
 			#si c'est un slot de l'equipement
 			if slot.id in inventaire.equipementSlots.keys():
@@ -368,7 +369,8 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all
 					if not switched:
 						spriteLocked.move(spritePosBeforeLock)
 					hoverASlot=True
-		else:
+		elif slot.hoover(mx,my) and slot.id =="bin":
+			print("la si ")
 			inventaire.remove(spriteLocked)
 			itemlist.remove(spriteLocked)
 			all_sprites.remove(spriteLocked)
