@@ -30,7 +30,7 @@ def initPartie():
     current_room = floor[player.current_room_id]
 
 def initSprites():
-    global all_sprites_list,enemy_list,bullet_list,player,current_room_no,current_room,floor, allRoomsCoordinates
+    global all_sprites_list,enemy_list,bullet_list,loots_list,player,current_room_no,current_room,floor, allRoomsCoordinates
     # --- Listes de Sprites
     # Ceci est la liste de tous les sprites. Tous les ennemis et le joueur aussi.
     # Un groupe de sprite LayeredUpdates possede en plus un ordre (pour l'affichage)
@@ -40,6 +40,8 @@ def initSprites():
     # Liste des balles
     bullet_list = pygame.sprite.Group()
 
+    #liste des loots
+    loots_list = pygame.sprite.Group()
     # --- Creation des Sprites
     # Création du joueur
     player = Player("Test", 0, 0)
@@ -56,6 +58,7 @@ def initSprites():
 
 
     # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
+    all_sprites_list.add(loots_list)
     all_sprites_list.add(current_room.enemy_list)
     all_sprites_list.add(bullet_list)
     all_sprites_list.add(player)
@@ -221,6 +224,8 @@ def game(screen,fpsClock):
                 if event.key == K_i:
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
                     player.updateStats()
+                if event.key == K_f:
+                    checkRecupLoot(all_sprites_list,loots_list,player)
 
 
         if not mapOn and player.HP >0:
@@ -238,6 +243,8 @@ def game(screen,fpsClock):
 
             # on change la couleur du joueur en fonction de la position
             setColorPlayerFromPosition(current_room.taches, player)
+
+
 
 
             # Si la salle contient des monstres de couleurs et que le delai d'aparition est bon on fait aparaitre
@@ -329,6 +336,8 @@ def game(screen,fpsClock):
                     if dmgDone:
                         bullet_list.remove(bullet)
                         all_sprites_list.remove(bullet)
+                        mob.checkdead(loots_list,all_sprites_list)
+                        print(loots_list)
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran
                 if bullet.rect.y < -10:
@@ -473,7 +482,7 @@ def estDansCercle(Cercle, M):
 def estDansEnsembleCercles(ensemble,M):
     n = len(ensemble)
     bool = False
-    for i in range(n):
+    for i in range(n-1):
         if estDansCercle(ensemble[i], M):
             bool = True
             break
@@ -492,3 +501,17 @@ def setColorPlayerFromPosition(taches,player):
             color=taches[i][1]
         i+=1
     player.colorbuff = color
+
+
+def checkRecupLoot(all_sprites_list,loots_list,player):
+    for item in loots_list:
+        if pygame.sprite.collide_rect(item, player):
+            spaceAvailable=False
+            for itemInv in player.inventaire.items:
+                if itemInv==False:
+                    spaceAvailable=True
+            if spaceAvailable:
+                loots_list.remove(item)
+                all_sprites_list.remove(item)
+                item.resetImage()
+                player.inventaire.add(item)

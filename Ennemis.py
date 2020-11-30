@@ -2,6 +2,7 @@ import pygame, math, random
 from constants import *
 from pygame.locals import *
 from random import randint
+from inventaire import generateLoot
 
 class Monstre1(pygame.sprite.Sprite):
     """ Cette classe represente les objets Monstre1"""
@@ -77,7 +78,7 @@ class Monstre1(pygame.sprite.Sprite):
 
         return angle
 
-    def hp_bar(self):
+    def hp_bar(self,):
         """"""
         HP_BAR_STATE = (self.HP * self.rect.width) / self.HP_MAX
         pygame.draw.rect(self.image, RED2, (0, 0, self.HP_BAR_WIDTH, self.HP_BAR_HEIGHT))
@@ -113,4 +114,8 @@ class Monstre1(pygame.sprite.Sprite):
         # ce qui le retire de tous les Groupes (all_sprite_list,...)
         if self.HP <= 0:
             self.kill()
+    
+    def checkdead(self,loots_list,all_sprites_list):
+        if self.HP <=0:
+            generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
 

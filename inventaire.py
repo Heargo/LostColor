@@ -22,6 +22,7 @@ class Item(pygame.sprite.Sprite):
 		else:
 			self.slotequipable=-1
 		self.image = pygame.image.load(image)
+		self.imagePath=image
 		self.rect = self.image.get_rect()
 		self.rect.x = self.x 
 		self.rect.y = self.y
@@ -38,6 +39,12 @@ class Item(pygame.sprite.Sprite):
 		else:
 			is_hoover = False
 		return is_hoover
+
+	def resetImage(self):
+		self.image = pygame.image.load(self.imagePath)
+		#on rezise a 64*64 pixel
+		self.image = pygame.transform.scale(self.image,(64,64))
+		self.rect = self.image.get_rect()
 
 	def pos(self):
 		return (self.rect.x,self.rect.y)
@@ -320,6 +327,21 @@ def switch(item1,item2,inventaire):
 		res = True
 	return res
 
+def generateLoot(x,y,loots_list,all_sprites_list):
+	item = createRandomItem()
+
+	#on recupère l'image du l'item
+	img = pygame.transform.scale(item.image,(32,32))
+	#on récup le rect
+	rect = img.get_rect()
+	item.image = img
+	item.rect = rect
+	#on la place correctement
+	item.move((x,y))
+
+	#on le met dans la liste des loots
+	loots_list.add(item)
+	all_sprites_list.add(item)
 
 
 def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all_sprites,inventaire):
@@ -370,7 +392,6 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all
 						spriteLocked.move(spritePosBeforeLock)
 					hoverASlot=True
 		elif slot.hoover(mx,my) and slot.id =="bin":
-			print("la si ")
 			inventaire.remove(spriteLocked)
 			itemlist.remove(spriteLocked)
 			all_sprites.remove(spriteLocked)
