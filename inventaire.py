@@ -147,7 +147,7 @@ def createRandomItem():
 		else:
 			stats={}
 
-		item = Item(equipable=False,slotequipable=-1,name=itemname,shortName=itemname,image="./img/"+categorie+"/"+itemname+".png",grade="commun",price=prix,stats=stats,description="Un item pouvant s'avérer utile")
+		item = Item(equipable=False,slotequipable=-1,name=itemname,shortName=itemname,image="./img/"+categorie+"/"+itemname+".png",grade="commun",price=prix,stats=stats,description="Un item pouvant s'avérer utile. Vous pouvez le vendre à un marchant.")
 
 		if categorie=="plants":
 			#on recupère l'image du l'item
@@ -524,8 +524,20 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 					color = RED
 			draw_text(screen,txt, 'fonts/No_Color.ttf', 12, color, mx+(factTextStat*200), my+100+(i*15)+decalY, False)
 			i+=1
-		draw_text(screen,itemHoover.description, 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY, False)
-		
+
+		#la description
+		lenLigne=22
+		nblignes=int(len(itemHoover.description)/(lenLigne+1))
+		startletter=0
+		for j in range(nblignes+2):
+			if j <nblignes:
+				if itemHoover.description[startletter+lenLigne]!=" ":
+					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne]+"-", 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+				else:
+					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+			else:
+				draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+			startletter+=lenLigne
 		
 
 
