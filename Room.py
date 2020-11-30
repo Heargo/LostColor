@@ -73,6 +73,8 @@ class Room(object):
         self.visited=False
         # Bonus de la salle
         self.bonus = Bonus(BONUS_TYPE[randint(0, 5)], player)
+        #liste des items sur le sol de la salle
+        self.loots=pygame.sprite.Group()
         # Création d'un monstre
         self.spawnMonsters(difficulty, player)
 

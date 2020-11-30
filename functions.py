@@ -41,8 +41,7 @@ def initSprites():
     # Liste des balles
     bullet_list = pygame.sprite.Group()
 
-    #liste des loots
-    loots_list = pygame.sprite.Group()
+    
     # --- Creation des Sprites
     # Création du joueur
     player = Player("Test", 0, 0)
@@ -56,8 +55,8 @@ def initSprites():
 
     # Salle courante (ou est le joueur est)
     current_room = floor[player.current_room_id]
-
-
+    #liste des loots
+    loots_list = pygame.sprite.Group()
     # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
     all_sprites_list.add(loots_list)
     all_sprites_list.add(current_room.enemy_list)
@@ -176,6 +175,7 @@ def game(screen,fpsClock):
     playing = True
     mapOn=False
     white_mob_spawn_delay = 0
+    loots_list=current_room.loots
     while playing:
         click=False
         current_room.visited=True
@@ -291,11 +291,15 @@ def game(screen,fpsClock):
             # Gestions du changement de salle
             if player.rect.x < -player.rect.width:  # Le joueur va à gauche
                 player.current_room_id = current_room.doors_id["left"]
+                current_room.loots = loots_list
                 all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
                 all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
                 current_room = floor[player.current_room_id]
                 player.rect.x = SCREEN_WIDTH - player.rect.width - wall_size
+                loots_list = current_room.loots 
+                all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
+
 
             if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
                 player.current_room_id = current_room.doors_id["right"]
@@ -303,6 +307,8 @@ def game(screen,fpsClock):
                 all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
                 current_room = floor[player.current_room_id]
                 player.rect.x = player.rect.width + wall_size
+                loots_list = current_room.loots 
+                all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
 
             if player.rect.y < -player.rect.height:  # Le joueur va en haut
@@ -311,6 +317,8 @@ def game(screen,fpsClock):
                 all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
                 current_room = floor[player.current_room_id]
                 player.rect.y = SCREEN_HEIGHT - player.rect.height - wall_size
+                loots_list = current_room.loots 
+                all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
 
             if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
@@ -319,6 +327,8 @@ def game(screen,fpsClock):
                 all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
                 current_room = floor[player.current_room_id]
                 player.rect.y = player.rect.height + wall_size
+                loots_list = current_room.loots 
+                all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
 
             # Gestions des balles
@@ -343,7 +353,6 @@ def game(screen,fpsClock):
                         bullet_list.remove(bullet)
                         all_sprites_list.remove(bullet)
                         mob.checkdead(loots_list,all_sprites_list)
-                        print(loots_list)
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran
                 if bullet.rect.y < -10:
