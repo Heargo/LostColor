@@ -473,7 +473,7 @@ def estDansCercle(Cercle, M):
 def estDansEnsembleCercles(ensemble,M):
     n = len(ensemble)
     bool = False
-    for i in range(n-1):
+    for i in range(n):
         if estDansCercle(ensemble[i], M):
             bool = True
             break
