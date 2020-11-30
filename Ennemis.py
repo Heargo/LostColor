@@ -116,6 +116,6 @@ class Monstre1(pygame.sprite.Sprite):
             self.kill()
     
     def checkdead(self,loots_list,all_sprites_list):
-        if self.HP <=0:
+        if self.HP <=0 and self.colorbuff!=GRAY:
             generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
 
