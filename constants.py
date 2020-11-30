@@ -41,3 +41,6 @@ DIFFICULTIESWEIGHTS=[10,8,6,4,1,1]
 
 #relation couleur/grade
 COLOR_OF_GRADE={"commun":(176, 176, 176),"rare":(123, 212, 220),"mythique":(136, 77, 155),"légendaire":(230, 185, 45)}
+
+# Liste des pnjs
+PNJS = ["instructor", "merchant"]

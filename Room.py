@@ -5,6 +5,7 @@ from Ennemis import *
 from Wall import *
 from Bonus import *
 from CreationTache import *
+from Pnj import *
 
 
 def salleNormale(top, bottom, left, right):
@@ -63,6 +64,7 @@ class Room(object):
         self.wall_list = pygame.sprite.Group()
         self.door_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
+        self.pnj_list = pygame.sprite.Group()
         self.taches = createNTaches(random.randint(3, 10), (6, 20))
 
         self.id = id
@@ -78,6 +80,9 @@ class Room(object):
         self.walls_creation()
         # Création des portes avec la methode doors_creation() et ajout dans la liste
         self.doors_creation()
+
+        # Creation du pnj si la sallest peacfull
+        self.create_pnj()
 
     def walls_creation(self):
         # Création de la liste des murs
@@ -155,6 +160,13 @@ class Room(object):
     def close_doors(self):
         if self.doors_close == False:
             self.doors_close = True
+
+    def create_pnj(self):
+        """Méthode ajoutant un PNJ a la pnj_list"""
+
+        if self.difficulty == "peaceful":
+            pnj = Merchant("Boby")
+            self.pnj_list.add(pnj)
 
     def update(self):
         """Gestion d'ouverture fermeture des portes"""

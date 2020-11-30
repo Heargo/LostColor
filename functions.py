@@ -9,6 +9,7 @@ import random
 from math import sqrt
 from proceduralGeneration import *
 from inventaire import invetoryScreen, Item
+from Dialog_Box import *
 
 def initPartie():
     """Initialise une partie"""
@@ -60,6 +61,7 @@ def initSprites():
     # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
     all_sprites_list.add(loots_list)
     all_sprites_list.add(current_room.enemy_list)
+    all_sprites_list.add(current_room.pnj_list)
     all_sprites_list.add(bullet_list)
     all_sprites_list.add(player)
 
@@ -190,6 +192,10 @@ def game(screen,fpsClock):
                         click = True
             # Detection d'utilisation du clavier pour faire spawner 3 monstres
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    for pnj in current_room.pnj_list:
+                        if pygame.sprite.collide_rect(pnj, player):
+                            dialog_loop(pnj, screen, fpsClock)
                 if event.key == pygame.K_KP8:
                     current_room.spawnMonsters("exact_number", player, 3)
                     all_sprites_list.add(current_room.enemy_list)
@@ -279,7 +285,7 @@ def game(screen,fpsClock):
 
             # --- Logique du jeu
             # Bonus a la fin des salles
-            if len(current_room.enemy_list) == 0 and (not current_room.bonus.taken):
+            if len(current_room.enemy_list) == 0 and (not current_room.bonus.taken)  and current_room.difficulty!="peaceful":
                 all_sprites_list.add(current_room.bonus)
 
             # Gestions du changement de salle
@@ -371,6 +377,9 @@ def game(screen,fpsClock):
             # Dessine les murs et portes de la salle courante
             current_room.wall_list.draw(screen)
             current_room.door_list.draw(screen)
+            # Dessine les PNJs de la salle courante
+            current_room.pnj_list.draw(screen)
+
 
             # Affichage HUD
             draw_HUD(screen)
@@ -515,3 +524,28 @@ def checkRecupLoot(all_sprites_list,loots_list,player):
                 all_sprites_list.remove(item)
                 item.resetImage()
                 player.inventaire.add(item)
+
+def dialog_loop(pnj, screen, fpsClock):
+    dialog_end = False
+    boite_de_dialogue = pnj.dialog_box
+    dialog_box_group = pygame.sprite.Group()
+    dialog_box_group.add(boite_de_dialogue)
+
+    while not dialog_end:
+        # close game
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    boite_de_dialogue.boite_suiv()
+                    if len(dialog_box_group) == 0:
+                        boite_de_dialogue.reset_boite()
+                        dialog_end = True
+
+        dialog_box_group.draw(screen)
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
