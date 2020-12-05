@@ -489,7 +489,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 		
 		
 		#on dessine le cadre
-		pygame.draw.rect(screen,(100,64,31),border)
+		pygame.draw.rect(screen,COLOR_OF_GRADE[itemHoover.grade],border)
 		pygame.draw.rect(screen,(164,131,80),fond)
 
 		#on recupère l'image du l'item
