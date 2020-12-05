@@ -27,11 +27,11 @@ class Bonus(pygame.sprite.Sprite):
                     self.gatherer.HP = self.gatherer.HP_MAX
             elif (self.bonus_type == "hp_max"):
                 self.gatherer.HP_MAX_bonus += 10
-                #self.gatherer.HP += 10
+                self.gatherer.HP += 10
             elif (self.bonus_type == "shot_speed"):
                 self.gatherer.shot_speed_bonus += 1
             elif (self.bonus_type == "speed"):
-                self.gatherer.speed_bonus += 1
+                self.gatherer.speed_bonus += 0.05
             elif (self.bonus_type == "tps"):
                 self.gatherer.tps_bonus += 0.5
             self.gatherer.updateStats()

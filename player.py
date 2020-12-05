@@ -63,8 +63,23 @@ class Player(pygame.sprite.Sprite):
 		self.shot_speed = PLAYER_SHOOT_SPEED +self.shot_speed_bonus + effetsItems["shot_speed"]
 		self.speed = PLAYER_SPEED +self.speed_bonus + effetsItems["speed"]
 
+		#on cap si besoin
+		if self.HP_MAX >STATS_MAX["hp"]:
+			self.HP_MAX = STATS_MAX["hp"]
+		if self.DMG >STATS_MAX["dmg"]:
+			self.DMG =STATS_MAX["dmg"]
+		if self.tps >STATS_MAX["tps"]:
+			self.tps =STATS_MAX["tps"]
+		if self.shot_speed >STATS_MAX["shot_speed"]:
+			self.shot_speed =STATS_MAX["shot_speed"]
+		if self.speed >STATS_MAX["speed"]:
+			self.speed =STATS_MAX["speed"]
+
 		self.cooldown = FPS // self.tps
 		self.cooldown_max = FPS // self.tps
+
+	def getStatsDico(self):
+		return {"hp":self.HP_MAX,"dmg":self.DMG,"tps":self.tps,"speed":self.speed,"shot_speed":self.shot_speed}
 
 	def pos(self):
 

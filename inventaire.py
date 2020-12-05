@@ -436,7 +436,7 @@ def checkRightClick(inventaire,player,itemlist,all_sprites):
 				
 
 
-def drawInventory(screen):
+def drawInventory(screen,player):
 	#on dessine les background
 	#inventaire fond
 	pygame.draw.rect(screen,(164,131,80),(690,40,505,635))
@@ -451,6 +451,32 @@ def drawInventory(screen):
 	#puis les texts
 	draw_text(screen,'Inventaire', 'fonts/No_Color.ttf', 30, BLACK, 950, 80, True)
 	draw_text(screen,'Profil', 'fonts/No_Color.ttf', 30, BLACK, 300, 80, True)
+
+	#stats
+	i=0
+	stats= player.getStatsDico()
+	for stat in stats:
+		yPOS=450+(i*30)
+		draw_text(screen,stat, 'fonts/No_Color.ttf', 15, BLACK, 80, yPOS, False)
+		nbBlocks=int(5*stats[stat]/STATS_MAX_COMMUN[stat])
+		if nbBlocks==0:
+			nbBlocks=1
+		if nbBlocks>5:
+			nbBlocks=5
+		#on recupère le grade de la stat COLOR_OF_GRADE
+		color =(100,64,31)
+		for grade in STATS_GRADE_DATA[stat].keys():
+			if stats[stat] >=STATS_GRADE_DATA[stat][grade]:
+				color = COLOR_OF_GRADE[grade]
+				gradeStat=grade
+
+		if stats[stat] <STATS_MAX_COMMUN[stat]:
+			for j in range(nbBlocks):
+				pygame.draw.rect(screen,color,(80+(j*55),yPOS+20,50,5))
+		else:
+			for j in range(GRADES.index(gradeStat)+1):
+				pygame.draw.rect(screen,COLOR_OF_GRADE[GRADES[j]],(80+(j*55),yPOS+20,50,5))
+		i+=1
 
 
 def drawItemOverlay(screen,mx, my,itemlist,inventaire):
@@ -581,7 +607,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 
 	profilimg=ProfilIMG(132,100)
 	otherlist.add(profilimg)
-	#en couche la plus basse on met les slots (pour qu'ils soit recouverts par les items)
+	#en couche la plus basse on met la poubelle puis les slots (pour qu'ils soit recouverts par les items)
 	all_sprites.add(otherlist)
 	all_sprites.add(slotslist)
 
@@ -651,7 +677,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 		#on met l'ecran en blanc
 		screen.fill((255,255,255))
 
-		drawInventory(screen)
+		drawInventory(screen,player)
 		# Dessine tous les sprites (les blits sur screen)
 		all_sprites.draw(screen)
 
