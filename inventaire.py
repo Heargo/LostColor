@@ -86,19 +86,19 @@ def random_key(dico):
 	return random.choice(liste)
 
 def createRandomItem():
-	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":1,"tps":1,},description="Une baguette magique...")
+	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
 		]
-	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":1,"shot_speed":1},description="Une orbe magique...")
+	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":0.1,"shot_speed":4},description="Une orbe magique...")
 	]
 	#"weaponbis":WEAPONSBIS,
 	DICOEQUIPEMENT={
 			"weapon":WEAPONS,
-			"head": [Item(equipable=True,slotequipable="head",name="casque",shortName="casque",image="./img/items/head_commun.png",grade="commun",price=0.1,stats={"hp":1},description="Un casque...")],
-			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=0.1,stats={"hp":1},description="Un plastron...")],
-			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=0.1,stats={"hp":1,"tps":1},description="Une paire de gants...")],
-			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=0.1,stats={"hp":1,"speed":1},description="Des bottes...")],
-			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=0.1,stats={"dmg":1},description="Un casque...")],
-			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=0.1,stats={"shot_speed":1},description="Un casque...")]
+			"head": [Item(equipable=True,slotequipable="head",name="casque",shortName="casque",image="./img/items/head_commun.png",grade="commun",price=0.1,stats={"hp":10},description="Un casque...")],
+			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=0.1,stats={"hp":30},description="Un plastron...")],
+			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=0.1,stats={"hp":10,"tps":1},description="Une paire de gants...")],
+			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=0.1,stats={"hp":10,"speed":0.5},description="Des bottes...")],
+			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=0.1,stats={"dmg":5},description="Un casque...")],
+			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=0.1,stats={"shot_speed":2},description="Un casque...")]
 			}
 	#on choisi si l'item sera un item equipable ou pas
 	equipable=choices([True,False], weights=[10,90])[0]
@@ -436,7 +436,7 @@ def checkRightClick(inventaire,player,itemlist,all_sprites):
 				
 
 
-def drawInventory(screen,player):
+def drawInventory(screen):
 	#on dessine les background
 	#inventaire fond
 	pygame.draw.rect(screen,(164,131,80),(690,40,505,635))
@@ -452,6 +452,8 @@ def drawInventory(screen,player):
 	draw_text(screen,'Inventaire', 'fonts/No_Color.ttf', 30, BLACK, 950, 80, True)
 	draw_text(screen,'Profil', 'fonts/No_Color.ttf', 30, BLACK, 300, 80, True)
 
+def drawStats(screen,player):
+	player.updateStats()
 	#stats
 	i=0
 	stats= player.getStatsDico()
@@ -465,6 +467,7 @@ def drawInventory(screen,player):
 			nbBlocks=5
 		#on recupère le grade de la stat COLOR_OF_GRADE
 		color =(100,64,31)
+		gradeStat="commun"
 		for grade in STATS_GRADE_DATA[stat].keys():
 			if stats[stat] >=STATS_GRADE_DATA[stat][grade]:
 				color = COLOR_OF_GRADE[grade]
@@ -677,7 +680,8 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 		#on met l'ecran en blanc
 		screen.fill((255,255,255))
 
-		drawInventory(screen,player)
+		drawInventory(screen)
+		drawStats(screen,player)
 		# Dessine tous les sprites (les blits sur screen)
 		all_sprites.draw(screen)
 
