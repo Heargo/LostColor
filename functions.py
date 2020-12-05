@@ -221,10 +221,6 @@ def game(screen,fpsClock):
                     all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing = False
-                if event.key == K_1:
-                    player.colorbuff=GRAY
-                if event.key == K_2:
-                    player.colorbuff=RED
                 if event.key == K_TAB :
                     mapOn=True
                 if event.key == K_i and len(current_room.enemy_list) == 0:
@@ -232,6 +228,8 @@ def game(screen,fpsClock):
                     player.updateStats()
                 if event.key == K_f:
                     checkRecupLoot(all_sprites_list,loots_list,player)
+                if event.key == K_e:
+                    healSkill(player)
 
 
         if not mapOn and player.HP >0:
@@ -456,6 +454,17 @@ def manageWhiteMobs(mobs_lists, current_room, player):
     if is_colored_mob:
         current_room.spawnMonsters("exact_number", player, 1, GRAY)
 
+def healSkill(player):
+    healed=False
+    for item in player.inventaire.items:
+        if item != False and not healed and "heal" in item.stats.keys() and player.HP < player.HP_MAX:
+            #on enlève l'item de l'inventaire
+            player.inventaire.remove(item)
+            #on soigne le joueur
+            player.HP += item.stats["heal"]
+            if player.HP > player.HP_MAX:
+                player.HP = player.HP_MAX
+            healed=True
 
         
 def estDansPolygone(x,y,polygone):
