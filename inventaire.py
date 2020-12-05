@@ -399,8 +399,6 @@ def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all
 	if not hoverASlot:
 			spriteLocked.move(spritePosBeforeLock)
 
-print("test")
-
 def checkRightClick(inventaire,player,itemlist,all_sprites):
 	mx, my = pygame.mouse.get_pos()
 	#on regarde pour les objets de l'inventaire
