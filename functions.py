@@ -223,7 +223,7 @@ def game(screen,fpsClock):
                     playing = False
                 if event.key == K_TAB :
                     mapOn=True
-                if event.key == K_i:# and len(current_room.enemy_list) == 0:
+                if event.key == K_i and len(current_room.enemy_list) == 0:
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
                     player.updateStats()
                 if event.key == K_f:
