@@ -21,7 +21,7 @@ class Monstre1(pygame.sprite.Sprite):
 
         #Mise en place de l'image du monstre
         self.image = pygame.image.load('img/blob_'+str(num+1)+'.png')
-
+        self.originalImage=self.image
         # Mise en place de la "hit-box" du monstre
         self.rect = self.image.get_rect()
 
@@ -60,8 +60,10 @@ class Monstre1(pygame.sprite.Sprite):
         if color!=GRAY:
             num = COLORS.index(color)
             self.image = pygame.image.load('img/blob_'+str(num+1)+'.png')
+            self.originalImage=self.image
         else:
             self.image = pygame.image.load('img/blob_0.png')
+            self.originalImage=self.image
 
     def calc_angle(self):
         """ Calcul de l'angle"""

@@ -31,6 +31,10 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 		self.colorbuff= GRAY
 
+		#cd
+		self.healed=0
+		self.healCD=HEAL_COOLDOWN
+
 		#bonus
 		self.HP_MAX_bonus = 0
 		self.DMG_bonus = 0

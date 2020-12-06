@@ -26,7 +26,7 @@ PLAYER_DMG = 12
 PLAYER_TPS = 2
 PLAYER_SHOOT_SPEED = 8
 PLAYER_SPEED = 6
-
+HEAL_COOLDOWN = 5
 
 # Taille des portes et murs du jeu
 wall_size = 20

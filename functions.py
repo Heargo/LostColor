@@ -10,6 +10,7 @@ from math import sqrt
 from proceduralGeneration import *
 from inventaire import invetoryScreen, Item
 from Dialog_Box import *
+from time import time
 
 def initPartie():
     """Initialise une partie"""
@@ -381,6 +382,8 @@ def game(screen,fpsClock):
             drawAllTaches(screen, current_room.taches)
             # Dessine tous les sprites (les blits sur screen)
             all_sprites_list.draw(screen)
+            #dessine le bouton de skill de heal
+            dessineHealBouton(screen,player)
             # Dessine les murs et portes de la salle courante
             current_room.wall_list.draw(screen)
             current_room.door_list.draw(screen)
@@ -431,7 +434,18 @@ def game(screen,fpsClock):
         # --- Limite le jeu à 60 images par seconde
         fpsClock.tick(FPS)
 
-        
+
+def dessineHealBouton(screen,player):
+    image = pygame.image.load("./img/slots/heal.png")
+    screen.blit(image,(1150,600))
+    now=time()
+    timeLeft=player.healCD-(now-player.healed)
+    if timeLeft > 0:
+        pygame.draw.circle(screen, (55,55,55), (1182, 632), 36, 0)
+        draw_text(screen,str(int(timeLeft)), 'fonts/No_Color.ttf', 40, BLACK, 1180, 630, True)
+        draw_text(screen,str(int(timeLeft)), 'fonts/No_Color.ttf', 37, WHITE, 1180, 630, True)
+
+
 
 def updateMobsStats(mobs_lists,color):
     for mob in mobs_lists:
@@ -439,10 +453,18 @@ def updateMobsStats(mobs_lists,color):
             mob.DMG*=2
             mob.speed+=3
             mob.isboosted=True
+            #on recupère l'image du monstre
+            mob.image = pygame.transform.scale(mob.image,(40,40))
+            #on la resize
+            mob.rect = mob.image.get_rect()
         elif mob.colorbuff != color and mob.isboosted:
             mob.DMG/=2
             mob.speed-=3
             mob.isboosted=False
+            #on recupère l'image du monstre
+            mob.image =mob.originalImage
+            #on la resize
+            mob.rect = mob.image.get_rect()
 
 def manageWhiteMobs(mobs_lists, current_room, player):
     is_colored_mob=False
@@ -455,16 +477,21 @@ def manageWhiteMobs(mobs_lists, current_room, player):
         current_room.spawnMonsters("exact_number", player, 1, GRAY)
 
 def healSkill(player):
-    healed=False
-    for item in player.inventaire.items:
-        if item != False and not healed and "heal" in item.stats.keys() and player.HP < player.HP_MAX:
-            #on enlève l'item de l'inventaire
-            player.inventaire.remove(item)
-            #on soigne le joueur
-            player.HP += item.stats["heal"]
-            if player.HP > player.HP_MAX:
-                player.HP = player.HP_MAX
-            healed=True
+    now=time()
+    timeLeft=player.healCD-(now-player.healed)
+    if timeLeft <0:
+        healed=False
+        for item in player.inventaire.items:
+            if item != False and not healed and "heal" in item.stats.keys() and player.HP < player.HP_MAX:
+                #on enlève l'item de l'inventaire
+                player.inventaire.remove(item)
+                #on soigne le joueur
+                player.HP += item.stats["heal"]
+                if player.HP > player.HP_MAX:
+                    player.HP = player.HP_MAX
+                player.healed = time()
+                print(player.healed)
+                healed=True
 
         
 def estDansPolygone(x,y,polygone):
