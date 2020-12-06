@@ -9,10 +9,10 @@ def createPrimaryPathWithError(n,player):
 	for i in range(n):
 		#on init la salle
 		if i == 0: # Pour la première salle (Tuto)
-			currentroom = Room(player, i, difficulty="ultra_easy")
+			currentroom = Room(player, i, difficulty="ultra_easy",lvl=1)
 		else:
 			random_difficulty = random.choices(DIFFICULTIES, weights = DIFFICULTIESWEIGHTS)[0]
-			currentroom = Room(player, i, difficulty=random_difficulty)
+			currentroom = Room(player, i, difficulty=random_difficulty,lvl=i)
 		coordo=[0,0]
 		#on ouvre sa porte en fonction de la salle précédente
 		if i >0:
@@ -112,7 +112,7 @@ def ExtendPath(primaryPath,allRoomsCoordinates,player):
 				salle.doors_id[door]=idUsable
 				#on créer la salle
 				random_difficulty = random.choices(DIFFICULTIES, weights = DIFFICULTIESWEIGHTS)[0]
-				currentroom = Room(player, idUsable, difficulty=random_difficulty)
+				currentroom = Room(player, idUsable, difficulty=random_difficulty,lvl=salle.lvl+1)
 				extends[idUsable]=currentroom
 				allRoomsCoordinates[idUsable]=calcCoordinates(salle,idUsable,allRoomsCoordinates)
 				extends[idUsable].openDoorFromPreviousRoom(salle)

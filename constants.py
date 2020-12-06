@@ -28,6 +28,8 @@ PLAYER_SHOOT_SPEED = 8
 PLAYER_SPEED = 6
 HEAL_COOLDOWN = 5
 
+MONSTER_LEVEL_MAX=100
+
 # Taille des portes et murs du jeu
 wall_size = 20
 door_length = 100

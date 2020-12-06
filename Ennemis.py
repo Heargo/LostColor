@@ -7,7 +7,7 @@ from inventaire import generateLoot
 class Monstre1(pygame.sprite.Sprite):
     """ Cette classe represente les objets Monstre1"""
 
-    def __init__(self, spawn_x, spawn_y, target):
+    def __init__(self, spawn_x, spawn_y, target,lvl=1):
         """ Constructeur.
         spawn_x et spawn_ y sont les coordonés d'aparition du monstre
         """
@@ -32,11 +32,12 @@ class Monstre1(pygame.sprite.Sprite):
         self.rect.x = spawn_x
         self.rect.y = spawn_y
         
-        # Statistiques du monstre
-        self.HP_MAX = 20
+        # Statistiques du monstre #stat = lvl*statMax/lvlMax
+        self.lvl=lvl
+        self.HP_MAX = 4*(self.lvl*500/MONSTER_LEVEL_MAX)
         self.HP = self.HP_MAX
-        self.DMG = 10
-        self.speed = random.uniform(2.0, 3.0)
+        self.DMG = 2*(self.lvl*300/MONSTER_LEVEL_MAX)
+        self.speed = random.uniform(1.5, 2.8)
         self.colorbuff=color
 
         #si il est boost
@@ -118,6 +119,6 @@ class Monstre1(pygame.sprite.Sprite):
             self.kill()
     
     def checkdead(self,loots_list,all_sprites_list):
-        if self.HP <=0 and self.colorbuff!=GRAY:
+        if self.HP <=0 and self.colorbuff!=GRAY and randint(0,3)==1:
             generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
 

@@ -22,7 +22,7 @@ class Item(pygame.sprite.Sprite):
 		else:
 			self.slotequipable=-1
 		self.image = pygame.image.load(image)
-		self.imagePath=image
+		self.originalImage=self.image
 		self.rect = self.image.get_rect()
 		self.rect.x = self.x 
 		self.rect.y = self.y
@@ -41,7 +41,8 @@ class Item(pygame.sprite.Sprite):
 		return is_hoover
 
 	def resetImage(self):
-		self.image = pygame.image.load(self.imagePath)
+		self.image = self.originalImage
+		print(self.image,self.originalImage)
 		#on rezise a 64*64 pixel
 		self.image = pygame.transform.scale(self.image,(64,64))
 		self.rect = self.image.get_rect()
@@ -125,8 +126,10 @@ def createRandomItem():
 		#en fonction du grade on change l'image
 		if item.slotequipable not in ["weapon","weaponbis"]:
 			item.image = pygame.image.load("./img/items/"+item.slotequipable+"_"+grade+".png")
+			item.originalImage=item.image
 		else:
 			item.image = pygame.image.load("./img/items/"+item.shortName+"_"+grade+".png")
+			item.originalImage=item.image
 	#si il n'est pas equipable
 	else:
 		lsPlants=[]

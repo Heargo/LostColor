@@ -20,7 +20,9 @@ def initPartie():
 
     # Création du joueur
     player.initStats()
-
+    player.inventaire.items=[False]*player.inventaire.size
+    player.updateStats()
+    
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
@@ -290,7 +292,7 @@ def game(screen,fpsClock):
             # Gestions du changement de salle
             if player.rect.x < -player.rect.width:  # Le joueur va à gauche
                 player.current_room_id = current_room.doors_id["left"]
-                current_room.loots = loots_list
+                loots_list = current_room.loots
                 all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
                 all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
                 current_room = floor[player.current_room_id]
@@ -298,6 +300,7 @@ def game(screen,fpsClock):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
+                print(current_room.difficulty,current_room.lvl)
 
 
             if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
@@ -309,6 +312,7 @@ def game(screen,fpsClock):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
+                print(current_room.difficulty,current_room.lvl)
 
             if player.rect.y < -player.rect.height:  # Le joueur va en haut
                 player.current_room_id = current_room.doors_id["top"]
@@ -319,6 +323,7 @@ def game(screen,fpsClock):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
+                print(current_room.difficulty,current_room.lvl)
 
             if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
                 player.current_room_id = current_room.doors_id["bottom"]
@@ -329,6 +334,7 @@ def game(screen,fpsClock):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
+                print(current_room.difficulty,current_room.lvl)
 
             # Gestions des balles
             for bullet in bullet_list:
@@ -490,7 +496,6 @@ def healSkill(player):
                 if player.HP > player.HP_MAX:
                     player.HP = player.HP_MAX
                 player.healed = time()
-                print(player.healed)
                 healed=True
 
         

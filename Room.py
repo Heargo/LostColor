@@ -59,7 +59,7 @@ class Room(object):
 
     doors_close = True
 
-    def __init__(self, player, id, top=-1, bottom=-1, left=-1, right=-1, difficulty="none"):
+    def __init__(self, player, id, top=-1, bottom=-1, left=-1, right=-1, difficulty="none",lvl=1):
         """Chaque salle a une liste de monstre, de murs et de portes"""
         self.wall_list = pygame.sprite.Group()
         self.door_list = pygame.sprite.Group()
@@ -70,6 +70,7 @@ class Room(object):
         self.id = id
         self.doors_id = {"top": top, "bottom": bottom, "left": left, "right": right}
         self.difficulty = difficulty
+        self.lvl = lvl
         self.visited=False
         # Bonus de la salle
         self.bonus = Bonus(BONUS_TYPE[randint(0, 5)], player)
@@ -148,7 +149,9 @@ class Room(object):
         for i in range(0, num_of_monsters):
             monstre = Monstre1(random.randint(0, SCREEN_WIDTH),
                                random.randint(0, SCREEN_HEIGHT // 3),
-                               target)
+                               target,
+                               self.lvl
+                               )
             if color != "none":
                 monstre.setColor(color)
             self.enemy_list.add(monstre)
