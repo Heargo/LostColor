@@ -12,6 +12,10 @@ class PNJ(pygame.sprite.Sprite):
         self.dialog = "Dialogue par défaut blablabla"
         self.dialog_box = Dialog_Box(self.dialog, self.name)
 
+    def say(self,newDialog):
+        self.dialog = newDialog
+        self.dialog_box = Dialog_Box(self.dialog, self.name)
+
 
 class Merchant(PNJ):
     def __init__(self, name, x = SCREEN_WIDTH//2, y = SCREEN_HEIGHT//2):
@@ -31,9 +35,9 @@ class Merchant(PNJ):
         self.dialog_box = Dialog_Box(self.dialog, self.name)
 
 class Instructor(PNJ):
-    def __init__(self, x = SCREEN_WIDTH//2, y = SCREEN_HEIGHT//2):
+    def __init__(self, name, x = SCREEN_WIDTH//2, y = SCREEN_HEIGHT//2):
         # Appel du constructeur de la classe mère (Sprite)
-        super().__init__()
+        super().__init__(name)
         # Mise en place de l'image du pnj
         self.image = pygame.image.load('img/pnjs/instructor.png')
 

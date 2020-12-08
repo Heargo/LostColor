@@ -2,13 +2,13 @@ import pygame, sys
 import random
 from constants import *
 from Room import *
-
+from Pnj import Instructor
 def createPrimaryPathWithError(n,player):
 	allRooms={}
 	allRoomsCoordinates={}
 	for i in range(n):
 		#on init la salle
-		if i == 0: # Pour la première salle (Tuto)
+		if i == 0: # Pour la première salle
 			currentroom = Room(player, i, difficulty="ultra_easy",lvl=1)
 		else:
 			random_difficulty = random.choices(DIFFICULTIES, weights = DIFFICULTIESWEIGHTS)[0]
@@ -37,9 +37,61 @@ def createPrimaryPathWithError(n,player):
 	return allRooms,allRoomsCoordinates
 
 
+def createTutorialWithError(player):
+	#get info from TUTORIAL_DATA
+	allRooms={}
+	allRoomsCoordinates={}
+	n=len(TUTORIAL_DATA)
+	for i in range(n):
+		roomDATA =TUTORIAL_DATA[i]
+		#on init la salle
+		currentroom = Room(player, i, difficulty=roomDATA["difficulty"],lvl=roomDATA["lvl"])
+		coordo=[0,0]
 
+		#on edit le pnj si besoin
+		if currentroom.difficulty=="peaceful":
+			currentroom.enemy_list.empty()
+			currentroom.pnj_list.empty() #on vide la liste de pnj pour repartir a 0
+			#print(roomDATA)
+			pnj = Instructor(roomDATA["pnj-name"]) #créer le pnj
+			pnj.say(roomDATA["pnj-dialogue"]) #on met a jour son dialogue
+			currentroom.pnj_list.add(pnj)
 
+		#on ouvre sa porte en fonction de la salle précédente
+		if i >0:
+			previousRoom=allRooms[i-1]
+			currentroom.openDoorFromPreviousRoom(previousRoom)
+			coordo=calcCoordinates(previousRoom,currentroom.id,allRoomsCoordinates)
+		allRoomsCoordinates[i]=coordo
+		
+		#on ouvre une nouvelle porte si ce n'est pas la dernière salle
+		if i < n-1:
+			#on choisi une porte à ouvrir aléatoirement dans celles qui sont possibles
+			if i==0:
+				alea=random.choice(currentroom.doorsPossibleToOpen())
+			else:
+				doorsPossible=doorsPossibleToOpenWithCoords(currentroom,i+1,allRoomsCoordinates)
+				#si il y a aucune porte possible, une erreur fait crash l'algo
+				alea=random.choice(doorsPossible)
+			currentroom.doors_id[alea]=i+1
+		allRooms[i]=currentroom
 
+	for salle in allRooms.values():
+		#on créer les murs et les portes
+		salle.walls_creation()
+		salle.doors_creation()
+
+	return allRooms,allRoomsCoordinates
+
+def createTutorial(player):
+	generer=False
+	while not generer:
+		try:
+			allRooms,allRoomsCoordinates = createTutorialWithError(player)
+			generer=True
+		except:
+			print("On ressaye de généré")
+	return allRooms,allRoomsCoordinates
 
 def createPrimaryPath(n,player):
 	generer=False

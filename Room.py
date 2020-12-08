@@ -143,7 +143,7 @@ class Room(object):
             num_of_monsters = randint(5, 9)
         elif difficulty == "ultra_hard":
             num_of_monsters = randint(12, 20)
-        else:
+        else: #nombre exact
             num_of_monsters = 0 + N
 
         for i in range(0, num_of_monsters):
@@ -173,9 +173,9 @@ class Room(object):
             pnj = Merchant("Boby")
             self.pnj_list.add(pnj)
 
-    def update(self):
+    def update(self,tutorialStepOk):
         """Gestion d'ouverture fermeture des portes"""
-        if len(self.enemy_list) == 0:
+        if len(self.enemy_list) == 0 and tutorialStepOk:
             self.open_doors()
 
         if self.doors_close and len(self.door_list) == 0:  # Gestion de la fermeture

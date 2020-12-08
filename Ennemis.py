@@ -92,7 +92,6 @@ class Monstre1(pygame.sprite.Sprite):
         """ Déplacement et condition de mort du monstre et affichage barre de vie. """
         # Appel de la méthode pour calculer l'angle
         angle = self.calc_angle()
-
         # En prenant en compte l'angle on calcul change_x
         # et change_y. La Velocity est la vitesse du monstre.
         
@@ -119,6 +118,10 @@ class Monstre1(pygame.sprite.Sprite):
             self.kill()
     
     def checkdead(self,loots_list,all_sprites_list):
+        res=False
         if self.HP <=0 and self.colorbuff!=GRAY and randint(0,3)==1:
             generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
+        if self.HP <=0:
+            res=True
+        return res
 

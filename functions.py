@@ -12,26 +12,41 @@ from inventaire import invetoryScreen, Item
 from Dialog_Box import *
 from time import time
 
-def initPartie():
+def initPartie(tutorial=False):
     """Initialise une partie"""
     global player,current_room,floor, allRoomsCoordinates
 
 
-
-    # Création du joueur
-    player.initStats()
-    player.inventaire.items=[False]*player.inventaire.size
-    player.updateStats()
+    if not tutorial:
+        # Création du joueur
+        player.initStats()
+        player.inventaire.items=[False]*player.inventaire.size
+        player.updateStats()
     
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
     # Création des salles
-    floor,allRoomsCoordinates = createPrimaryPath(10, player)
-    allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
+    if not tutorial:
+        floor,allRoomsCoordinates = createPrimaryPath(10, player)
+        allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
+    else:
+        floor,allRoomsCoordinates = createTutorialWithError(player)
 
     # Salle courante (ou est le joueur est)
     current_room = floor[player.current_room_id]
+    #on reset les sprites
+    loots_list = pygame.sprite.Group()
+    # Ajout des sprite dans l'ordre d'affichage dans le Group all_sprites_list
+    all_sprites_list.empty()
+    current_room.enemy_list.empty()
+    all_sprites_list.add(loots_list)
+    all_sprites_list.add(current_room.enemy_list)
+    all_sprites_list.add(current_room.pnj_list)
+    all_sprites_list.add(bullet_list)
+    all_sprites_list.add(player)
+
+
 
 def initSprites():
     global all_sprites_list,enemy_list,bullet_list,loots_list,player,current_room_no,current_room,floor, allRoomsCoordinates
@@ -124,7 +139,7 @@ def main_menu(screen,fpsClock):
     click = False
     #créer les boutons
     b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100, 'Jouer', RED)
-    b2 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 'Options', GREEN)
+    b2 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 'Tutoriel', GREEN)
     b3 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100, 'Credit', BLUE)
     b4 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200, 'Quitter', GRAY)
 
@@ -147,7 +162,8 @@ def main_menu(screen,fpsClock):
                 game(screen,fpsClock)
         if b2.hoover(mx, my):
             if click:
-                pass # options()
+                initPartie(True)
+                game(screen,fpsClock,True)
         if b3.hoover(mx, my):
             if click:
                 pass # credits()
@@ -173,12 +189,19 @@ def main_menu(screen,fpsClock):
 
 
 
-def game(screen,fpsClock):
+def game(screen,fpsClock,tutorial=False):
     global current_room
     playing = True
     mapOn=False
     white_mob_spawn_delay = 0
     loots_list=current_room.loots
+    actions={"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
+    firstDialogueBoxDone=False
+    if tutorial:
+        tutorialCompleted=False       
+    else:
+        tutorialCompleted=True
+   
     while playing:
         click=False
         current_room.visited=True
@@ -198,30 +221,30 @@ def game(screen,fpsClock):
                 if event.key == pygame.K_SPACE:
                     for pnj in current_room.pnj_list:
                         if pygame.sprite.collide_rect(pnj, player):
-                            dialog_loop(pnj, screen, fpsClock)
-                if event.key == pygame.K_KP8:
-                    current_room.spawnMonsters("exact_number", player, 3)
-                    all_sprites_list.add(current_room.enemy_list)
-                if event.key == pygame.K_KP9:
-                    print(all_sprites_list)
-                if event.key == pygame.K_KP1:
-                    bonus_test = Bonus("dmg", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP2:
-                    bonus_test = Bonus("tps", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP3:
-                    bonus_test = Bonus("shot_speed", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP4:
-                    bonus_test = Bonus("heal", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP5:
-                    bonus_test = Bonus("hp_max", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP6:
-                    bonus_test = Bonus("speed", player)
-                    all_sprites_list.add(bonus_test)
+                            dialog_loop(tutorial,False,pnj, screen, fpsClock)
+                #if event.key == pygame.K_KP8:
+                #    current_room.spawnMonsters("exact_number", player, 3)
+                #    all_sprites_list.add(current_room.enemy_list)
+                #if event.key == pygame.K_KP9:
+                #    print(all_sprites_list)
+                # if event.key == pygame.K_KP1:
+                #     bonus_test = Bonus("dmg", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP2:
+                #     bonus_test = Bonus("tps", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP3:
+                #     bonus_test = Bonus("shot_speed", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP4:
+                #     bonus_test = Bonus("heal", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP5:
+                #     bonus_test = Bonus("hp_max", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP6:
+                #     bonus_test = Bonus("speed", player)
+                #     all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing = False
                 if event.key == K_TAB :
@@ -241,12 +264,20 @@ def game(screen,fpsClock):
 
             if activeKey[K_a]:  # left
                 player.move("LEFT", current_room.wall_list)
+                if tutorial:
+                    actions["q"]=True
             if activeKey[K_d]:  # right
                 player.move("RIGHT", current_room.wall_list)
+                if tutorial:
+                    actions["d"]=True
             if activeKey[K_w]:  # top
                 player.move("UP", current_room.wall_list)
+                if tutorial:
+                    actions["z"]=True
             if activeKey[K_s]:  # bottom
                 player.move("DOWN", current_room.wall_list)
+                if tutorial:
+                    actions["s"]=True
 
             # on change la couleur du joueur en fonction de la position
             setColorPlayerFromPosition(current_room.taches, player)
@@ -256,13 +287,20 @@ def game(screen,fpsClock):
 
             # Si la salle contient des monstres de couleurs et que le delai d'aparition est bon on fait aparaitre
             # un monstre blanc
-            if white_mob_spawn_delay >= 120:
-                manageWhiteMobs(current_room.enemy_list, current_room, player)
-                all_sprites_list.add(current_room.enemy_list)
-                white_mob_spawn_delay = 0
+            if not tutorial :
+                if white_mob_spawn_delay >= 120:
+                    manageWhiteMobs(current_room.enemy_list, current_room, player)
+                    all_sprites_list.add(current_room.enemy_list)
+                    white_mob_spawn_delay = 0
+            elif TUTORIAL_DATA[current_room.id]["allowWhiteMobSpawn"]:
+                if white_mob_spawn_delay >= 120:
+                    manageWhiteMobs(current_room.enemy_list, current_room, player)
+                    all_sprites_list.add(current_room.enemy_list)
+                    white_mob_spawn_delay = 0
 
             # on met a jour les stats des monstres en fonction de la couleur du joueur
-            updateMobsStats(current_room.enemy_list, player.colorbuff)
+            if not tutorial:
+                updateMobsStats(current_room.enemy_list, player.colorbuff)
 
 
             # Detection de la souris et du cooldown pour tirer
@@ -357,7 +395,10 @@ def game(screen,fpsClock):
                     if dmgDone:
                         bullet_list.remove(bullet)
                         all_sprites_list.remove(bullet)
-                        mob.checkdead(loots_list,all_sprites_list)
+                        if tutorial:
+                            actions["kill"] = mob.checkdead(loots_list,all_sprites_list)
+                        else:
+                            mob.checkdead(loots_list,all_sprites_list)
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran
                 if bullet.rect.y < -10:
@@ -373,23 +414,33 @@ def game(screen,fpsClock):
             # Incrementation du delai d'aparition des monstre blanc
             white_mob_spawn_delay += 1
 
-
+            #si on est dans le tuto, on vérifie l'avancement de l'étape
+            if tutorial:
+                actions = checkTutorialStepCompletion(current_room,actions)
 
             # Appelle la méthode update() de tous les Sprites
             all_sprites_list.update()
 
             # Méthode update de la salle courante pour la gestion des portes
-            current_room.update()
+            current_room.update(tutorialCompleted)
         
             # --- Dessiner la frame
             # Clear the screen
             screen.fill(WHITE)
             # Dessine les taches de couleur
-            drawAllTaches(screen, current_room.taches)
+            if not tutorial:
+                drawAllTaches(screen, current_room.taches)
+            else:
+                if TUTORIAL_DATA[current_room.id]["showBackground"]:
+                    drawAllTaches(screen, current_room.taches) 
             # Dessine tous les sprites (les blits sur screen)
             all_sprites_list.draw(screen)
-            #dessine le bouton de skill de heal
-            dessineHealBouton(screen,player)
+            #dessine le bouton de skill de heal 
+            if not tutorial:
+                dessineHealBouton(screen,player)
+            else:
+                if TUTORIAL_DATA[current_room.id]["showHealSkill"]:
+                    dessineHealBouton(screen,player)
             # Dessine les murs et portes de la salle courante
             current_room.wall_list.draw(screen)
             current_room.door_list.draw(screen)
@@ -432,7 +483,12 @@ def game(screen,fpsClock):
             
 
             
-        
+        #print(actions)
+        #bidouille pour afficher instant la bote de dialogue
+        if tutorial and current_room.id ==0 and not firstDialogueBoxDone :
+            for pnj in current_room.pnj_list:
+                dialog_loop(tutorial,True,pnj, screen, fpsClock)
+                firstDialogueBoxDone=True
 
         # Met à jour la fenetre de jeu
         pygame.display.update()
@@ -575,7 +631,7 @@ def checkRecupLoot(all_sprites_list,loots_list,player):
                 item.resetImage()
                 player.inventaire.add(item)
 
-def dialog_loop(pnj, screen, fpsClock):
+def dialog_loop(tutorial,first,pnj, screen, fpsClock):
     dialog_end = False
     boite_de_dialogue = pnj.dialog_box
     dialog_box_group = pygame.sprite.Group()
@@ -594,8 +650,39 @@ def dialog_loop(pnj, screen, fpsClock):
                     if len(dialog_box_group) == 0:
                         boite_de_dialogue.reset_boite()
                         dialog_end = True
+                        if tutorial:
+                            initTutorialStep(current_room,player)
 
         dialog_box_group.draw(screen)
 
         pygame.display.update()
         fpsClock.tick(FPS)
+
+def initTutorialStep(current_room,player):
+    roomDATA= TUTORIAL_DATA[current_room.id]
+    if roomDATA["step"]["action"]=="spawn":
+        current_room.spawnMonsters("exact_number", player, 1, GRAY)
+        for mob in current_room.enemy_list:
+            mob.speed = roomDATA["step"]["mobspeed"]
+            mob.rect.x = roomDATA["step"]["pos"][0]
+            mob.rect.y = roomDATA["step"]["pos"][1]
+            mob.floating_point_x =roomDATA["step"]["pos"][0]
+            mob.floating_point_y=roomDATA["step"]["pos"][1]
+
+        all_sprites_list.add(current_room.enemy_list)
+
+def checkTutorialStepCompletion(current_room,actions):
+    res= actions
+    if TUTORIAL_DATA[current_room.id]["step"]["action"]=="spawn" and len(current_room.enemy_list)==0 and actions["kill"]:
+        current_room.open_doors()
+    if TUTORIAL_DATA[current_room.id]["step"]["action"]=="key":
+        ok=True
+        for key in TUTORIAL_DATA[current_room.id]["step"]["keys"]:
+            if not actions[key]:
+                ok=False
+        if ok:
+            current_room.open_doors()
+            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
+            
+
+    return res

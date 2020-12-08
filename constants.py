@@ -54,3 +54,30 @@ STATS_GRADE_DATA={"dmg":{"commun":50,"rare":65,"mythique":80,"légendaire":STATS
 				  }
 # Liste des pnjs
 PNJS = ["instructor", "merchant"]
+
+
+TUTORIAL_DATA=[
+
+{
+	"difficulty":"peaceful",
+	"showBackground":False,
+	"showHealSkill":False,
+	"lvl":1,
+	"allowWhiteMobSpawn":False,
+	"pnj-name":"HuSiRo",
+	"pnj-dialogue":"Bonjour, bienvenu(e) sur le Tutoriel de LostColor ! Je suis votre instructeur ici ! vous pouvez vous deplacer avec les  touches z q s d. Attention, si votre clavier est en qwerty, passez le en azerty. Essayez de vous deplacer dans la salle en utilisant ces touches puis passez a la salle suivante. Vous pouvez interragir avec moi avec [barre espace]",
+	
+	"step":{"action":"key","keys":["z","q","s","d"]}
+},
+{
+	"difficulty":"peaceful",
+	"showBackground":False,
+	"showHealSkill":False,
+	"lvl":1,
+	"allowWhiteMobSpawn":False,
+	"pnj-name":"HuSiRo",
+	"pnj-dialogue":"Vous avez pu trouver votre chemin ? Bien... Préparez vous à tuer un monstre. Vous pouvez visez avec le curseur de votre souris. utilisez le clique gauche pour tirer. ",
+	"step":{"action":"spawn","mobspeed":0,"pos":(600,100)}
+}
+
+]
