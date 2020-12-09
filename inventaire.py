@@ -127,9 +127,14 @@ def createRandomItem():
 		if item.slotequipable not in ["weapon","weaponbis"]:
 			item.image = pygame.image.load("./img/items/"+item.slotequipable+"_"+grade+".png")
 			item.originalImage=item.image
+			key=item.slotequipable+"_"+grade
 		else:
 			item.image = pygame.image.load("./img/items/"+item.shortName+"_"+grade+".png")
 			item.originalImage=item.image
+			key = item.shortName+"_"+grade
+
+		item.name = NOMSITEMS[key][randint(0,len(NOMSITEMS[key])-1)]
+		item.description = DESCRIPTIONS[key][randint(0,len(DESCRIPTIONS[key])-1)]
 	#si il n'est pas equipable
 	else:
 		lsPlants=[]
@@ -541,6 +546,8 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 
 		#le grade
 		draw_text(screen,itemHoover.grade, 'fonts/No_Color.ttf', 10, COLOR_OF_GRADE[itemHoover.grade], mx+(0.75*(decalXText//2)), my+50+decalY, True)
+
+		draw_text(screen,itemHoover.name, 'fonts/No_Color.ttf', 10, BLACK, mx+(factTextStat*200), my+80+decalY, False)
 
 		#les stats
 		i=0
