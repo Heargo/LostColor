@@ -66,7 +66,7 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Bonjour, bienvenu sur le tutoriel de LostColor! C'est ici que tu vas apprendre les principale commandes du jeu. Je suis ton instructeur! Tu peux interagir avec moi grâce à la touche espace. Pour te déplacer, utilise les  touches z (haut), q (gauche), s (bas) et d (droite). Cela te permettra d'esquiver les attaques adverses et de mieux te positionner pour attaquer tes ennemis. Attention, si ton clavier est en qwerty, passe-le en azerty. Essaye de te déplacer dans la salle en utilisant ces touches puis passe a la salle suivante.",
+	"pnj-dialogue":"Bonjour, bienvenue sur le tutoriel de LostColor! C'est ici que tu vas apprendre les principale commandes du jeu. Je suis ton instructeur! Tu peux interagir avec moi grâce à la touche espace. Pour te déplacer, utilise les  touches z (haut), q (gauche), s (bas) et d (droite). Cela te permettra d'esquiver les attaques adverses et de mieux te positionner pour attaquer tes ennemis. Attention, si ton clavier est en qwerty, passe-le en azerty. Essaye de te déplacer dans la salle en utilisant ces touches puis passe a la salle suivante.",
 	
 	"step":{"action":"key","keys":["z","q","s","d"]}
 },
