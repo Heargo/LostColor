@@ -66,7 +66,7 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Bonjour, bienvenu(e) sur le Tutoriel de LostColor ! Je suis votre instructeur ici ! vous pouvez vous deplacer avec les  touches z q s d. Attention, si votre clavier est en qwerty, passez le en azerty. Essayez de vous deplacer dans la salle en utilisant ces touches puis passez a la salle suivante. Vous pouvez interragir avec moi avec [barre espace]",
+	"pnj-dialogue":"Bonjour, bienvenu sur le tutoriel de LostColor! C'est ici que tu vas apprendre les principale commandes du jeu. Je suis ton instructeur! Tu peux interagir avec moi grâce à la touche espace. Pour te déplacer, utilise les  touches z (haut), q (gauche), s (bas) et d (droite). Cela te permettra d'esquiver les attaques adverses et de mieux te positionner pour attaquer tes ennemis. Attention, si ton clavier est en qwerty, passe-le en azerty. Essaye de te déplacer dans la salle en utilisant ces touches puis passe a la salle suivante.",
 	
 	"step":{"action":"key","keys":["z","q","s","d"]}
 },
@@ -78,7 +78,7 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Vous avez pu trouver votre chemin ? Bien... Préparez vous à tuer un monstre. Vous pouvez visez avec le curseur de votre souris. utilisez le clique gauche pour tirer. ",
+	"pnj-dialogue":"Tu as réussi à trouver votre chemin ? C'est un bon début. Passons au combat. Tu peux viser avec ta souris et tirer avec le clic gauche. Essaie donc sur cet ennemi! ",
 	"step":{"action":"spawn","mobspeed":0,"number":1,"pos":[(600,100)],"color":[GRAY]}
 }
 ,
@@ -90,7 +90,7 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Comme vous avez pu le constater, des taches de couleurs sont apparues sur le sol. Lorsque vous vous trouvez sur une couleur, vos tir prennent la même couleur. Quel interet me direz vous ? Lorsque vous êtes sur une tache rouges, vous faites plus de dégâts à tous les monstres SAUF que vous ne pouvez pas attaquer les monstres rouges. De même pour les autres couleurs sauf le blanc. Je vous laisse essayer...",
+	"pnj-dialogue":"Comme tu as pu le constater, des tâches de couleur sont apparues sur le sol. Lorsque tu es sur l'une d'elle, tes tirs prennent la même couleur que celle-ci. À quoi cela sert-il? J'y viens. Lorsque tu te trouves sur une tâche rouge, tu fais plus de dégâts à tous les monstres SAUF les monstres rouges que tu ne touches pas. De même pour les autres couleur excepté le blanc, qui représente les monstres de base. Essaie donc!",
 	"step":{"action":"spawn","mobspeed":0,"number":5,"pos":[(400,100),(500,100),(600,100),(700,100),(800,100)],"color":[GRAY,GREEN,BLUE,RED,GRAY]}
 },
 {
@@ -101,7 +101,7 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Venons en maintenant aux dégats... Un monstre viendra plus vite vers vous et vous fera le double de dégats si vous vous tenez sur la même couleur que lui. Au bout d'un moment vous aurez besoin de vous soigner pour ne pas mourrir. Pour vous soigner en combat, il suffit d'utiliser la touche 'e'. Si vous avez de la nourriture dans votre inventaire elle sera automatiquement consommée. Hors combat vous pouvez utiliser la nourriture directement dans l'inventaire avec le clique droit. Pour ouvrir l'inventaire vous pouvez utiliser la touche 'i'. Enfin vous pouvez voir la carte avec la touche 'tab'. Essayez donc ces fonctionnalitées.",
+	"pnj-dialogue":"Un monstre viendra plus vite vers toi et te fera deux fois plus de dégâts si tu es sur une tâche de la même couleur que lui. Au bout d'un moment, tu auras besoin de te soigner pour ne pas mourir. Pour te soigner en combat, utilise la touche 'e' pour consommer de la nourriture de ton inventaire. Hors combat tu peux utiliser la nourriture depuis l'inventaire avec le clic droit. Pour ouvrir l'inventaire, utilise la touche 'i'. Enfin, tu peux voir la carte avec la touche 'tab'. Essaye donc ces fonctionnalitées pour t'y familiariser.",
 	"step":{"action":"dmg-inv-map","keys":["e","i","tab"]}
 }
 
