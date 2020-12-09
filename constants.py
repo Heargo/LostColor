@@ -156,7 +156,7 @@ DESCRIPTIONSITEMS = {
 	"boot_légendaire" : ["La simple vue de ces bottes vous remplit de courage", "Ces bottes font jaillir en vous une force inconnue"],
 	"head_commun" : ["Un casque simple", "Un casque abimé par le temps"],
 	"head_rare" : ["Un casque solide", "Porter ce casque vous fait vous sentir un peu plus fort"],
-	"head_mythique" : ["casque de paladin", "casque en peau de troll"],
+	"head_mythique" : ["Porter ce casque vous remplit de détermination"],
 	"head_légendaire" : ["La simple vue de ce casque vous remplit de courage", "Ce casque fait jaillir en vous une force inconnue"],
 	"glove_commun" : ["Des gants simples", "Des gants abimés par le temps"],
 	"glove_rare" : ["Des gants robustes", "Porter ces gants vous fait vous sentir un peu plus fort"],
