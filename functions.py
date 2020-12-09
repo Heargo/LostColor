@@ -222,32 +222,32 @@ def game(screen,fpsClock,tutorial=False):
                     for pnj in current_room.pnj_list:
                         if pygame.sprite.collide_rect(pnj, player):
                             dialog_loop(tutorial,False,pnj, screen, fpsClock)
-                #if event.key == pygame.K_KP8:
-                #    current_room.spawnMonsters("exact_number", player, 3)
-                #    all_sprites_list.add(current_room.enemy_list)
-                #if event.key == pygame.K_KP9:
-                #    print(all_sprites_list)
-                # if event.key == pygame.K_KP1:
-                #     bonus_test = Bonus("dmg", player)
-                #     all_sprites_list.add(bonus_test)
-                # if event.key == pygame.K_KP2:
-                #     bonus_test = Bonus("tps", player)
-                #     all_sprites_list.add(bonus_test)
-                # if event.key == pygame.K_KP3:
-                #     bonus_test = Bonus("shot_speed", player)
-                #     all_sprites_list.add(bonus_test)
-                # if event.key == pygame.K_KP4:
-                #     bonus_test = Bonus("heal", player)
-                #     all_sprites_list.add(bonus_test)
-                # if event.key == pygame.K_KP5:
-                #     bonus_test = Bonus("hp_max", player)
-                #     all_sprites_list.add(bonus_test)
-                # if event.key == pygame.K_KP6:
-                #     bonus_test = Bonus("speed", player)
-                #     all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP8:
+                   current_room.spawnMonsters("exact_number", player, 3)
+                   all_sprites_list.add(current_room.enemy_list)
+                if event.key == pygame.K_KP9:
+                   print(all_sprites_list)
+                if event.key == pygame.K_KP1:
+                    bonus_test = Bonus("dmg", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP2:
+                    bonus_test = Bonus("tps", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP3:
+                    bonus_test = Bonus("shot_speed", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP4:
+                    bonus_test = Bonus("heal", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP5:
+                    bonus_test = Bonus("hp_max", player)
+                    all_sprites_list.add(bonus_test)
+                if event.key == pygame.K_KP6:
+                    bonus_test = Bonus("speed", player)
+                    all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing = False
-                if event.key == K_TAB :
+                if event.key == K_TAB and len(current_room.enemy_list) == 0:
                     mapOn=True
                 if event.key == K_i and len(current_room.enemy_list) == 0:
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
@@ -280,7 +280,12 @@ def game(screen,fpsClock,tutorial=False):
                     actions["s"]=True
 
             # on change la couleur du joueur en fonction de la position
-            setColorPlayerFromPosition(current_room.taches, player)
+            if not tutorial:
+                setColorPlayerFromPosition(current_room.taches, player)
+            else:
+                if TUTORIAL_DATA[current_room.id]["showBackground"]:
+                    setColorPlayerFromPosition(current_room.taches, player)
+            
 
 
 
@@ -396,9 +401,9 @@ def game(screen,fpsClock,tutorial=False):
                         bullet_list.remove(bullet)
                         all_sprites_list.remove(bullet)
                         if tutorial:
-                            actions["kill"] = mob.checkdead(loots_list,all_sprites_list)
+                            actions["kill"] = mob.checkdead(loots_list,all_sprites_list,TUTORIAL_DATA[current_room.id]["lootEnable"])
                         else:
-                            mob.checkdead(loots_list,all_sprites_list)
+                            mob.checkdead(loots_list,all_sprites_list,True)
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran
                 if bullet.rect.y < -10:
@@ -597,7 +602,7 @@ def estDansCercle(Cercle, M):
 def estDansEnsembleCercles(ensemble,M):
     n = len(ensemble)
     bool = False
-    for i in range(n-1):
+    for i in range(n):
         if estDansCercle(ensemble[i], M):
             bool = True
             break
@@ -661,13 +666,16 @@ def dialog_loop(tutorial,first,pnj, screen, fpsClock):
 def initTutorialStep(current_room,player):
     roomDATA= TUTORIAL_DATA[current_room.id]
     if roomDATA["step"]["action"]=="spawn":
-        current_room.spawnMonsters("exact_number", player, 1, GRAY)
+        current_room.spawnMonsters("exact_number", player, roomDATA["step"]["number"], GRAY)
+        i=0
         for mob in current_room.enemy_list:
+            mob.setColor(roomDATA["step"]["color"][i]) 
             mob.speed = roomDATA["step"]["mobspeed"]
-            mob.rect.x = roomDATA["step"]["pos"][0]
-            mob.rect.y = roomDATA["step"]["pos"][1]
-            mob.floating_point_x =roomDATA["step"]["pos"][0]
-            mob.floating_point_y=roomDATA["step"]["pos"][1]
+            mob.rect.x = roomDATA["step"]["pos"][i][0]
+            mob.rect.y = roomDATA["step"]["pos"][i][1]
+            mob.floating_point_x =roomDATA["step"]["pos"][i][0]
+            mob.floating_point_y=roomDATA["step"]["pos"][i][1]
+            i+=1
 
         all_sprites_list.add(current_room.enemy_list)
 
@@ -675,6 +683,7 @@ def checkTutorialStepCompletion(current_room,actions):
     res= actions
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="spawn" and len(current_room.enemy_list)==0 and actions["kill"]:
         current_room.open_doors()
+        res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="key":
         ok=True
         for key in TUTORIAL_DATA[current_room.id]["step"]["keys"]:
