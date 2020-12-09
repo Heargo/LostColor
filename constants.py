@@ -81,3 +81,78 @@ TUTORIAL_DATA=[
 }
 
 ]
+
+NOMSITEMS = {
+	"belt_commun" = ["Ceinture usagée", "Ceinture de voyage"],
+	"belt_rare" = ["Ceinture d'aventurier", "Ceinture en peau de gobelin"],
+	"belt_mythique" = ["Ceinture de paladin", "Ceinture en peau de troll"],
+	"belt_légendaire" = ["Ceinture de héros", "Ceinture d'écailles de dragon"],
+	"chest_commun" = ["Armure de peau", "Tenue de voyage"],
+	"chest_rare" = ["Tenue d'aventurier", "Armure en peau de gobelin"],
+	"chest_mythique" = ["Armure de paladin", "Armure en peau de troll"],
+	"chest_légendaire" = ["Armure de héros", "Armure d'écailles de dragon"],
+	"boot_commun" = ["Bottes usagées", "Bottes de voyage"],
+	"boot_rare" = ["Bottes d'aventurier", "Bottes en peau de gobelin"],
+	"boot_mythique" = ["Soleret de paladin", "Bottes en peau de troll"],
+	"boot_légendaire" = ["Soleret de héros", "Bottes d'écailles de dragon"],
+	"head_commun" = ["Casque usagé", "Chapeau de voyage"],
+	"head_rare" = ["Casque d'aventurier", "Casque en peau de gobelin"],
+	"head_mythique" = ["Casque de paladin", "Casque en peau de troll"],
+	"head_légendaire" = ["Casque de héros", "Casque d'écailles de dragon"],
+	"glove_commun" = ["Gants usagés", "Gants de voyage"],
+	"glove_rare" = ["Gantelets d'aventurier", "Gants en peau de gobelin"],
+	"glove_mythique" = ["Gantelets de paladin", "Gants en peau de troll"],
+	"glove_légendaire" = ["Gantelets de héros", "Gants d'écailles de dragon"],
+	"earrings_commun" = ["Boucles d'oreilles tordues"],
+	"earrings_rare" = ["Boucles d'oereilles de qualité"],
+	"earrings_mythique" = ["Boucles d'oreilles de magnificence"],
+	"earrings_légendaire" = ["Boucles d'oreilles illustres"],
+	"wand_commun" = ["Baguette d'apprenti", "Baguette de roturier"],
+	"wand_rare" = ["Baguette de mage", "Baguette magique"],
+	"wand_mythique" = ["Baguette de maître", "Baguette de renom"],
+	"wand_légendaire" = ["Baguette d'archimage"],
+	"staff_rare" = ["Bâton de magicien"]
+	
+}
+
+DESCRIPTIONS = {
+	"belt_commun" = ["Une ceinture simple", "Une ceinture abimée par le temps"],
+	"belt_rare" = ["Une ceinture solide", "Porter cette ceinture vous fait vous sentir un peu plus fort"],
+	"belt_mythique" = ["Porter cette ceinture vous remplit de détermination"],
+	"belt_légendaire" = ["La simple vue de cette ceinture vous remplit de courage", "Cette ceinture fait jaillir en vous une force inconnue"],
+	"chest_commun" = ["Une tenue simple", "Une tenue abimée par le temps"],
+	"chest_rare" = ["Une armure solide", "Porter cette armure vous fait vous sentir un peu plus fort"],
+	"chest_mythique" = ["Porter cette armure vous remplit de détermination"],
+	"chest_légendaire" = ["La simple vue de cette armure vous remplit de courage", "Cette armure fait jaillir en vous une force inconnue"],
+	"boot_commun" = ["De simples bottes", "Des bottes abimées par le temps"],
+	"boot_rare" = ["Des bottes robustes", "Porter ces bottes vous fait vous sentir un peu plus fort"],
+	"boot_mythique" = ["Porter ces bottes vous remplit de détermination"],
+	"boot_légendaire" = ["La simple vue de ces bottes vous remplit de courage", "Ces bottes font jaillir en vous une force inconnue"],
+	"head_commun" = ["Un casque simple", "Un casque abimé par le temps"],
+	"head_rare" = ["Un casque solide", "Porter ce casque vous fait vous sentir un peu plus fort"],
+	"head_mythique" = ["casque de paladin", "casque en peau de troll"],
+	"head_légendaire" = ["La simple vue de ce casque vous remplit de courage", "Ce casque fait jaillir en vous une force inconnue"],
+	"glove_commun" = ["Des gants simples", "Des gants abimés par le temps"],
+	"glove_rare" = ["Des gants robustes", "Porter ces gants vous fait vous sentir un peu plus fort"],
+	"glove_mythique" = ["Porter ces gants vous remplit de détermination"],
+	"glove_légendaire" = ["La simple vue de ces gants vous remplit de courage", "Ces gants font jaillir en vous une force inconnue"],
+	"earrings_commun" = ["De la joaillerie de bas étage"],
+	"earrings_rare" = ["Une perle de joaillier"],
+	"earrings_mythique" = ["Ces boucles d'oreilles semblent être tirées d'un rêve"],
+	"earrings_légendaire" = ["Ces fabuleuses boucles d'oreilles sont réputées pour leur beauté"],
+	"wand_commun" = ["Un simple bout de bois"],
+	"wand_rare" = ["Vous sentez de la magie pure émanant de cette baguette],
+	"wand_mythique" = ["Vous savez que la baguette que vous tenez s'est fait un nom dans l'histoire de la magie"],
+	"wand_légendaire" = ["Cette baguette a déjà accompli de nombreux exploits"],
+	"staff_rare" = ["Vous sentez de la magie pure émanant de ce bâton orné"]
+
+		       
+}
+		  
+		       
+	
+	
+	
+	
+	
+	
