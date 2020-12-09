@@ -174,6 +174,39 @@ DESCRIPTIONSITEMS = {
 
 		       
 }
+
+NOMSFOOD = {
+	"beer" : ["Bière", "Cervoise de qualité"],
+	"cake" : ["Gâteau", "Tarte"],
+	"fish" : ["Poisson", "Poisson pêché"],
+	"meal" : ["Repas", "Casse-croûte"],
+	"meat" : ["Viande", "Morceau de viande rouge"],
+	"noodles" : ["Nouilles", "Plat de nouilles", "Plat de pâtes"],
+	"onigri" : ["Riz", "Boulette de riz"],
+	"pizza" : ["Pizza", "Morceau de pizza"],
+	"steak" : ["Steak", "Côtelette d'agneau"],
+	"strawberry" : ["Fraise" "Fruit rouge"],
+	"tomato" : ["Tomate", "Tomate de potager"],
+	"whiskey" : ["Whiskey", "Alcool de qualité"]
+	
+}
+
+DESCRIPTIONSFOOD = {
+	"beer" : ["Une curieuse boisson importée par les nains"],
+	"cake" : ["Un gâteau appétissant"],
+	"fish" : ["Frais de ce matin"],
+	"meal" : ["Parfaitement équilibré pour une aventure!"],
+	"meat" : ["Le regarder vous fait saliver"],
+	"noodles" : ["Son odeur vous fait chavirer"],
+	"onigri" : ["Une simple boulette de riz"],
+	"pizza" : ["Le fromage en coule encore"],
+	"steak" : ["Un fumet ravissant"],
+	"strawberry" : ["Une denrée rare dans ces régions"],
+	"tomato" : ["Pour respecter les 5 fruits et légumes par jour"],
+	"whiskey" : ["Celui-ci a été conservé pendant 30 ans"]
+		    
+}
+
 	
 		  
 		       
