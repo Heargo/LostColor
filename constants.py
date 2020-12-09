@@ -64,6 +64,7 @@ TUTORIAL_DATA=[
 	"showHealSkill":False,
 	"lvl":1,
 	"allowWhiteMobSpawn":False,
+	"lootEnable":False,
 	"pnj-name":"HuSiRo",
 	"pnj-dialogue":"Bonjour, bienvenu(e) sur le Tutoriel de LostColor ! Je suis votre instructeur ici ! vous pouvez vous deplacer avec les  touches z q s d. Attention, si votre clavier est en qwerty, passez le en azerty. Essayez de vous deplacer dans la salle en utilisant ces touches puis passez a la salle suivante. Vous pouvez interragir avec moi avec [barre espace]",
 	
@@ -75,12 +76,37 @@ TUTORIAL_DATA=[
 	"showHealSkill":False,
 	"lvl":1,
 	"allowWhiteMobSpawn":False,
+	"lootEnable":False,
 	"pnj-name":"HuSiRo",
 	"pnj-dialogue":"Vous avez pu trouver votre chemin ? Bien... Préparez vous à tuer un monstre. Vous pouvez visez avec le curseur de votre souris. utilisez le clique gauche pour tirer. ",
-	"step":{"action":"spawn","mobspeed":0,"pos":(600,100)}
+	"step":{"action":"spawn","mobspeed":0,"number":1,"pos":[(600,100)],"color":[GRAY]}
+}
+,
+{
+	"difficulty":"peaceful",
+	"showBackground":True,
+	"showHealSkill":False,
+	"lvl":1,
+	"allowWhiteMobSpawn":False,
+	"lootEnable":False,
+	"pnj-name":"HuSiRo",
+	"pnj-dialogue":"Comme vous avez pu le constater, des taches de couleurs sont apparues sur le sol. Lorsque vous vous trouvez sur une couleur, vos tir prennent la même couleur. Quel interet me direz vous ? Lorsque vous êtes sur une tache rouges, vous faites plus de dégâts à tous les monstres SAUF que vous ne pouvez pas attaquer les monstres rouges. De même pour les autres couleurs sauf le blanc. Je vous laisse essayer...",
+	"step":{"action":"spawn","mobspeed":0,"number":5,"pos":[(400,100),(500,100),(600,100),(700,100),(800,100)],"color":[GRAY,GREEN,BLUE,RED,GRAY]}
+},
+{
+	"difficulty":"peaceful",
+	"showBackground":False,
+	"showHealSkill":False,
+	"lvl":1,
+	"allowWhiteMobSpawn":False,
+	"lootEnable":False,
+	"pnj-name":"HuSiRo",
+	"pnj-dialogue":"Venons en maintenant aux dégats... Un monstre viendra plus vite vers vous et vous fera le double de dégats si vous vous tenez sur la même couleur que lui. Au bout d'un moment vous aurez besoin de vous soigner pour ne pas mourrir. Pour vous soigner en combat, il suffit d'utiliser la touche 'e'. Si vous avez de la nourriture dans votre inventaire elle sera automatiquement consommée. Hors combat vous pouvez utiliser la nourriture directement dans l'inventaire avec le clique droit. Pour ouvrir l'inventaire vous pouvez utiliser la touche 'i'. Enfin vous pouvez voir la carte avec la touche 'tab'. Essayez donc ces fonctionnalitées.",
+	"step":{"action":"dmg-inv-map","keys":["e","i","tab"]}
 }
 
 ]
+
 
 NOMSITEMS = {
 	"belt_commun" = ["Ceinture usagée", "Ceinture de voyage"],
