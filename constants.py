@@ -141,7 +141,7 @@ NOMSITEMS = {
 	
 }
 
-DESCRIPTIONS = {
+DESCRIPTIONSITEMS = {
 	"belt_commun" : ["Une ceinture simple", "Une ceinture abimée par le temps"],
 	"belt_rare" : ["Une ceinture solide", "Porter cette ceinture vous fait vous sentir un peu plus fort"],
 	"belt_mythique" : ["Porter cette ceinture vous remplit de détermination"],

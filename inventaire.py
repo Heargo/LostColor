@@ -134,7 +134,7 @@ def createRandomItem():
 			key = item.shortName+"_"+grade
 
 		item.name = NOMSITEMS[key][randint(0,len(NOMSITEMS[key])-1)]
-		item.description = DESCRIPTIONS[key][randint(0,len(DESCRIPTIONS[key])-1)]
+		item.description = DESCRIPTIONSITEMS[key][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
 	#si il n'est pas equipable
 	else:
 		lsPlants=[]
