@@ -162,6 +162,9 @@ def createRandomItem():
 			item.image = pygame.transform.scale(item.image,(64,64))
 			#on la resize
 			item.rect = item.image.get_rect()
+			#on met a jour le nom et la description
+			#item.name = NOMSITEMS[key][randint(0,len(NOMSITEMS[key])-1)]
+			#item.description = DESCRIPTIONSITEMS[key][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
 
 
 	return item
