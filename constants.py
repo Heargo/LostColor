@@ -207,7 +207,14 @@ DESCRIPTIONSFOOD = {
 		    
 }
 
+DIALOGUESMARCHAND = {
+	"présentation" : ["Bonjour", "Beau temps pour faire des affaires non?", "Je vous ai manqué?", "Cela fait bien longtemps... au moins trente secondes!", "Êtes-vous prêts à marchander?"],
+	"acheter" : ["J'ai quelques nouveautés dont vous me direz des nouvelles.", "J'ai refait mes stocks derièrement, regardez donc.", "Qu'est-ce qui vous intéresserait cette fois-ci?", "Jetez un coup d'oeil", "Peut-être trouverez-vous votre bohneur cette fois-ci", "Vous aurez bien besoin d'un petit remontant?"],
+	"vendre" : ["Que m'apportez-vous cette fois-ci?", "Montrez-moi ce que vous voulez vendre.", "Un peu de commerce ne fait jamais de mal", "Dites toujours", "Oh ho! Quels nouveaux joyaux m'apportez-vous?", "Ça tombe bien, j'avais envie de faire des emplettes aujourd'hui."],
+	"quitter" : ["À une prochaine fois! Enfin, je l'espère...", "Faites bien attention à vous.", "Les environs sont dangereux ces temps-ci, soyez prudent", "Puissent nos chemins de nouveau se croiser!", "Bonne chance."]
 	
+}
+
 		  
 		       
 	
