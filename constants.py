@@ -207,6 +207,55 @@ DESCRIPTIONSFOOD = {
 		    
 }
 
+NOMSPLANTES = {
+	"2" : ["Blé"],
+	"3" : ["Houx"],
+	"6" : ["Paille"],
+	"7" : ["Baie violette"],
+	"8" : ["Baie pâle"],
+	"9" : ["Baie orange"],
+	"10" : ["Noix"],
+	"12": ["Carotte"],
+	"16" : ["Trèfle commun"],
+	"19" : ["Baie rouge"],
+	"20" : ["Champignons noirâtres"],
+	"21" : ["Samare d'érable"],
+	"23": ["Champignons blancs"],
+	"32" : ["Grappe de baies bleuâtres"],
+	"33" : ["Haricot"],
+	"35" : ["Graines"],
+	"40" : ["Branche tordue"],
+	"44" : ["Champignons grisâtres"],
+	"46" : ["Chataîgne"],
+	"47" : ["Champignons luisants"],
+
+}
+
+NOMSDIVERS = {
+	"ambre" : ["Ambre"],
+	"diamond" : ["Diamant"],
+	"emerauld" : ["Émeraude"],
+	"leather" : ["Cuir"],
+	"metal" = ["Métal"],
+	"plank" = ["Planche"],
+	"rubis" = ["Rubis"],
+	"stone" : ["Pierre"],
+	"wood" : ["Bois"]
+
+}
+
+DESCRIPTIONSDIVERS = { 
+	"ambre" : ["Une gemme opaque de couleur jaune-marron"],
+	"diamond" : ["Une pierre précieuse, brillante et extrêmement dure"],
+	"emerauld" : ["Une gemme minérale de couleur verte"],
+	"leather" : ["Une simple peau d'animal tannée"],
+	"metal" : ["Un pur lingot de métal"],
+	"plank" : ["Une fine planche de bois"],
+	"stone" : ["De la pierre brute"],
+	"wood" : ["Des rondins de bois"]
+	
+}
+
 DIALOGUESMARCHAND = {
 	"présentation" : ["Bonjour", "Beau temps pour faire des affaires non?", "Je vous ai manqué?", "Cela fait bien longtemps... au moins trente secondes!", "Êtes-vous prêts à marchander?"],
 	"acheter" : ["J'ai quelques nouveautés dont vous me direz des nouvelles.", "J'ai refait mes stocks derièrement, regardez donc.", "Qu'est-ce qui vous intéresserait cette fois-ci?", "Jetez un coup d'oeil", "Peut-être trouverez-vous votre bohneur cette fois-ci", "Vous aurez bien besoin d'un petit remontant?"],
