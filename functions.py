@@ -198,9 +198,9 @@ def game(screen,fpsClock,tutorial=False):
     actions={"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
     firstDialogueBoxDone=False
     if tutorial:
-        tutorialCompleted=False       
+        tutorialCompleted=False
     else:
-        tutorialCompleted=True
+        tutorialCompleted=True   
    
     while playing:
         click=False
@@ -249,13 +249,19 @@ def game(screen,fpsClock,tutorial=False):
                     playing = False
                 if event.key == K_TAB and len(current_room.enemy_list) == 0:
                     mapOn=True
+                    if tutorial:
+                        actions["tab"]=True
                 if event.key == K_i and len(current_room.enemy_list) == 0:
+                    if tutorial:
+                        actions["i"]=True
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
                     player.updateStats()
                 if event.key == K_f:
                     checkRecupLoot(all_sprites_list,loots_list,player)
                 if event.key == K_e:
                     healSkill(player)
+                    if tutorial:
+                        actions["e"]=True
 
 
         if not mapOn and player.HP >0:
@@ -420,8 +426,8 @@ def game(screen,fpsClock,tutorial=False):
             white_mob_spawn_delay += 1
 
             #si on est dans le tuto, on vérifie l'avancement de l'étape
-            if tutorial:
-                actions = checkTutorialStepCompletion(current_room,actions)
+            if tutorial and not tutorialCompleted:
+                actions,tutorialCompleted = checkTutorialStepCompletion(current_room,actions,tutorialCompleted)
 
             # Appelle la méthode update() de tous les Sprites
             all_sprites_list.update()
@@ -432,6 +438,9 @@ def game(screen,fpsClock,tutorial=False):
             # --- Dessiner la frame
             # Clear the screen
             screen.fill(WHITE)
+
+            
+
             # Dessine les taches de couleur
             if not tutorial:
                 drawAllTaches(screen, current_room.taches)
@@ -446,6 +455,12 @@ def game(screen,fpsClock,tutorial=False):
             else:
                 if TUTORIAL_DATA[current_room.id]["showHealSkill"]:
                     dessineHealBouton(screen,player)
+
+            #on met l'affichage de fin de tuto
+            if tutorial:
+                if tutorialCompleted:
+                    draw_text(screen,"Vous avez terminé le tutoriel ! echap pour quitter", 'fonts/No_Color.ttf', 37, BLACK, 650, 100, True)
+
             # Dessine les murs et portes de la salle courante
             current_room.wall_list.draw(screen)
             current_room.door_list.draw(screen)
@@ -678,8 +693,11 @@ def initTutorialStep(current_room,player):
             i+=1
 
         all_sprites_list.add(current_room.enemy_list)
+    if TUTORIAL_DATA[current_room.id]["step"]["action"]=="dmg-inv-map":
+        player.HP-=10
+        player.inventaire.add(Item(equipable=False,slotequipable=-1,name="Gateau aux cerises",shortName="Gateau",image="./img/food/cake.png",grade="commun",price=0.01,stats={"heal":10},description="Tutorial item"))
 
-def checkTutorialStepCompletion(current_room,actions):
+def checkTutorialStepCompletion(current_room,actions,tutorialCompletedF1):
     res= actions
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="spawn" and len(current_room.enemy_list)==0 and actions["kill"]:
         current_room.open_doors()
@@ -692,6 +710,14 @@ def checkTutorialStepCompletion(current_room,actions):
         if ok:
             current_room.open_doors()
             res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
-            
+    if TUTORIAL_DATA[current_room.id]["step"]["action"]=="dmg-inv-map":
+        ok=True
+        for key in TUTORIAL_DATA[current_room.id]["step"]["keys"]:
+            if not actions[key]:
+                ok=False
+        if ok:
+            current_room.open_doors()
+            tutorialCompletedF1=True
+            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}     
 
-    return res
+    return res, tutorialCompletedF1

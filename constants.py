@@ -96,7 +96,7 @@ TUTORIAL_DATA=[
 {
 	"difficulty":"peaceful",
 	"showBackground":False,
-	"showHealSkill":False,
+	"showHealSkill":True,
 	"lvl":1,
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
@@ -182,7 +182,7 @@ NOMSFOOD = {
 	"meal" : ["Repas", "Casse-croûte"],
 	"meat" : ["Viande", "Morceau de viande rouge"],
 	"noodles" : ["Nouilles", "Plat de nouilles", "Plat de pâtes"],
-	"onigri" : ["Riz", "Boulette de riz"],
+	"onigiri" : ["Riz", "Boulette de riz"],
 	"pizza" : ["Pizza", "Morceau de pizza"],
 	"steak" : ["Steak", "Côtelette d'agneau"],
 	"strawberry" : ["Fraise" "Fruit rouge"],
@@ -198,7 +198,7 @@ DESCRIPTIONSFOOD = {
 	"meal" : ["Parfaitement équilibré pour une aventure!"],
 	"meat" : ["Le regarder vous fait saliver"],
 	"noodles" : ["Son odeur vous fait chavirer"],
-	"onigri" : ["Une simple boulette de riz"],
+	"onigiri" : ["Une simple boulette de riz"],
 	"pizza" : ["Le fromage en coule encore"],
 	"steak" : ["Un fumet ravissant"],
 	"strawberry" : ["Une denrée rare dans ces régions"],
@@ -236,9 +236,9 @@ NOMSDIVERS = {
 	"diamond" : ["Diamant"],
 	"emerauld" : ["Émeraude"],
 	"leather" : ["Cuir"],
-	"metal" = ["Métal"],
-	"plank" = ["Planche"],
-	"rubis" = ["Rubis"],
+	"metal" : ["Métal"],
+	"plank" : ["Planche"],
+	"rubis" : ["Rubis"],
 	"stone" : ["Pierre"],
 	"wood" : ["Bois"]
 
@@ -251,6 +251,7 @@ DESCRIPTIONSDIVERS = {
 	"leather" : ["Une simple peau d'animal tannée"],
 	"metal" : ["Un pur lingot de métal"],
 	"plank" : ["Une fine planche de bois"],
+	"rubis" : ["Un pierre couleur sang"],
 	"stone" : ["De la pierre brute"],
 	"wood" : ["Des rondins de bois"]
 	

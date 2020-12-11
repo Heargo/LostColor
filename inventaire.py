@@ -137,13 +137,11 @@ def createRandomItem():
 		item.description = DESCRIPTIONSITEMS[key][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
 	#si il n'est pas equipable
 	else:
-		lsPlants=[]
-		for i in range(1,49):
-			lsPlants+=[str(i)]
+
 		dicNameImg={
 		"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
 		"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
-		"plants":lsPlants
+		"plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
 		}
 		categorie=choice(["food","misc","plants"])
 		itemname=choice(dicNameImg[categorie])
@@ -163,8 +161,17 @@ def createRandomItem():
 			#on la resize
 			item.rect = item.image.get_rect()
 			#on met a jour le nom et la description
-			#item.name = NOMSITEMS[key][randint(0,len(NOMSITEMS[key])-1)]
-			#item.description = DESCRIPTIONSITEMS[key][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
+			item.name = NOMSPLANTES[itemname][0]
+			item.shortName = "Plante"
+			#item.description = DESCRIPTIONSITEMS[itemname][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
+		elif categorie =="misc":
+			item.name = NOMSDIVERS[itemname][0]
+			item.shortName = NOMSDIVERS[itemname][0]
+			item.description = DESCRIPTIONSDIVERS[itemname][0]
+		elif categorie =="food":
+			item.name = NOMSFOOD[itemname][randint(0,len(NOMSFOOD[itemname])-1)]
+			item.shortName = NOMSFOOD[itemname][0]
+			item.description = DESCRIPTIONSFOOD[itemname][0]
 
 
 	return item
@@ -650,7 +657,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 					all_sprites.add(item)
 					inventaire.add(item)
 
-				if event.key == pygame.K_i:
+				if event.key == pygame.K_i or event.key == pygame.K_ESCAPE:
 					inventaireOn=False
 
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not locked:
