@@ -11,6 +11,7 @@ from proceduralGeneration import *
 from inventaire import invetoryScreen, Item
 from Dialog_Box import *
 from time import time
+import controls
 
 def initPartie(tutorial=False):
     """Initialise une partie"""
@@ -133,6 +134,73 @@ def drawPolygones(screen,poly_list):
     for p in poly_list:
         pygame.draw.polygon(screen, p[1], p[0],0)
 
+def bind_controles(screen,fpsClock):
+    """Affichage et parametrage des controles"""
+    continuer = True
+    isBinding = False
+    click = False
+    touche_a_bind = ""
+    tab_bouton_touche = []
+    decalage_y = 0
+    for k in controls.affichageTouche:
+        button_color = ALL_COLORS[randint(0,len(ALL_COLORS)-1)]
+        b = Bouton((SCREEN_WIDTH // 3) * 2, 90 + decalage_y, 'Changer', button_color, False, height=50,
+                   font='fonts/SuperLegendBoy-4w8Y.ttf',font_size=30)
+        bouton_touche = (b, k)
+        tab_bouton_touche.append(bouton_touche)
+        decalage_y += 60
+    quit_button = Bouton(30, 30, 'Retour', RED, False, 200)
+    while continuer:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            # clic de la souris
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+            elif event.type == KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    continuer = False
+                elif isBinding:
+                    controls.binder(touche_a_bind, event.key, event.unicode)
+                    isBinding = False
+
+        # on recupère les coordonnées de la souris
+        mx, my = pygame.mouse.get_pos()
+
+        for bt in tab_bouton_touche:
+            bouton = bt[0]
+            touche = bt[1]
+            if bouton.hoover(mx, my) and click:
+                isBinding = True
+                touche_a_bind = touche
+        if quit_button.hoover(mx, my) and click:
+            continuer = False
+
+        # Affichage
+        screen.fill((255,255,255))
+        if isBinding:
+            draw_text(screen, "Entrez la nouvelle touche", "fonts/SuperLegendBoy-4w8Y.ttf", 50, BLACK,
+                      SCREEN_WIDTH//2, SCREEN_HEIGHT//2, True)
+        else:
+            decalage_y = 0
+            for k in controls.affichageTouche:
+                text = k + " : " + controls.affichageTouche[k]
+                draw_text(screen, text, "fonts/SuperLegendBoy-4w8Y.ttf", 30, BLACK, SCREEN_WIDTH//4, 100 + decalage_y, False)
+                decalage_y += 60
+
+
+            for bt in tab_bouton_touche:
+                bt[0].draw(screen,mx , my)
+            quit_button.draw(screen,mx , my)
+
+        # on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
+        click = False
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
 
 def main_menu(screen,fpsClock):
     running = True
@@ -141,7 +209,8 @@ def main_menu(screen,fpsClock):
     b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100, 'Jouer', RED)
     b2 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 'Tutoriel', GREEN)
     b3 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100, 'Credit', BLUE)
-    b4 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200, 'Quitter', GRAY)
+    b4 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200, 'Controles', ORANGE)
+    b5 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300, 'Quitter', GRAY)
 
     while running:
         #fermeture de la fenetre
@@ -169,6 +238,9 @@ def main_menu(screen,fpsClock):
                 pass # credits()
         if b4.hoover(mx, my):
             if click:
+                bind_controles(screen, fpsClock)
+        if b5.hoover(mx, my):
+            if click:
                 pygame.quit()
                 sys.exit()
 
@@ -181,6 +253,7 @@ def main_menu(screen,fpsClock):
         b2.draw(screen, mx, my)
         b3.draw(screen, mx, my)
         b4.draw(screen, mx, my)
+        b5.draw(screen, mx, my)
         #on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
         click = False
 
@@ -216,9 +289,9 @@ def game(screen,fpsClock,tutorial=False):
             if event.type == MOUSEBUTTONDOWN and player.HP <=0:
                     if event.button == 1:
                         click = True
-            # Detection d'utilisation du clavier pour faire spawner 3 monstres
+            # Detection d'utilisation du clavier
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == controls.C_PARLER:
                     for pnj in current_room.pnj_list:
                         if pygame.sprite.collide_rect(pnj, player):
                             dialog_loop(tutorial,False,pnj, screen, fpsClock)
@@ -247,18 +320,18 @@ def game(screen,fpsClock,tutorial=False):
                     all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing = False
-                if event.key == K_TAB and len(current_room.enemy_list) == 0:
+                if event.key == controls.C_CARTE and len(current_room.enemy_list) == 0:
                     mapOn=True
                     if tutorial:
                         actions["tab"]=True
-                if event.key == K_i and len(current_room.enemy_list) == 0:
+                if event.key == controls.C_INVENTAIRE and len(current_room.enemy_list) == 0:
                     if tutorial:
                         actions["i"]=True
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
                     player.updateStats()
-                if event.key == K_f:
+                if event.key == controls.C_RAMASSER:
                     checkRecupLoot(all_sprites_list,loots_list,player)
-                if event.key == K_e:
+                if event.key == controls.C_MANGER:
                     healSkill(player)
                     if tutorial:
                         actions["e"]=True
@@ -268,19 +341,19 @@ def game(screen,fpsClock,tutorial=False):
             # Detection d'utilisation du clavier pour déplacer le joueur:
             activeKey = pygame.key.get_pressed()
 
-            if activeKey[K_a]:  # left
+            if activeKey[controls.C_GAUCHE]:  # left
                 player.move("LEFT", current_room.wall_list)
                 if tutorial:
                     actions["q"]=True
-            if activeKey[K_d]:  # right
+            if activeKey[controls.C_DROITE]:  # right
                 player.move("RIGHT", current_room.wall_list)
                 if tutorial:
                     actions["d"]=True
-            if activeKey[K_w]:  # top
+            if activeKey[controls.C_HAUT]:  # top
                 player.move("UP", current_room.wall_list)
                 if tutorial:
                     actions["z"]=True
-            if activeKey[K_s]:  # bottom
+            if activeKey[controls.C_BAS]:  # bottom
                 player.move("DOWN", current_room.wall_list)
                 if tutorial:
                     actions["s"]=True
@@ -474,7 +547,7 @@ def game(screen,fpsClock,tutorial=False):
         #si il y a la map
         if mapOn and player.HP >0:
             activeKey = pygame.key.get_pressed()
-            if not activeKey[K_TAB]:
+            if not activeKey[controls.C_CARTE]:
                 mapOn=False
             # Clear the screen
             screen.fill(WHITE)
@@ -665,7 +738,7 @@ def dialog_loop(tutorial,first,pnj, screen, fpsClock):
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == controls.C_PARLER:
                     boite_de_dialogue.boite_suiv()
                     if len(dialog_box_group) == 0:
                         boite_de_dialogue.reset_boite()

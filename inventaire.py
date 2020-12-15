@@ -3,6 +3,7 @@ from pygame.locals import *
 #from functions import draw_text
 from constants import *
 from random import choice, choices, randint
+import controls
 
 class Item(pygame.sprite.Sprite):
 	"""docstring for Item"""
@@ -657,7 +658,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 					all_sprites.add(item)
 					inventaire.add(item)
 
-				if event.key == pygame.K_i or event.key == pygame.K_ESCAPE:
+				if event.key == pygame.controls.C_INVENTAIRE or event.key == pygame.K_ESCAPE:
 					inventaireOn=False
 
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not locked:
