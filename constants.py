@@ -10,10 +10,17 @@ BROWN = (58, 29, 0)
 RED2 = (225, 40, 30)
 GREEN2 = (40, 215, 50)
 BLUE2 = (40, 30, 215)
+ORANGE = (255,127,0)
+CYAN = (0,255,255)
+MAGENTA = (255,0,255)
+YELLOW = (255,255,0)
 
 
 #couleurs des taches et des monstres
 COLORS=[RED,GREEN,BLUE]
+
+# Tableau de toutes les couleurs du jeu a part noir, blanc et marron
+ALL_COLORS = [RED,GREEN, BLUE, GRAY, RED2, GREEN2, BLUE2, ORANGE, CYAN, MAGENTA, YELLOW]
 
 #taille de l'écran
 SCREEN_WIDTH = 1280
