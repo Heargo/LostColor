@@ -8,7 +8,7 @@ class Dialog_Box(pygame.sprite.Sprite):
 
         self.text = text
         self.author_name = author_name
-        lines_tab = self.get_lines_tab(120)
+        lines_tab = self.get_lines_tab(90)
         self.dialog_tab = self.get_dialog_tab(lines_tab)
 
         self.boite_no = 0
@@ -63,8 +63,8 @@ class Dialog_Box(pygame.sprite.Sprite):
 
 
     def ecrit_boite(self, surface, surface_rect, boite, author_name):
-        font = pygame.font.Font('fonts/RPGSystem.ttf', 25)
-        text_image = font.render(author_name+" :", True, WHITE)
+        font = pygame.font.Font('fonts/SuperLegendBoy-4w8Y.ttf', 22)
+        text_image = font.render(author_name+" :", True, ORANGE)
         text_rect = text_image.get_rect()
         text_rect.x = surface_rect.x + 10
         text_rect.y = surface_rect.y + 5
@@ -74,7 +74,7 @@ class Dialog_Box(pygame.sprite.Sprite):
 
         for i in range(len(boite)):
             line = boite[i]
-            font = pygame.font.Font('fonts/RPGSystem.ttf', 25)
+            font = pygame.font.Font('fonts/SuperLegendBoy-4w8Y.ttf', 18)
 
             text_image = font.render(line, True, WHITE)
             text_rect = text_image.get_rect()
