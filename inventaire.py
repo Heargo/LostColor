@@ -658,7 +658,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 					all_sprites.add(item)
 					inventaire.add(item)
 
-				if event.key == pygame.controls.C_INVENTAIRE or event.key == pygame.K_ESCAPE:
+				if event.key == controls.C_INVENTAIRE or event.key == pygame.K_ESCAPE:
 					inventaireOn=False
 
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not locked:
