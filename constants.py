@@ -231,6 +231,32 @@ NOMSPLANTES = {
 
 }
 
+DESCRIPTIONSPLANTES = {
+	"2" : ["De simples céréales"],
+	"3" : ["Une feuille de houx"],
+	"6" : ["Une touffe de paille"],
+	"7" : ["Une baie qui ne vous inspire guère confiance"],
+	"8" : ["Des baies utilisées comme somnifère"],
+	"9" : ["Une baie comestibles et succulentes"],
+	"10" : ["Leur poudre peut servir à concocter des solutions"],
+	"12" : ["Un légume basique"],
+	"16" : ["Certains spécimens très rares portent chance"],
+	"19" : ["Des baies toxiques"],
+	"20" : ["Des champignons non comestibles mais qui possèdent de sombres propriétés..."],
+	"21" : ["Une graine qui tournicote lors de sa chute"],
+	"23" : ["Ces champignons ont l'air succulents"],
+	"32" : ["Ces baies dégagent une odeur pestilentielle"],
+	"33" : ["Un haricot rempli de petits pois"],
+	"35" : ["Des graines de haricots"],
+	"40" : ["La forme étrange de cette branche vous fait penser qu'elle a été ensorcelée"],
+	"44" : ["De succulents champignons"],
+	"46" : ["Une chataîgne encore intacte"],
+	"47" : ["Des champignons d'aspect peu commun aux propriétés magiques"]
+
+}
+	
+	
+
 NOMSDIVERS = {
 	"ambre" : ["Ambre"],
 	"diamond" : ["Diamant"],
