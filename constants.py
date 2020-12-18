@@ -201,7 +201,7 @@ NOMSFOOD = {
 	"onigiri" : ["Riz", "Boulette de riz"],
 	"pizza" : ["Pizza", "Morceau de pizza"],
 	"steak" : ["Steak", "Côtelette d'agneau"],
-	"strawberry" : ["Fraise" "Fruit rouge"],
+	"strawberry" : ["Fraise","Fruit rouge"],
 	"tomato" : ["Tomate", "Tomate de potager"],
 	"whiskey" : ["Whiskey", "Alcool de qualité"]
 	

@@ -154,6 +154,8 @@ class Room(object):
                                )
             if color != "none":
                 monstre.setColor(color)
+            if color == GRAY:
+                monstre.speed=1.5
             self.enemy_list.add(monstre)
 
 

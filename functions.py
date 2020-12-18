@@ -606,16 +606,24 @@ def dessineHealBouton(screen,player):
 def updateMobsStats(mobs_lists,color):
     for mob in mobs_lists:
         if mob.colorbuff == color and not mob.isboosted:
-            mob.DMG*=2
-            mob.speed+=3
+            if mob.colorbuff!=GRAY:
+                mob.DMG*=2
+                mob.speed+=3
+            else:
+                mob.DMG*=1.5
+                mob.speed+=1.5
             mob.isboosted=True
             #on recupère l'image du monstre
             mob.image = pygame.transform.scale(mob.image,(40,40))
             #on la resize
             mob.rect = mob.image.get_rect()
         elif mob.colorbuff != color and mob.isboosted:
-            mob.DMG/=2
-            mob.speed-=3
+            if mob.colorbuff!=GRAY:
+                mob.DMG/=2
+                mob.speed-=3
+            else:
+                mob.DMG/=1.5
+                mob.speed-=1.5
             mob.isboosted=False
             #on recupère l'image du monstre
             mob.image =mob.originalImage
