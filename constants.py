@@ -3,13 +3,16 @@ FPS = 60
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+RED3 = (150, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 GRAY = (127, 127, 127)
 BROWN = (58, 29, 0)
 RED2 = (225, 40, 30)
 GREEN2 = (40, 215, 50)
+GREEN3 = (0, 150, 0)
 BLUE2 = (40, 30, 215)
+BLUE3 = (0, 0, 150)
 ORANGE = (255,127,0)
 CYAN = (0,255,255)
 MAGENTA = (255,0,255)
@@ -18,6 +21,12 @@ YELLOW = (255,255,0)
 
 #couleurs des taches et des monstres
 COLORS=[RED,GREEN,BLUE]
+
+COLOR_OF_BULLET = {	RED:RED3,
+					GREEN:GREEN3,
+					BLUE:BLUE3,
+					GRAY:GRAY
+					}
 
 # Tableau de toutes les couleurs du jeu a part noir, blanc et marron
 ALL_COLORS = [RED,GREEN, BLUE, GRAY, RED2, GREEN2, BLUE2, ORANGE, CYAN, MAGENTA, YELLOW]

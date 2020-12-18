@@ -124,10 +124,7 @@ class Player(pygame.sprite.Sprite):
 
 
 			if self.filter_on:
-				filtre = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
-				filtre_rect = filtre.get_rect()
-				filtre.fill((255, 255, 255, 100))
-				self.image.blit(filtre, filtre_rect)
+				self.image = pygame.image.load("img/player/player_dmg.png")
 			else:
 				self.image = pygame.image.load("img/player/player.png")
 

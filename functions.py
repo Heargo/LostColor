@@ -398,7 +398,8 @@ def game(screen,fpsClock,tutorial=False):
                     mouse_y = pos[1]
 
                     # Créé la balle
-                    bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
+                    #bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
+                    bullet = Bullet(player, mouse_x, mouse_y, COLOR_OF_BULLET[player.colorbuff])
 
                     # et l'ajoute a la liste des balles
                     bullet_list.add(bullet)
@@ -472,7 +473,7 @@ def game(screen,fpsClock,tutorial=False):
                     if bullet.color==GRAY:
                         mob.HP -= player.DMG*0.5
                         dmgDone=True
-                    elif bullet.color!=mob.colorbuff:
+                    elif bullet.color!=COLOR_OF_BULLET[mob.colorbuff]:
                         mob.HP -= player.DMG*1.5
                         dmgDone=True
 
