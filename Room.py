@@ -155,8 +155,14 @@ class Room(object):
             if color != "none":
                 monstre.setColor(color)
             if color == GRAY:
-                monstre.speed=1.5
+                monstre.speed = 1.5
             self.enemy_list.add(monstre)
+        if difficulty == "boss":
+            boss = Boss1(target)
+            boss.phase = {1: Boss1P1(target, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+                          2: Boss1P2,
+                          3: Boss1P3}
+            self.enemy_list.add(boss.phase[boss.phase_no])
 
 
 

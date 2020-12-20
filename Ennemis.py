@@ -3,6 +3,7 @@ from constants import *
 from pygame.locals import *
 from random import randint
 from inventaire import generateLoot
+from Bullet import Bullet
 
 class Monstre1(pygame.sprite.Sprite):
     """ Cette classe represente les objets Monstre1"""
@@ -124,4 +125,186 @@ class Monstre1(pygame.sprite.Sprite):
         if self.HP <=0:
             res=True
         return res
+
+class Boss1(pygame.sprite.Sprite):
+    """ Cette classe represente le premier Boss"""
+
+    def __init__(self, target):
+        # Appel du constructeur de la classe mère (Sprite)
+        super().__init__()
+
+        # --- Tous ces atributs sont initialisés dans le classes filles ---
+        self.image = None
+
+        self.rect = None
+
+        self.HP_MAX = None
+        self.HP = None
+        self.DMG = None
+        self.colorbuff = None
+        self.speed = None
+        # -----------------------------------------------------------------
+
+        # Mise en place de la cible du boss
+        self.target = target
+
+        # Liste des balle pour gerer les tirs du boss
+        self.bullet_list = pygame.sprite.Group()
+
+        # Phase du boss
+        self.phase_no = 1
+
+        self.phase = None
+
+    def move(self, walls):
+        pass
+
+    def hp_bar(self, surface):
+        """"""
+        # Taille bare point de vie :
+        HP_BAR_WIDTH = SCREEN_WIDTH-100
+        HP_BAR_HEIGHT = 50
+
+        HP_BAR_STATE = (self.HP * HP_BAR_WIDTH) / self.HP_MAX
+        pygame.draw.rect(surface, RED2, (25, SCREEN_HEIGHT-25, HP_BAR_WIDTH, HP_BAR_HEIGHT))
+        pygame.draw.rect(surface, GREEN2, (25, SCREEN_HEIGHT-25, HP_BAR_STATE, HP_BAR_HEIGHT))
+
+class Boss1P1(Boss1):
+    """ Cette classe represente la phase 1 du boss 1"""
+
+    def __init__(self, target, x, y):
+        super().__init__(target)
+        # Mise en place de l'image du boss
+        self.image = pygame.image.load('img/boss1P1.png')
+
+        # Mise en place de la "hit-box" du boss
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.centery = y
+
+        # Statistiques du monstre
+        self.HP_MAX = 600
+        self.HP = self.HP_MAX
+        self.DMG = 30
+        self.colorbuff = BLACK
+        self.speed = 3
+
+        self.shot_speed = 7
+        self.shoot_cd_max = 20
+        self.shoot_cd = 20
+
+        self.shot_phase = 1
+        self.shoot_phase_cd = 0
+        self.shoot_phase_cd_max = 160
+        self.do_cardinal_shoot = True
+
+        self.move_cd = 0
+        self.move_cd_max = 75
+        self.move_nb_rand = 1
+
+    def move(self, walls):
+        if self.move_cd == self.move_cd_max:
+            self.move_nb_rand = randint(1, 4)
+            self.move_cd = 0
+
+        if self.move_nb_rand == 1: # Déplacement en haut
+            self.rect.y -= self.speed
+        elif self.move_nb_rand == 2: # Déplacement en bas
+            self.rect.y += self.speed
+        elif self.move_nb_rand == 3: # Déplacement a gauche
+            self.rect.x -= self.speed
+        elif self.move_nb_rand == 4: # Déplacement a droite
+            self.rect.x += self.speed
+
+        block_hit_list = pygame.sprite.spritecollide(self, walls, False)
+        for block in block_hit_list:
+            # Si le boss se déplace en direction d'un mur, cela
+            # met le coté du boss qui touche le mur sur le coté
+            # du mur touché
+            if self.move_nb_rand == 4:
+                self.rect.right = block.rect.left
+            elif self.move_nb_rand == 3:
+                self.rect.left = block.rect.right
+            elif self.move_nb_rand == 2:
+                self.rect.bottom = block.rect.top
+            elif self.move_nb_rand == 1:
+                self.rect.top = block.rect.bottom
+
+        self.move_cd += 1
+
+
+
+    def cardinal_shoot(self):
+        top_bullet = Bullet(self, self.rect.centerx, self.rect.top, BLACK)
+        bottom_bullet = Bullet(self, self.rect.centerx, self.rect.bottom, BLACK)
+        right_bullet = Bullet(self, self.rect.right, self.rect.centery, BLACK)
+        left_bullet = Bullet(self, self.rect.left, self.rect.centery, BLACK)
+
+        self.bullet_list.add(top_bullet, bottom_bullet, right_bullet, left_bullet)
+
+    def diagonal_shoot(self):
+        top_right_bullet = Bullet(self, self.rect.right, self.rect.top, BLACK)
+        top_left_bullet = Bullet(self, self.rect.left, self.rect.top, BLACK)
+        bottom_right_bullet = Bullet(self, self.rect.right, self.rect.bottom, BLACK)
+        bottom_left_bullet = Bullet(self, self.rect.left, self.rect.bottom, BLACK)
+
+        self.bullet_list.add(top_right_bullet, top_left_bullet, bottom_right_bullet, bottom_left_bullet)
+
+    def target_shoot(self):
+        target_bullet = Bullet(self, self.target.rect.centerx, self.target.rect.centery, BLACK)
+
+        self.bullet_list.add(target_bullet)
+
+
+    def update(self):
+        if self.shoot_phase_cd == self.shoot_phase_cd_max:
+            self.shot_phase = randint(1,4)
+            self.shoot_phase_cd = 0
+
+            # Si paterne de tire regulier
+            #self.shot_phase = (self.shot_phase + 1)
+            #if self.shot_phase > 4:
+            #    self.shot_phase = 1
+            #self.shoot_phase_cd = 0
+
+        if self.shot_phase == 1:
+            if self.shoot_cd == self.shoot_cd_max:
+                self.cardinal_shoot()
+                self.shoot_cd = 0
+        if self.shot_phase == 2:
+            if self.shoot_cd == self.shoot_cd_max:
+                self.diagonal_shoot()
+                self.shoot_cd = 0
+        if self.shot_phase == 3:
+            if self.shoot_cd == self.shoot_cd_max:
+                if self.do_cardinal_shoot:
+                    self.cardinal_shoot()
+                    self.do_cardinal_shoot = False
+                else:
+                    self.diagonal_shoot()
+                    self.do_cardinal_shoot = True
+                self.shoot_cd = 0
+        if self.shot_phase == 4:
+            if self.shoot_cd == self.shoot_cd_max:
+                self.target_shoot()
+                self.shoot_cd = 0
+
+        self.shoot_cd += 1
+        self.shoot_phase_cd += 1
+
+
+
+        if self.HP <= 0:
+            self.phase_no = 2
+            self.kill()
+
+
+class Boss1P2(Boss1):
+    """"""
+    pass
+
+
+class Boss1P3(Boss1):
+    """"""
+    pass
 

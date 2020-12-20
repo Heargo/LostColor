@@ -10,6 +10,9 @@ def createPrimaryPathWithError(n,player):
 		#on init la salle
 		if i == 0: # Pour la première salle
 			currentroom = Room(player, i, difficulty="ultra_easy",lvl=1)
+			#currentroom = Room(player, i, difficulty="boss") # Pour fair des tests sur le boss ds la 1ere salle
+		elif i == n-1:  # On fait apparaitre le boss a la dernière salle
+			currentroom = Room(player, i, difficulty="boss")
 		else:
 			random_difficulty = random.choices(DIFFICULTIES, weights = DIFFICULTIESWEIGHTS)[0]
 			currentroom = Room(player, i, difficulty=random_difficulty,lvl=i)

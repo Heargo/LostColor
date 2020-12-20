@@ -25,7 +25,8 @@ COLORS=[RED,GREEN,BLUE]
 COLOR_OF_BULLET = {	RED:RED3,
 					GREEN:GREEN3,
 					BLUE:BLUE3,
-					GRAY:GRAY
+					GRAY:GRAY,
+					BLACK:GRAY  #Pour le boss
 					}
 
 # Tableau de toutes les couleurs du jeu a part noir, blanc et marron

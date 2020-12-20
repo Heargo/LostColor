@@ -398,8 +398,9 @@ def game(screen,fpsClock,tutorial=False):
                     mouse_y = pos[1]
 
                     # Créé la balle
-                    #bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
+                    # bullet = Bullet(player, mouse_x, mouse_y, player.colorbuff)
                     bullet = Bullet(player, mouse_x, mouse_y, COLOR_OF_BULLET[player.colorbuff])
+
 
                     # et l'ajoute a la liste des balles
                     bullet_list.add(bullet)
@@ -473,7 +474,7 @@ def game(screen,fpsClock,tutorial=False):
                     if bullet.color==GRAY:
                         mob.HP -= player.DMG*0.5
                         dmgDone=True
-                    elif bullet.color!=COLOR_OF_BULLET[mob.colorbuff]:
+                    elif bullet.color != COLOR_OF_BULLET[mob.colorbuff]:
                         mob.HP -= player.DMG*1.5
                         dmgDone=True
 
@@ -483,7 +484,9 @@ def game(screen,fpsClock,tutorial=False):
                         if tutorial:
                             actions["kill"] = mob.checkdead(loots_list,all_sprites_list,TUTORIAL_DATA[current_room.id]["lootEnable"])
                         else:
-                            mob.checkdead(loots_list,all_sprites_list,True)
+                            if not (isinstance(mob, Boss1)):
+                                mob.checkdead(loots_list,all_sprites_list,True)
+
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran
                 if bullet.rect.y < -10:
@@ -495,6 +498,20 @@ def game(screen,fpsClock,tutorial=False):
                 if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
                     player.get_hit = True
                     player.HP -= mob.DMG
+
+            # Ajoute les balles du boss dans la all_sprite_list pour les afficher et les mettre a jour
+            for boss in current_room.enemy_list:
+                if isinstance(boss, Boss1):
+                    if boss.HP <= 0:
+                        end_game_loop(screen, fpsClock)
+                    boss.move(current_room.wall_list)
+                    all_sprites_list.add(boss.bullet_list)
+                    for bullet in boss.bullet_list:
+                        # Si une balle touche le joueur
+                        if pygame.sprite.collide_rect(bullet, player) and not player.get_hit:
+                            player.get_hit = True
+                            player.HP -= boss.DMG
+                            bullet.kill()
 
             # Incrementation du delai d'aparition des monstre blanc
             white_mob_spawn_delay += 1
@@ -541,6 +558,10 @@ def game(screen,fpsClock,tutorial=False):
             # Dessine les PNJs de la salle courante
             current_room.pnj_list.draw(screen)
 
+            # Dessine la vie du boss
+            for boss in current_room.enemy_list:
+                if isinstance(boss, Boss1):
+                    boss.hp_bar(screen)
 
             # Affichage HUD
             draw_HUD(screen)
@@ -590,6 +611,45 @@ def game(screen,fpsClock,tutorial=False):
         # --- Limite le jeu à 60 images par seconde
         fpsClock.tick(FPS)
 
+def end_game_loop(screen, fpsClock):
+    running = True
+    click = False
+    # créer les boutons
+    b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300, 'Quitter le jeu', GREEN)
+
+    while running:
+        # fermeture de la fenetre
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            # clic de la souris
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+        # on recupère les coordonnées de la souris
+        mx, my = pygame.mouse.get_pos()
+
+        # Si l'utilisateur clique sur un bouton, on lance la fonction adaptée
+        if b1.hoover(mx, my):
+            if click:
+                pygame.quit()
+                sys.exit()
+
+        # affichage
+        screen.fill((255, 255, 255))
+        # affiche le nom du jeu
+        draw_text(screen, 'Merci d\'avoir jouer à Lost color', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 100, True)
+        draw_text(screen, 'De futurs amélioration serons bientôt disponible !', 'fonts/No_Color.ttf', 30, BLACK,
+                  SCREEN_WIDTH // 2, 300, True)
+        # affiche les boutons
+        b1.draw(screen, mx, my)
+        # on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
+        click = False
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
 
 def dessineHealBouton(screen,player):
     image = pygame.image.load("./img/slots/heal.png")
@@ -605,36 +665,37 @@ def dessineHealBouton(screen,player):
 
 def updateMobsStats(mobs_lists,color):
     for mob in mobs_lists:
-        if mob.colorbuff == color and not mob.isboosted:
-            if mob.colorbuff!=GRAY:
-                mob.DMG*=2
-                mob.speed+=3
-            else:
-                mob.DMG*=1.5
-                mob.speed+=1.5
-            mob.isboosted=True
-            #on recupère l'image du monstre
-            mob.image = pygame.transform.scale(mob.image,(40,40))
-            #on la resize
-            mob.rect = mob.image.get_rect()
-        elif mob.colorbuff != color and mob.isboosted:
-            if mob.colorbuff!=GRAY:
-                mob.DMG/=2
-                mob.speed-=3
-            else:
-                mob.DMG/=1.5
-                mob.speed-=1.5
-            mob.isboosted=False
-            #on recupère l'image du monstre
-            mob.image =mob.originalImage
-            #on la resize
-            mob.rect = mob.image.get_rect()
+        if isinstance(mob, (Monstre1)):
+            if mob.colorbuff == color and not mob.isboosted:
+                if mob.colorbuff != GRAY:
+                    mob.DMG *= 2
+                    mob.speed += 3
+                else:
+                    mob.DMG *= 1.5
+                    mob.speed += 1.5
+                mob.isboosted=True
+                #on recupère l'image du monstre
+                mob.image = pygame.transform.scale(mob.image,(40,40))
+                #on la resize
+                mob.rect = mob.image.get_rect()
+            elif mob.colorbuff != color and mob.isboosted:
+                if mob.colorbuff != GRAY:
+                    mob.DMG /= 2
+                    mob.speed -= 3
+                else:
+                    mob.DMG /= 1.5
+                    mob.speed -= 1.5
+                mob.isboosted=False
+                #on recupère l'image du monstre
+                mob.image =mob.originalImage
+                #on la resize
+                mob.rect = mob.image.get_rect()
 
 def manageWhiteMobs(mobs_lists, current_room, player):
     is_colored_mob=False
 
     for mob in mobs_lists:
-        if mob.colorbuff != GRAY:
+        if mob.colorbuff != GRAY and not isinstance(mob, Boss1):
             is_colored_mob=True
 
     if is_colored_mob:
