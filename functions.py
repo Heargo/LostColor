@@ -12,6 +12,7 @@ from inventaire import invetoryScreen, Item
 from Dialog_Box import *
 from time import time
 import controls
+from tools import draw_text
 
 def initPartie(tutorial=False):
     """Initialise une partie"""
@@ -84,20 +85,6 @@ def initSprites():
     all_sprites_list.add(player)
 
 
-
-def draw_text(screen,text, font_name, size, color, x, y, center):
-    """"""
-    font = pygame.font.Font(font_name, size)
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    if center:
-        text_rect.centerx = x
-        text_rect.centery = y
-    else:
-        text_rect.x = x
-        text_rect.y = y
-
-    screen.blit(text_surface, text_rect)
 
 def draw_HUD(screen):
     """Head up display : affichage d'information pour le joueur"""

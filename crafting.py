@@ -30,19 +30,22 @@ for i in range(2):
 def drawCraftOverlay(screen,page):
 	#on dessine les background
 	largeur =505
-	hauteur = 175
+	hauteur = 100
 	spaceBetween = 15
-	for i in range(3):
+	for i in range(5):
+		###FOND
 		#inventaire fond
-		pygame.draw.rect(screen,(164,131,80),(690,80+(i*hauteur+i*spaceBetween),largeur,hauteur))
+		pygame.draw.rect(screen,(164,131,80),(690,40+(i*hauteur+i*spaceBetween),largeur,hauteur))
 		#inventaire bords
-		pygame.draw.rect(screen,(100,64,31),(690,80+(i*hauteur+i*spaceBetween),largeur,hauteur),5)
+		pygame.draw.rect(screen,(100,64,31),(690,40+(i*hauteur+i*spaceBetween),largeur,hauteur),5)
+		
+		##APPERCU
 
 def drawResultOverlay(screen,actif):
 	#profil fond
-	pygame.draw.rect(screen,(164,131,80),(50,40,505,535))
+	pygame.draw.rect(screen,(164,131,80),(50,40,505,560))
 	#profil bords
-	pygame.draw.rect(screen,(100,64,31),(50,40,505,535),5)
+	pygame.draw.rect(screen,(100,64,31),(50,40,505,560),5)
 
 
 
