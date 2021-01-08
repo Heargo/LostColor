@@ -228,6 +228,7 @@ def main_menu(screen,fpsClock):
         #Si l'utilisateur clique sur un bouton, on lance la fonction adaptée
         if b1.hoover(mx, my):
             if click:
+                initPartie()
                 game(screen,fpsClock)
         if b2.hoover(mx, my):
             if click:
@@ -260,6 +261,60 @@ def main_menu(screen,fpsClock):
         pygame.display.update()
         fpsClock.tick(FPS)
 
+def pause_menu(screen,fpsClock,tuto,tutorialCompleted):
+    running = True
+    click = False
+    leave=False
+    #créer les boutons
+    if tuto and tutorialCompleted:
+        b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100, 'Menu', RED)
+    else:
+        b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100, 'Continuer', RED)
+    b2 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 'Controles', GREEN)
+
+    b3 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100, 'Quitter', BLUE)
+
+    while running:
+        #fermeture de la fenetre
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            #clic de la souris
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+        #on recupère les coordonnées de la souris
+        mx, my = pygame.mouse.get_pos()
+
+        #Si l'utilisateur clique sur un bouton, on lance la fonction adaptée
+        if b1.hoover(mx, my):
+            if click:
+                running=False
+            if tuto and tutorialCompleted:
+                leave=True
+        if b2.hoover(mx, my):
+            if click:
+                bind_controles(screen, fpsClock)
+        if b3.hoover(mx, my):
+            if click:
+                pygame.quit()
+                sys.exit()
+
+        #affichage 
+        screen.fill((255, 255, 255))
+        #affiche le nom du jeu
+        draw_text(screen,'PAUSE', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 100, True)
+        #affiche les boutons
+        b1.draw(screen, mx, my)
+        b2.draw(screen, mx, my)
+        b3.draw(screen, mx, my)
+        #on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
+        click = False
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+    return leave
 
 
 def game(screen,fpsClock,tutorial=False):
@@ -319,7 +374,7 @@ def game(screen,fpsClock,tutorial=False):
                     bonus_test = Bonus("speed", player)
                     all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
-                    playing = False
+                    playing= not pause_menu(screen,fpsClock,tutorial,tutorialCompleted)
                 if event.key == controls.C_CARTE and len(current_room.enemy_list) == 0:
                     mapOn=True
                     if tutorial:
