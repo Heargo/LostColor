@@ -6,13 +6,12 @@ from Bonus import *
 from player import *
 from Room import *
 import random
-from math import sqrt
 from proceduralGeneration import *
 from inventaire import invetoryScreen, Item
 from Dialog_Box import *
 from time import time
 import controls
-from tools import draw_text
+from tools import *
 
 def initPartie(tutorial=False):
     """Initialise une partie"""
@@ -103,23 +102,6 @@ def draw_HUD(screen):
 
     # Affichage SPEED
     draw_text(screen, "SHOT SPEED : " + str(player.shot_speed), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 60, False)
-
-
-def setNewPolygones():
-    res=[]
-    for p in polygones_list:
-        randomX= randint(0,SCREEN_WIDTH)
-        randomY = randint(0,SCREEN_HEIGHT)
-        newp=[]
-        for point in p:
-            newp+=[((randomX+point[0])/2,(randomY+point[1])/2)]
-        res+=[[newp,random.choice(COLORS)]]
-
-    return res
-
-def drawPolygones(screen,poly_list):
-    for p in poly_list:
-        pygame.draw.polygon(screen, p[1], p[0],0)
 
 def bind_controles(screen,fpsClock):
     """Affichage et parametrage des controles"""
@@ -760,53 +742,7 @@ def healSkill(player):
                 healed=True
 
         
-def estDansPolygone(x,y,polygone):
-    bool = True
-    n = len(polygone)
-    a = polygone[n-1][0] - x
-    b = polygone[n-1][1] - y
-    c = polygone[0][0] - polygone[n-1][0]
-    d = polygone[0][1] - polygone[n-1][1]
-    z = a*d - b*c
-    if z < 0:
-        s = -1
-    elif z > 0:
-        s = 1
-    else :
-        s = 0
-    if s!=0:
-        for i in (0, n-2):
-            a = polygone[i][0] - x
-            b = polygone[i][1] - y
-            c = polygone[i+1][0] - polygone[i][0]
-            d= polygone[i+1][1] - polygone[i][1]
-            z = a*d - b*c
-            if z == 0:
-                break
-            if z * s < 0:
-                bool = False
-                break
-    return bool
 
-
-def estDansCercle(Cercle, M):
-    a = Cercle[0][0] - M[0]
-    b = Cercle[0][1] - M[1]
-    c=sqrt(a**2 + b**2)
-    if c <= Cercle[1]:
-        bool = True
-    else:
-        bool = False
-    return bool
-
-def estDansEnsembleCercles(ensemble,M):
-    n = len(ensemble)
-    bool = False
-    for i in range(n):
-        if estDansCercle(ensemble[i], M):
-            bool = True
-            break
-    return bool
 
 def setColorPlayerFromPosition(taches,player):
     fin=False
