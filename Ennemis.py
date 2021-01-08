@@ -37,7 +37,7 @@ class Monstre1(pygame.sprite.Sprite):
         self.lvl=lvl
         self.HP_MAX = 4*(self.lvl*500/MONSTER_LEVEL_MAX)
         self.HP = self.HP_MAX
-        self.DMG = 2*(self.lvl*300/MONSTER_LEVEL_MAX)
+        self.DMG = 2*(self.lvl*80/MONSTER_LEVEL_MAX)
         self.speed = random.uniform(1.5, 2.8)
         self.colorbuff=color
 

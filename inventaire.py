@@ -650,7 +650,7 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
-			# Detection d'utilisation du clavier pour faire spawner 3 monstres
+			# Detection d'utilisation du clavier pour ajouter un item aléatoire (debug)
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_q and inventaire.numOfItems() < inventaire.size:
 					item=createRandomItem()
