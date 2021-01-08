@@ -18,6 +18,11 @@ CYAN = (0,255,255)
 MAGENTA = (255,0,255)
 YELLOW = (255,255,0)
 
+dicNameImg={
+"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
+"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
+"plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
+}
 
 #couleurs des taches et des monstres
 COLORS=[RED,GREEN,BLUE]
@@ -308,11 +313,79 @@ DIALOGUESMARCHAND = {
 	
 }
 
-		  
-		       
+#pour les ingrédients, utilser le nom de l'image /!\ sensible à la casse
+RECIPES = [
+	{"img":"belt_commun",
+	"grade":"commun",
+	"slot":"belt",
+	"craft":{"leather":2,"metal":2} #{"ingrédient":quantitée}
+	},
+	{"img":"belt_rare" ,
+	"grade":"rare",
+	"slot":"belt",
+	"craft":{"leather":4,"metal":3} 
+	},
+	{"img":"chest_commun" , 
+	"grade":"commun",
+	"slot":"chest",
+	"craft":{"leather":4,"metal":4} 
+	},
+	{"img":"chest_rare" , 
+	"grade":"rare",
+	"slot":"chest",
+	"craft":{"leather":4,"metal":6} 
+	},
+	{"img":"boot_commun" , 
+	"grade":"commun",
+	"slot":"boot",
+	"craft":{"leather":4} 
+	},
+	{"img":"boot_rare" , 
+	"grade":"rare",
+	"slot":"boot",
+	"craft":{"leather":10} 
+	},
+	{"img":"head_commun" ,
+	"grade":"commun",
+	"slot":"head",
+	"craft":{"leather":4,"metal":2} 
+	},
+	{"img":"head_rare" , 
+	"grade":"rare",
+	"slot":"head",
+	"craft":{"leather":2,"metal":4} 
+	},
+	{"img":"glove_commun" , 
+	"grade":"commun",
+	"slot":"glove",
+	"craft":{"leather":4,"metal":2} 
+	},
+	{"img":"glove_rare" , 
+	"grade":"rare",
+	"slot":"glove",
+	"craft":{"leather":2,"metal":4} 
+	},
+	{"img":"earrings_commun" ,
+	"grade":"commun",
+	"slot":"earrings",
+	"craft":{"metal":2,"ambre":4} 
+	},
+	{"img":"earrings_rare" , 
+	"grade":"rare",
+	"slot":"earrings",
+	"craft":{"metal":4,"rubis":4} 
+	},
+	{"img":"wand_commun" , 
+	"grade":"commun",
+	"slot":"weapon",
+	"craft":{"wood":2,"diamond":1} 
+	},
+	{"img":"wand_rare" ,
+	"grade":"rare",
+	"slot":"weapon",
+	"craft":{"wood":3,"diamond":1,"ambre":2,"emerauld":1} 
+	}
 	
-	
-	
-	
-	
-	
+]
+
+

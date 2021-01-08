@@ -86,7 +86,7 @@ def random_key(dico):
 		liste+=[k]
 	return random.choice(liste)
 
-def createRandomItem():
+def createRandomItem(typeItem="default",gradeItem="default"):
 	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
 		]
 	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":0.1,"shot_speed":4},description="Une orbe magique...")
@@ -102,9 +102,16 @@ def createRandomItem():
 			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=0.1,stats={"shot_speed":2},description="Un casque...")]
 			}
 	#on choisi si l'item sera un item equipable ou pas
-	equipable=choices([True,False], weights=[10,90])[0]
-	if equipable:
-		slotequipable=choice(["head","chest","glove","boot","weapon","earrings","belt"])
+	if typeItem =="default":
+		equipable=choices([True,False], weights=[10,90])[0]
+		if equipable:
+			slotequipable=choice(["head","chest","glove","boot","weapon","earrings","belt"])
+	else:
+		if typeItem in DICOEQUIPEMENT:
+			equipable=True
+			slotequipable=typeItem
+		else:
+			equipable=False
 
 	#si il est equipable
 	if equipable:
@@ -113,16 +120,22 @@ def createRandomItem():
 		item = choice(DICOEQUIPEMENT[slotequipable])
 
 		#on choisi un grade
-		grade = choices(["commun","rare","mythique","légendaire"], weights = [50,45,4,1])[0]
+		if gradeItem=="default":
+			grade = choices(["commun","rare","mythique","légendaire"], weights = [50,45,4,1])[0]
+		else:
+			grade = gradeItem
 		item.grade=grade
+
 		#en fonction du grade on modifie les stats
 		gradeFactor = {"commun":1,"rare":1.5,"mythique":2,"légendaire":3}
 		for k in item.stats.keys():
 			item.stats[k] = gradeFactor[grade] * item.stats[k]
+
 		#en fonction du grade on modifie le prix
 		gradeFactor ={"commun":1,"rare":8,"mythique":16,"légendaire":32}
 		for k in item.stats:
 			item.price = gradeFactor[grade] * item.price
+
 		#en fonction du grade on change l'image
 		if item.slotequipable not in ["weapon","weaponbis"]:
 			item.image = pygame.image.load("./img/items/"+item.slotequipable+"_"+grade+".png")
@@ -135,14 +148,9 @@ def createRandomItem():
 
 		item.name = NOMSITEMS[key][randint(0,len(NOMSITEMS[key])-1)]
 		item.description = DESCRIPTIONSITEMS[key][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
+
 	#si il n'est pas equipable
 	else:
-
-		dicNameImg={
-		"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
-		"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
-		"plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
-		}
 		categorie=choice(["food","misc","plants"])
 		itemname=choice(dicNameImg[categorie])
 		#on set le prix
@@ -184,6 +192,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 			hoverAnItem=True
 
 	if hoverAnItem:
+
 		width=200
 		height=300
 
