@@ -300,7 +300,7 @@ def game(screen,fpsClock,tutorial=False):
     mapOn=False
     white_mob_spawn_delay = 0
     loots_list=current_room.loots
-    actions={"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
+    actions={"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"r":False,"e":False,"kill":False}
     firstDialogueBoxDone=False
     if tutorial:
         tutorialCompleted=False
@@ -529,11 +529,12 @@ def game(screen,fpsClock,tutorial=False):
                     bullet_list.remove(bullet)
                     all_sprites_list.remove(bullet)
 
-            # Colision entre joueur et monstre
-            for mob in current_room.enemy_list:
-                if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
-                    player.get_hit = True
-                    player.HP -= mob.DMG
+            # Colision entre joueur et monstre (dégats)
+            if not tutorial:
+                for mob in current_room.enemy_list:
+                    if pygame.sprite.collide_rect(mob, player) and not player.get_hit:
+                        player.get_hit = True
+                        player.HP -= mob.DMG
 
             # Ajoute les balles du boss dans la all_sprite_list pour les afficher et les mettre a jour
             for boss in current_room.enemy_list:
@@ -834,7 +835,7 @@ def checkTutorialStepCompletion(current_room,actions,tutorialCompletedF1):
     res= actions
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="spawn" and len(current_room.enemy_list)==0 and actions["kill"]:
         current_room.open_doors()
-        res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
+        res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"r":False,"e":False,"kill":False}
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="key":
         ok=True
         for key in TUTORIAL_DATA[current_room.id]["step"]["keys"]:
@@ -842,7 +843,7 @@ def checkTutorialStepCompletion(current_room,actions,tutorialCompletedF1):
                 ok=False
         if ok:
             current_room.open_doors()
-            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}
+            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"r":False,"e":False,"kill":False}
     if TUTORIAL_DATA[current_room.id]["step"]["action"]=="dmg-inv-map":
         ok=True
         for key in TUTORIAL_DATA[current_room.id]["step"]["keys"]:
@@ -851,6 +852,6 @@ def checkTutorialStepCompletion(current_room,actions,tutorialCompletedF1):
         if ok:
             current_room.open_doors()
             tutorialCompletedF1=True
-            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"f":False,"e":False,"kill":False}     
+            res= {"i":False,"tab":False,"z":False,"q":False,"s":False,"d":False,"r":False,"e":False,"kill":False}     
 
     return res, tutorialCompletedF1

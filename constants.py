@@ -123,8 +123,8 @@ TUTORIAL_DATA=[
 	"allowWhiteMobSpawn":False,
 	"lootEnable":False,
 	"pnj-name":"HuSiRo",
-	"pnj-dialogue":"Un monstre viendra plus vite vers toi et te fera deux fois plus de dégâts si tu es sur une tâche de la même couleur que lui. Au bout d'un moment, tu auras besoin de te soigner pour ne pas mourir. Pour te soigner en combat, utilise la touche 'e' pour consommer de la nourriture de ton inventaire. Hors combat tu peux utiliser la nourriture depuis l'inventaire avec le clic droit. Pour ouvrir l'inventaire, utilise la touche 'i'. Enfin, tu peux voir la carte avec la touche 'tab'. Essaye donc ces fonctionnalitées pour t'y familiariser.",
-	"step":{"action":"dmg-inv-map","keys":["e","i","tab"]}
+	"pnj-dialogue":"Un monstre viendra plus vite vers toi et te fera deux fois plus de dégâts si tu es sur une tâche de la même couleur que lui. Au bout d'un moment, tu auras besoin de te soigner pour ne pas mourir. Pour te soigner en combat, utilise la touche 'e' pour consommer de la nourriture de ton inventaire. Hors combat tu peux utiliser la nourriture depuis l'inventaire avec le clic droit. Pour ouvrir l'inventaire, utilise la touche 'i'.Tu peux aussi crafter des objets via la touche 'r'. Enfin, tu peux voir la carte avec la touche 'tab'. Essaye donc ces fonctionnalitées pour t'y familiariser.",
+	"step":{"action":"dmg-inv-map","keys":["e","i","tab","r"]}
 }
 
 ]
