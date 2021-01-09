@@ -23,7 +23,8 @@ dicNameImg={
 "misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
 "plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
 }
-
+LOOTPOURCENTAGE=75
+GRADES_WEIGHTS=[30,16,2,1]
 #couleurs des taches et des monstres
 COLORS=[RED,GREEN,BLUE]
 
@@ -61,7 +62,7 @@ BONUS_TYPE = ("dmg", "tps", "heal", "hp_max", "shot_speed", "speed")
 
 # Liste des difficultés
 DIFFICULTIES = ["peaceful", "ultra_easy", "easy", "medium", "hard", "ultra_hard"]
-DIFFICULTIESWEIGHTS=[10,8,6,4,1,1]
+DIFFICULTIESWEIGHTS=[5,6,6,4,1,1]
 
 #relation couleur/grade
 COLOR_OF_GRADE={"commun":(176, 176, 176),"rare":(123, 212, 220),"mythique":(136, 77, 155),"légendaire":(230, 185, 45)}

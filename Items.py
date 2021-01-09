@@ -121,7 +121,7 @@ def createRandomItem(typeItem="default",gradeItem="default"):
 
 		#on choisi un grade
 		if gradeItem=="default":
-			grade = choices(["commun","rare","mythique","légendaire"], weights = [50,45,4,1])[0]
+			grade = choices(["commun","rare","mythique","légendaire"], weights = GRADES_WEIGHTS)[0]
 		else:
 			grade = gradeItem
 		item.grade=grade

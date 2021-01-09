@@ -120,7 +120,7 @@ class Monstre1(pygame.sprite.Sprite):
     
     def checkdead(self,loots_list,all_sprites_list,lootEnable):
         res=False
-        if self.HP <=0 and self.colorbuff!=GRAY and randint(0,3)==1 and lootEnable:
+        if self.HP <=0 and self.colorbuff!=GRAY and randint(0,100)<=LOOTPOURCENTAGE and lootEnable:
             generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
         if self.HP <=0:
             res=True

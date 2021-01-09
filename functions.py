@@ -27,11 +27,6 @@ def initPartie(tutorial=False):
         player.inventaire.items=[False]*player.inventaire.size
         player.updateStats()
 
-        #test 
-        for i in range(20):
-            item=createRandomItem()
-            player.inventaire.add(item)
-    
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
@@ -40,7 +35,7 @@ def initPartie(tutorial=False):
         floor,allRoomsCoordinates = createPrimaryPath(10, player)
         allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
     else:
-        floor,allRoomsCoordinates = createTutorialWithError(player)
+        floor,allRoomsCoordinates = createTutorial(player)
 
     # Salle courante (ou est le joueur est)
     current_room = floor[player.current_room_id]
