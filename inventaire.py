@@ -297,7 +297,7 @@ def drawStats(screen,player):
 			nbBlocks=1
 		if nbBlocks>5:
 			nbBlocks=5
-		#on recupère le grade de la stat COLOR_OF_GRADE
+		#on recupère le grade de la stat
 		color =(100,64,31)
 		gradeStat="commun"
 		for grade in STATS_GRADE_DATA[stat].keys():

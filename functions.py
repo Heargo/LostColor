@@ -92,19 +92,13 @@ def draw_HUD(screen):
     """Head up display : affichage d'information pour le joueur"""
 
     # Affichage PV
-    draw_text(screen, "PV : " + str(player.HP) + "/" + str(player.HP_MAX), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT//2+20, False)
+    life = pygame.Rect(25,25,(400*player.HP)//player.HP_MAX,40)
+    pygame.draw.rect(screen,GREEN2,life)
+    rect = pygame.Rect(25,25,400,40)
+    pygame.draw.rect(screen,BLACK,rect,4)
 
-    # Affichage DMG
-    draw_text(screen, "DMG : " + str(player.DMG), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2, False)
-
-    # Affichage TPS
-    draw_text(screen, "TPS : " + str(player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 20, False)
-
-    # Affichage SPEED
-    draw_text(screen, "SPEED : " + str(player.speed), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 40, False)
-
-    # Affichage SPEED
-    draw_text(screen, "SHOT SPEED : " + str(player.shot_speed), 'fonts/RPGSystem.ttf', 20, BLACK, 25, SCREEN_HEIGHT // 2 - 60, False)
+    # Affichage DPS
+    draw_text(screen, "DPS : " + str(player.DMG*player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 25, 70, False)
 
 def bind_controles(screen,fpsClock):
     """Affichage et parametrage des controles"""
