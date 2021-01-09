@@ -57,12 +57,10 @@ def removeIngredient(ingredient,inventaire):
 
 def removeRecipeItems(craft,inventaire):
 	for ing in craft:
-		print(ing)
 		if ing in dicNameImg["plants"]:
 			name = NOMSPLANTES[ing][0]
 		else:
 			name = NOMSDIVERS[ing][0]
-		print("je remove ",craft[ing],ing)
 		for i in range(craft[ing]):
 			removeIngredient(name,inventaire)
 
@@ -245,12 +243,10 @@ def craftScreen(screen,fpsClock,player):
 		mx, my = pygame.mouse.get_pos()
 		#si on clique
 		if activeMouse[0] == True:
-			print('hey')
 			#on regarde pour chaque bouton 
 			for s in slots:
 				#si on est dessus 
 				if s[0].collidepoint(mx,my):
-					print("j'ai cliqué sur un slot",s[1]["item"].name)
 					actif = s[1]["id"]
 			
 

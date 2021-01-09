@@ -15,7 +15,6 @@ C_BAS = 115
 C_GAUCHE = 97
 C_DROITE = 100
 C_PARLER = 32
-C_RAMASSER = 102
 C_MANGER = 101
 C_INVENTAIRE = 105
 C_CARTE = 9
@@ -25,7 +24,7 @@ affichageTouche = {"HAUT" : 'z',
                    "GAUCHE" : 'q',
                    "DROITE" : 'd',
                    "PARLER" : 'espace',
-                   "RAMASSER" : 'f',
+                   "CRAFT" : 'r',
                    "MANGER" : 'e',
                    "INVENTAIRE" : 'i',
                    "CARTE" : "tab"}
@@ -33,7 +32,7 @@ affichageTouche = {"HAUT" : 'z',
 
 def binder(touche_a_bind, key_code, key_char):
     """Procedure qui bind une touche"""
-    global C_HAUT, C_BAS, C_GAUCHE, C_DROITE, C_PARLER, C_RAMASSER, C_MANGER, C_INVENTAIRE, C_CARTE
+    global C_HAUT, C_BAS, C_GAUCHE, C_DROITE, C_PARLER, C_CRAFT, C_MANGER, C_INVENTAIRE, C_CARTE
 
     if touche_a_bind == "HAUT":
         C_HAUT = key_code
@@ -45,8 +44,8 @@ def binder(touche_a_bind, key_code, key_char):
         C_DROITE = key_code
     elif touche_a_bind == "PARLER":
         C_PARLER = key_code
-    elif touche_a_bind == "RAMASSER":
-        C_RAMASSER = key_code
+    elif touche_a_bind == "CRAFT":
+        C_CRAFT = key_code
     elif touche_a_bind == "MANGER":
         C_MANGER = key_code
     elif touche_a_bind == "INVENTAIRE":

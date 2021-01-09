@@ -365,12 +365,12 @@ def game(screen,fpsClock,tutorial=False):
                     if tutorial:
                         actions["r"]=True
                     craftScreen(screen,fpsClock,player)
-                if event.key == controls.C_RAMASSER:
-                    checkRecupLoot(all_sprites_list,loots_list,player)
                 if event.key == controls.C_MANGER:
                     healSkill(player)
                     if tutorial:
                         actions["e"]=True
+
+        checkRecupLoot(all_sprites_list,loots_list,player)
 
 
         if not mapOn and player.HP >0:
