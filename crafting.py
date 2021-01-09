@@ -8,7 +8,7 @@ from inventaire import createRandomItem
 from player import *
 from Items import drawItemOverlay, createRandomItem
 from tools import draw_text
-
+from math import ceil
 #################################################################################
 #################################################################################
 
@@ -163,6 +163,33 @@ def drawResultOverlay(screen,actif,inventaire):
 	#grade
 	draw_text(screen,item.grade, 'fonts/No_Color.ttf', 20, colorGrade, 350,110, True)
 
+
+	i=0
+	for stat in item.stats.keys():
+		txt=stat+" : "+str(item.stats[stat])
+		color=BLACK
+		if item.slotequipable in inventaire.equipement.keys():
+			if inventaire.equipement[item.slotequipable]!=False and inventaire.equipement[item.slotequipable].stats[stat] < item.stats[stat]:
+				color = GREEN
+			elif inventaire.equipement[item.slotequipable]!=False and inventaire.equipement[item.slotequipable].stats[stat] > item.stats[stat]:
+				color = RED
+		draw_text(screen,txt, 'fonts/No_Color.ttf', 15, color, 100, 150+(i*15), False)
+		i+=1
+
+	#la description
+	lenLigne=45
+	nblignes=int(len(item.description)/(lenLigne+1))
+	startletter=0
+	for j in range(nblignes+2):
+		if j <nblignes:
+			if item.description[startletter+lenLigne]!=" ":
+				draw_text(screen,item.description[startletter:startletter+lenLigne]+"-", 'fonts/No_Color.ttf', 15, BLACK, 100, 180+(i+2*15)+(j*15), False)
+			else:
+				draw_text(screen,item.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 15, BLACK, 100, 180+(i+2*15)+(j*15), False)
+		else:
+			draw_text(screen,item.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 15, BLACK, 100, 180+(i+2*15)+(j*15), False)
+		startletter+=lenLigne
+
 	#ingrédients dispo
 	i=0
 	for ingredient in craft:
@@ -198,9 +225,13 @@ def craftScreen(screen,fpsClock,player):
 	#les crafts/recette
 	ITEMS_RECIPES=[]
 	for i in range(0,len(RECIPES) ):
-		#print(RECIPES[i]["img"])
+		if RECIPES[i]["slot"]=="food":
+			item = createRandomItem(typeItem="food",categorie="food",itemname=RECIPES[i]["img"])
+		else:
+			item =createRandomItem(typeItem=RECIPES[i]["slot"],gradeItem=RECIPES[i]["grade"])
+
 		ITEMS_RECIPES.append(
-			{"item":createRandomItem(typeItem=RECIPES[i]["slot"],gradeItem=RECIPES[i]["grade"]),
+			{"item":item ,
 			"id":i,
 			"craft":RECIPES[i]["craft"]})
 
@@ -227,7 +258,7 @@ def craftScreen(screen,fpsClock,player):
 					if craftButton.hoover(mx,my):
 						craft(ITEMS_RECIPES[actif],player.inventaire)
 					if nextB.hoover(mx,my):
-						if page == round(len(RECIPES)/5):
+						if page == ceil(len(RECIPES)/5):
 							pass
 						else:
 							page+=1
@@ -260,9 +291,6 @@ def craftScreen(screen,fpsClock,player):
 		if actif >=0:
 			drawResultOverlay(screen,ITEMS_RECIPES[actif],player.inventaire)
 
-		#si besoin on dessine l'overlay de l'item
-		if activeMouse[0] == False:
-			drawItemOverlay(screen,mx, my,listeCraftSprite,player.inventaire)
 		#affiche les boutons
 		craftButton.draw(screen, mx, my)
 		nextB.draw(screen,mx,my)

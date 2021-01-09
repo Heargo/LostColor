@@ -86,7 +86,7 @@ def random_key(dico):
 		liste+=[k]
 	return random.choice(liste)
 
-def createRandomItem(typeItem="default",gradeItem="default"):
+def createRandomItem(typeItem="default",gradeItem="default",categorie="default",itemname="default"):
 	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
 		]
 	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":0.1,"shot_speed":4},description="Une orbe magique...")
@@ -151,8 +151,10 @@ def createRandomItem(typeItem="default",gradeItem="default"):
 
 	#si il n'est pas equipable
 	else:
-		categorie=choice(["food","misc","plants"])
-		itemname=choice(dicNameImg[categorie])
+		if categorie=="default":
+			categorie=choice(["food","misc","plants"])
+		if itemname == "default":
+			itemname=choice(dicNameImg[categorie])
 		#on set le prix
 		prix=randint(1,50)/100
 		#on set les stats si possible
