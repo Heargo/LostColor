@@ -386,6 +386,75 @@ RECIPES = [
 	"slot":"weapon",
 	"craft":{"wood":3,"diamond":1,"ambre":2,"emerauld":1} 
 	}
+	{"img":"beer",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"2":1,"8":1}
+	}
+	{"img":"cake",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"10":1,"21":1}
+	}
+	{"img":"fish",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"7":1,"32":1} 
+	}
+	{"img":"meal",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"12":1,"33":1}
+	}
+	{"img":"meat",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"19":1,"35":1}
+	}
+	{"img":"noodles",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"23":1,"46":1}
+	}
+	{"img":"onigri",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"35":1,"44":1}
+	}
+	{"img":"pizza",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"20":1,"47":1}
+	}
+	{"img":"steak",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"3":1,"40":1}
+	}
+	{"img":"strawberry",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"7":1,"9":1}
+	}
+	{"img":"tomato",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"6":1,"12":1}
+	}
+	{"img":"whiskey",
+	 "grade":"commun",
+	 "slot":"food",
+	 "craft":{"16":1,"32":1}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 ]
 
