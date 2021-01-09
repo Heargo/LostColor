@@ -12,6 +12,9 @@ from Dialog_Box import *
 from time import time
 import controls
 from tools import *
+from Items import createRandomItem
+from crafting import craftScreen
+
 
 def initPartie(tutorial=False):
     """Initialise une partie"""
@@ -23,6 +26,11 @@ def initPartie(tutorial=False):
         player.initStats()
         player.inventaire.items=[False]*player.inventaire.size
         player.updateStats()
+
+        #test 
+        for i in range(20):
+            item=createRandomItem()
+            player.inventaire.add(item)
     
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
@@ -353,6 +361,10 @@ def game(screen,fpsClock,tutorial=False):
                         actions["i"]=True
                     invetoryScreen(screen,fpsClock,player.inventaire,player)
                     player.updateStats()
+                if event.key == controls.C_CRAFT and len(current_room.enemy_list) == 0:
+                    if tutorial:
+                        actions["r"]=True
+                    craftScreen(screen,fpsClock,player)
                 if event.key == controls.C_RAMASSER:
                     checkRecupLoot(all_sprites_list,loots_list,player)
                 if event.key == controls.C_MANGER:

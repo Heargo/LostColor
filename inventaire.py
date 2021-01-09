@@ -83,7 +83,10 @@ class Inventory(object):
 			if self.items[i] ==False:
 				self.items[i] = item
 				item.slot=i
+				print(item.slot)
+				print(item.pos())
 				item.move((self.slots[i].rect.x+5,self.slots[i].rect.y+5))
+				print(item.pos())
 				added=True
 			i+=1
 

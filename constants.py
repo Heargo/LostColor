@@ -318,7 +318,7 @@ RECIPES = [
 	{"img":"belt_commun",
 	"grade":"commun",
 	"slot":"belt",
-	"craft":{"leather":2,"metal":2} #{"ingrédient":quantitée}
+	"craft":{"leather":1,"metal":1} #{"ingrédient":quantitée}
 	},
 	{"img":"belt_rare" ,
 	"grade":"rare",

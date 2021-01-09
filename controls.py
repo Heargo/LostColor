@@ -19,6 +19,7 @@ C_RAMASSER = 102
 C_MANGER = 101
 C_INVENTAIRE = 105
 C_CARTE = 9
+C_CRAFT = 114
 affichageTouche = {"HAUT" : 'z',
                    "BAS" : 's',
                    "GAUCHE" : 'q',

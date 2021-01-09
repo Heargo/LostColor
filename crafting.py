@@ -9,28 +9,9 @@ from player import *
 from Items import drawItemOverlay, createRandomItem
 from tools import draw_text
 
+#################################################################################
+#################################################################################
 
-# Création du joueur
-player = Player("Test", 0, 0)
-player.initStats()
-player.inventaire.items=[False]*player.inventaire.size
-player.updateStats()
-for i in range(20):
-	item=createRandomItem()
-	player.inventaire.add(item)
-
-#les crafts/recette
-ITEMS_RECIPES=[]
-for i in range(0,len(RECIPES) ):
-	#print(RECIPES[i]["img"])
-	ITEMS_RECIPES.append(
-		{"item":createRandomItem(typeItem=RECIPES[i]["slot"],gradeItem=RECIPES[i]["grade"]),
-		"id":i,
-		"craft":RECIPES[i]["craft"]
-		}
-		)
-
-slots=[]
 def craftsOfPage(page):
 	#print("--PAGE",page)
 	NewCrafts=[]
@@ -59,9 +40,50 @@ def nbIngDispo(craft,inv):
 			name = NOMSPLANTES[ing][0]
 		else:
 			name = NOMSDIVERS[ing][0]
-		get+=nbIngredientInInv(name,inv)
+		nb = nbIngredientInInv(name,inv)
+		if nb > craft[ing]:
+			nb=craft[ing]
+		get+=nb
+
 	return get,maxi
 
+def removeIngredient(ingredient,inventaire):
+	removed = False
+	for item in inventaire.items:
+		if item!=False:
+			if item.name==ingredient and not removed:
+				inventaire.remove(item)
+				removed = True
+
+def removeRecipeItems(craft,inventaire):
+	for ing in craft:
+		print(ing)
+		if ing in dicNameImg["plants"]:
+			name = NOMSPLANTES[ing][0]
+		else:
+			name = NOMSDIVERS[ing][0]
+		print("je remove ",craft[ing],ing)
+		for i in range(craft[ing]):
+			removeIngredient(name,inventaire)
+
+def ItemCraftable(craft,inventaire):
+	res = True
+	for ing in craft:
+		if ing in dicNameImg["plants"]:
+			name = NOMSPLANTES[ing][0]
+		else:
+			name = NOMSDIVERS[ing][0]
+		if craft[ing] > nbIngredientInInv(name,inventaire):
+			res = False
+	return res
+
+
+def craft(actif,inventaire):
+	craftable = ItemCraftable(actif["craft"],inventaire)
+	#si il y a assez d'item, on craft
+	if craftable:
+		removeRecipeItems(actif["craft"],inventaire)
+		inventaire.add(actif["item"])
 
 
 def drawCraftOverlay(screen,page,inventaire):
@@ -72,7 +94,7 @@ def drawCraftOverlay(screen,page,inventaire):
 	spaceBetween = 15
 	crafts, listeCraftSprite = craftsOfPage(page)
 	slots=[]
-	for i in range(5):
+	for i in range(len(listeCraftSprite)):
 		x = 700
 		y = (i*hauteur+i*spaceBetween)
 		item = listeCraftSprite[i]
@@ -92,7 +114,7 @@ def drawCraftOverlay(screen,page,inventaire):
 		#on la place en haut à gauche du cadre
 		pos= (700, 60+y)
 		rect = rect.move(pos)
-		item.move(pos)
+		#item.move(pos)
 		screen.blit(img, rect)
 
 		#NOM
@@ -163,88 +185,93 @@ def drawResultOverlay(screen,actif,inventaire):
 		pos= (100, 300+i*40)
 		rect = rect.move(pos)
 		screen.blit(img, rect)
-
-
 		#text
 		draw_text(screen,name+"  "+str(nbIngredientInInv(name,inventaire))+"/"+str(quantity) , 'fonts/No_Color.ttf', 15, BLACK, 140,310+i*40, False)
-
-
-
 		i+=1
-	
 
 
 
 
+#################################################################################
+#################################################################################
 
+def craftScreen(screen,fpsClock,player):
+	global ITEMS_RECIPES
+	#les crafts/recette
+	ITEMS_RECIPES=[]
+	for i in range(0,len(RECIPES) ):
+		#print(RECIPES[i]["img"])
+		ITEMS_RECIPES.append(
+			{"item":createRandomItem(typeItem=RECIPES[i]["slot"],gradeItem=RECIPES[i]["grade"]),
+			"id":i,
+			"craft":RECIPES[i]["craft"]})
 
+	#boutons
+	craftButton =Bouton(300 ,650, 'Craft', (164,131,80))
+	nextB = Bouton(1050 ,650, 'Suivant', (164,131,80),width=100, height=50,font_size=15)
+	previousB = Bouton(850 ,650, 'Précédent', (164,131,80),width=100, height=50,font_size=15)
 
-pygame.init()
-# Definition des FPS
-fpsClock = pygame.time.Clock()
-# --- Création de la fenetre
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('LostColor')
+	craftScreenOn=True
+	page =1
+	actif=-1
+	# -------- Main Program Loop -----------
+	while craftScreenOn:
+		#fermeture de la fenetre
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.KEYDOWN:
+				if event.key == controls.C_CRAFT or event.key == pygame.K_ESCAPE:
+					craftScreenOn=False
+			if event.type == MOUSEBUTTONDOWN:
+				if event.button == 1:
+					if craftButton.hoover(mx,my):
+						craft(ITEMS_RECIPES[actif],player.inventaire)
+					if nextB.hoover(mx,my):
+						if page == round(len(RECIPES)/5):
+							pass
+						else:
+							page+=1
+					if previousB.hoover(mx,my):
+						if page == 1:
+							pass
+						else:
+							page-=1
+				
 
-#liste des boutons
-boutonList=pygame.sprite.Group()
-#liste des slots de craft
-craftSlotsList = pygame.sprite.Group()
-#liste de tout les sprites
-all_sprites=pygame.sprite.LayeredUpdates()
-
-all_sprites.add(boutonList)
-all_sprites.add(craftSlotsList)
-
-
-craftScreenOn=True
-page =1
-actif=-1
-# -------- Main Program Loop -----------
-while craftScreenOn:
-	#fermeture de la fenetre
-	for event in pygame.event.get():
-		if event.type == QUIT:
-			pygame.quit()
-			sys.exit()
-		if event.type == pygame.KEYDOWN:
-			if event.key == controls.C_CRAFT or event.key == pygame.K_ESCAPE:
-				craftScreenOn=False
+		# Detection du clic gauche la souris et de sa position
+		activeMouse = pygame.mouse.get_pressed()
+		mx, my = pygame.mouse.get_pos()
+		#si on clique
+		if activeMouse[0] == True:
+			print('hey')
+			#on regarde pour chaque bouton 
+			for s in slots:
+				#si on est dessus 
+				if s[0].collidepoint(mx,my):
+					print("j'ai cliqué sur un slot",s[1]["item"].name)
+					actif = s[1]["id"]
 			
 
-	# Detection du clic gauche la souris et de sa position
-	activeMouse = pygame.mouse.get_pressed()
-	mx, my = pygame.mouse.get_pos()
-	#si on clique
-	if activeMouse[0] == True:
-		#on regarde pour chaque bouton 
-		for s in slots:
-			#si on est dessus 
-			if s[0].collidepoint(mx,my):
-				print("j'ai cliqué sur un slot",s[1]["item"].name)
-				actif = s[1]["id"]
+		#on met l'ecran en blanc
+		screen.fill((255,255,255))
 
+		#on dessine la liste des crafts de la page
+		drawCraftOverlay(screen,page,player.inventaire)
 
-	# Appelle la méthode update() de tous les Sprites
-	all_sprites.update()
-	#on met l'ecran en blanc
-	screen.fill((255,255,255))
+		#resultat du craft actif
+		if actif >=0:
+			drawResultOverlay(screen,ITEMS_RECIPES[actif],player.inventaire)
 
-	#on dessine la liste des crafts de la page
-	drawCraftOverlay(screen,page,player.inventaire)
+		#si besoin on dessine l'overlay de l'item
+		if activeMouse[0] == False:
+			drawItemOverlay(screen,mx, my,listeCraftSprite,player.inventaire)
+		#affiche les boutons
+		craftButton.draw(screen, mx, my)
+		nextB.draw(screen,mx,my)
+		draw_text(screen,str(page), 'fonts/No_Color.ttf', 40, BLACK, 950,650, True)
+		previousB.draw(screen,mx,my)
 
-	#resultat du craft actif
-	if actif >=0:
-		drawResultOverlay(screen,ITEMS_RECIPES[actif],player.inventaire)
-
-	#si besoin on dessine l'overlay de l'item
-	if activeMouse[0] == False:
-		drawItemOverlay(screen,mx, my,listeCraftSprite,player.inventaire)
-
-	# Dessine tous les sprites (les blits sur screen)
-	all_sprites.draw(screen)
-
-
-
-	pygame.display.update()
-	fpsClock.tick(60)
+		pygame.display.update()
+		fpsClock.tick(60)
