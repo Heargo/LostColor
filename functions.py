@@ -205,7 +205,7 @@ def main_menu(screen,fpsClock):
                 game(screen,fpsClock,True)
         if b3.hoover(mx, my):
             if click:
-                pass # credits()
+                credit_screen(screen, fpsClock)
         if b4.hoover(mx, my):
             if click:
                 bind_controles(screen, fpsClock)
@@ -639,6 +639,47 @@ def game(screen,fpsClock,tutorial=False):
         pygame.display.update()
 
         # --- Limite le jeu à 60 images par seconde
+        fpsClock.tick(FPS)
+
+def credit_screen(screen, fpsClock):
+    running = True
+    click = False
+    b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300, 'Retour', RED)
+
+    while running:
+        # fermeture de la fenetre
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            # clic de la souris
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        # on recupère les coordonnées de la souris
+        mx, my = pygame.mouse.get_pos()
+
+        # Si l'utilisateur clique sur un bouton, on lance la fonction adaptée
+        if b1.hoover(mx, my):
+            if click:
+                running = False
+
+        # affichage
+        screen.fill((255, 255, 255))
+        # affiche le nom du jeu
+        draw_text(screen, 'Hugo Rey', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 100,
+                  True)
+        draw_text(screen, 'Simon Marsan', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 250,
+                  True)
+        draw_text(screen, 'Romain Pajean', 'fonts/No_Color.ttf', 60, BLACK, SCREEN_WIDTH // 2, 400,
+                  True)
+        # affiche les boutons
+        b1.draw(screen, mx, my)
+        # on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
+        click = False
+
+        pygame.display.update()
         fpsClock.tick(FPS)
 
 def end_game_loop(screen, fpsClock):
