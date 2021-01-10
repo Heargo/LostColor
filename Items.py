@@ -148,6 +148,7 @@ def createRandomItem(typeItem="default",gradeItem="default",categorie="default",
 			#on met a jour le nom et la description
 			item.name = NOMSPLANTES[itemname][0]
 			item.shortName = "Plante"
+			item.description = DESCRIPTIONSPLANTES[itemname][0]
 			#item.description = DESCRIPTIONSITEMS[itemname][randint(0,len(DESCRIPTIONSITEMS[key])-1)]
 		elif categorie =="misc":
 			item.name = NOMSDIVERS[itemname][0]
