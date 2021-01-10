@@ -14,6 +14,7 @@ import controls
 from tools import *
 from Items import createRandomItem
 from crafting import craftScreen
+from shop import shopScreen
 
 
 def initPartie(tutorial=False):
@@ -800,6 +801,8 @@ def dialog_loop(tutorial,first,pnj, screen, fpsClock):
 
         pygame.display.update()
         fpsClock.tick(FPS)
+    if isinstance(pnj, Merchant):
+        shopScreen(screen, fpsClock, player, pnj)
 
 def initTutorialStep(current_room,player):
     roomDATA= TUTORIAL_DATA[current_room.id]
