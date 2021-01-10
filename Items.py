@@ -42,7 +42,7 @@ class Item(pygame.sprite.Sprite):
 
 	def resetImage(self):
 		self.image = self.originalImage
-		print(self.image,self.originalImage)
+		#print(self.image,self.originalImage)
 		#on rezise a 64*64 pixel
 		self.image = pygame.transform.scale(self.image,(64,64))
 		self.rect = self.image.get_rect()

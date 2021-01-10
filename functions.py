@@ -452,7 +452,7 @@ def game(screen,fpsClock,tutorial=False):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
-                print(current_room.difficulty,current_room.lvl)
+                #print(current_room.difficulty,current_room.lvl)
 
 
             if player.rect.x > SCREEN_WIDTH:  # Le joueur va à droite
@@ -464,7 +464,7 @@ def game(screen,fpsClock,tutorial=False):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
-                print(current_room.difficulty,current_room.lvl)
+                #print(current_room.difficulty,current_room.lvl)
 
             if player.rect.y < -player.rect.height:  # Le joueur va en haut
                 player.current_room_id = current_room.doors_id["top"]
@@ -475,7 +475,7 @@ def game(screen,fpsClock,tutorial=False):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
-                print(current_room.difficulty,current_room.lvl)
+                #print(current_room.difficulty,current_room.lvl)
 
             if player.rect.y > SCREEN_HEIGHT:  # Le joueur va en bas
                 player.current_room_id = current_room.doors_id["bottom"]
@@ -486,7 +486,7 @@ def game(screen,fpsClock,tutorial=False):
                 loots_list = current_room.loots 
                 all_sprites_list.add(loots_list)
                 all_sprites_list.add(current_room.enemy_list)
-                print(current_room.difficulty,current_room.lvl)
+                #print(current_room.difficulty,current_room.lvl)
 
             # Gestions des balles
             for bullet in bullet_list:

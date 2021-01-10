@@ -9,3 +9,5 @@ Projet VISI301, jeu 2D de shooter/RPG/Rogue-like centré sur les couleurs.
 
 3 - Vous pouvez changer les touches dans le menu controles 
 
+## un tutoriel est disponible en jeu, laissez vous guider.
+
