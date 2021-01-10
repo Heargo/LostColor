@@ -212,8 +212,11 @@ def drawMap(screen,mapdico,allRoomsCoordinates,salleID):
 			x=(allRoomsCoordinates[roomid][0]+transx)*40 # 500 et 300 centre le 0 0 au milieu environ
 			y=(-allRoomsCoordinates[roomid][1]+transy)*40
 			color=GRAY
+			if room.difficulty=="peaceful":
+				color=BLUE
 			if roomid==salleID:#salle du joueur
 				color=GREEN
+
 			pygame.draw.rect(screen, color, (x,y,20,20))
 			#draw line 
 			#on trouve on on vas
