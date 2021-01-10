@@ -319,29 +319,29 @@ def game(screen,fpsClock,tutorial=False):
                     for pnj in current_room.pnj_list:
                         if pygame.sprite.collide_rect(pnj, player):
                             dialog_loop(tutorial,False,pnj, screen, fpsClock)
-                if event.key == pygame.K_KP8:
-                   current_room.spawnMonsters("exact_number", player, 3)
-                   all_sprites_list.add(current_room.enemy_list)
-                if event.key == pygame.K_KP9:
-                   print(all_sprites_list)
-                if event.key == pygame.K_KP1:
-                    bonus_test = Bonus("dmg", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP2:
-                    bonus_test = Bonus("tps", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP3:
-                    bonus_test = Bonus("shot_speed", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP4:
-                    bonus_test = Bonus("heal", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP5:
-                    bonus_test = Bonus("hp_max", player)
-                    all_sprites_list.add(bonus_test)
-                if event.key == pygame.K_KP6:
-                    bonus_test = Bonus("speed", player)
-                    all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP8:
+                #    current_room.spawnMonsters("exact_number", player, 3)
+                #    all_sprites_list.add(current_room.enemy_list)
+                # if event.key == pygame.K_KP9:
+                #    print(all_sprites_list)
+                # if event.key == pygame.K_KP1:
+                #     bonus_test = Bonus("dmg", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP2:
+                #     bonus_test = Bonus("tps", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP3:
+                #     bonus_test = Bonus("shot_speed", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP4:
+                #     bonus_test = Bonus("heal", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP5:
+                #     bonus_test = Bonus("hp_max", player)
+                #     all_sprites_list.add(bonus_test)
+                # if event.key == pygame.K_KP6:
+                #     bonus_test = Bonus("speed", player)
+                #     all_sprites_list.add(bonus_test)
                 if event.key == K_ESCAPE:
                     playing= not pause_menu(screen,fpsClock,tutorial,tutorialCompleted)
                 if event.key == controls.C_CARTE and len(current_room.enemy_list) == 0:
