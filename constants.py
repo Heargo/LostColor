@@ -18,11 +18,12 @@ CYAN = (0,255,255)
 MAGENTA = (255,0,255)
 YELLOW = (255,255,0)
 
-dicNameImg={
-"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
-"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
-"plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
-}
+
+
+FLOOR_SIZE=10
+#########################
+#######Equilibrage#######
+#########################
 LOOTPOURCENTAGE=75
 GRADES_WEIGHTS=[30,16,2,1]
 #couleurs des taches et des monstres
@@ -62,22 +63,29 @@ BONUS_TYPE = ("dmg", "tps", "heal", "hp_max", "shot_speed", "speed")
 
 # Liste des difficultés
 DIFFICULTIES = ["peaceful", "ultra_easy", "easy", "medium", "hard", "ultra_hard"]
-DIFFICULTIESWEIGHTS=[105,6,6,4,1,1]
+DIFFICULTIESWEIGHTS=[5,6,6,4,1,1]
 
 #relation couleur/grade
 COLOR_OF_GRADE={"commun":(176, 176, 176),"rare":(123, 212, 220),"mythique":(136, 77, 155),"légendaire":(230, 185, 45)}
 GRADES=["commun","rare","mythique","légendaire"]
 STATS_MAX_COMMUN={"dmg":50, "tps":6, "hp":500, "shot_speed":10, "speed":6.5}
-STATS_MAX={"dmg":100, "tps":60, "hp":1000, "shot_speed":20, "speed":8}
+STATS_MAX={"dmg":100, "tps":60, "hp":400, "shot_speed":20, "speed":8}
 STATS_GRADE_DATA={"dmg":{"commun":50,"rare":65,"mythique":80,"légendaire":STATS_MAX["dmg"]},
 				  "tps":{"commun":7,"rare":20,"mythique":40,"légendaire":STATS_MAX["tps"]},
-				  "hp":{"commun":500,"rare":600,"mythique":800,"légendaire":STATS_MAX["hp"]},
+				  "hp":{"commun":150,"rare":180,"mythique":200,"légendaire":STATS_MAX["hp"]},
 				  "shot_speed":{"commun":10,"rare":13,"mythique":16,"légendaire":STATS_MAX["shot_speed"]},
 				  "speed":{"commun":6.5,"rare":6.9,"mythique":7.5,"légendaire":STATS_MAX["speed"]}
 				  }
 # Liste des pnjs
 PNJS = ["instructor", "merchant"]
 
+
+
+dicNameImg={
+"food":["beer","cake","fish","meal","meat","noodles","onigiri","pizza","steak","strawberry","tomato","whiskey"],
+"misc":["ambre","diamond","emerauld","leather","metal","plank","rubis","stone","wood"],
+"plants":["2" ,"3" ,"6" ,"7" ,"8" ,"9" ,"10" ,"12","16" ,"19" ,"20" ,"21" ,"23","32" ,"33" ,"35" ,"40" ,"44" ,"46" ,"47"]
+}
 
 TUTORIAL_DATA=[
 

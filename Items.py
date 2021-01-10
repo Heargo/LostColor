@@ -61,9 +61,9 @@ class Item(pygame.sprite.Sprite):
 		
 
 def createRandomItem(typeItem="default",gradeItem="default",categorie="default",itemname="default"):
-	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
+	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=2,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
 		]
-	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"speed":0.1,"shot_speed":4},description="Une orbe magique...")
+	WEAPONSBIS=[Item(equipable=True,slotequipable="weaponbis",name="orbe",shortName="orbe",image="./img/items/wand_commun.png",grade="commun",price=2,stats={"speed":0.1,"shot_speed":4},description="Une orbe magique...")
 	]
 	#"weaponbis":WEAPONSBIS,
 	DICOEQUIPEMENT={
@@ -72,7 +72,7 @@ def createRandomItem(typeItem="default",gradeItem="default",categorie="default",
 			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=1,stats={"hp":30},description="Un plastron...")],
 			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=1,stats={"hp":10,"tps":1},description="Une paire de gants...")],
 			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=1,stats={"hp":10,"speed":0.5},description="Des bottes...")],
-			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=0.1,stats={"dmg":5},description="Un casque...")],
+			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=1.5,stats={"dmg":5},description="Un casque...")],
 			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=1,stats={"shot_speed":2},description="Un casque...")]
 			}
 	#on choisi si l'item sera un item equipable ou pas
@@ -107,8 +107,9 @@ def createRandomItem(typeItem="default",gradeItem="default",categorie="default",
 
 		#en fonction du grade on modifie le prix
 		gradeFactor ={"commun":1,"rare":8,"mythique":16,"légendaire":32}
+		item.price = gradeFactor[grade] * item.price
 		for k in item.stats:
-			item.price = gradeFactor[grade] * item.price
+			item.price+=2
 
 		#en fonction du grade on change l'image
 		if item.slotequipable not in ["weapon","weaponbis"]:

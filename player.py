@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.y = self.y
 
 		self.inventaire = Inventory(64)
+		self.money = 0.5
 		self.initStats()
 
 	def initStats(self):
@@ -30,7 +31,7 @@ class Player(pygame.sprite.Sprite):
 		self.shot_speed = PLAYER_SHOOT_SPEED
 		self.speed = PLAYER_SPEED
 		self.colorbuff= GRAY
-		self.money = 0.5
+		
 
 		#cd
 		self.healed=0
@@ -53,7 +54,7 @@ class Player(pygame.sprite.Sprite):
 		# Gestion salle
 		self.current_room_id = 0
 
-	def updateStats(self):
+	def updateStats(self,initPartie=False):
 		#on stocke les effets des items équipés
 		effetsItems={"hp":0,"dmg":0,"tps":0,"speed":0,"shot_speed":0}
 		for item in self.inventaire.equipement.values():
@@ -61,8 +62,11 @@ class Player(pygame.sprite.Sprite):
 				for stat in item.stats:
 					effetsItems[stat]+=item.stats[stat]
 
+
 		#on met a jour les stats en prenant en compte les bonus 
 		self.HP_MAX = PLAYER_HP + self.HP_MAX_bonus + effetsItems["hp"]
+		if initPartie:
+			self.HP = self.HP_MAX
 		self.DMG = PLAYER_DMG + self.DMG_bonus + effetsItems["dmg"]
 		self.tps = PLAYER_TPS  + self.tps_bonus  +effetsItems["tps"]
 		self.shot_speed = PLAYER_SHOOT_SPEED +self.shot_speed_bonus + effetsItems["shot_speed"]

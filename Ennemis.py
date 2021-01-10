@@ -189,7 +189,7 @@ class Boss1P1(Boss1):
         self.rect.centery = y
 
         # Statistiques du monstre
-        self.HP_MAX = 600
+        self.HP_MAX = 5000
         self.HP = self.HP_MAX
         self.DMG = 30
         self.colorbuff = BLACK

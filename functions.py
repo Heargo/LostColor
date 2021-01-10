@@ -26,14 +26,14 @@ def initPartie(tutorial=False):
         # Création du joueur
         player.initStats()
         player.inventaire.items=[False]*player.inventaire.size
-        player.updateStats()
+        player.updateStats(True)
 
     player.rect.centerx = 2 * SCREEN_WIDTH // 3
     player.rect.centery = 2 * SCREEN_HEIGHT // 3
 
     # Création des salles
     if not tutorial:
-        floor,allRoomsCoordinates = createPrimaryPath(10, player)
+        floor,allRoomsCoordinates = createPrimaryPath(FLOOR_SIZE, player)
         allRoomsCoordinates=ExtendPath(floor,allRoomsCoordinates,player)
     else:
         floor,allRoomsCoordinates = createTutorial(player)
@@ -532,7 +532,8 @@ def game(screen,fpsClock,tutorial=False):
             for boss in current_room.enemy_list:
                 if isinstance(boss, Boss1):
                     if boss.HP <= 0:
-                        end_game_loop(screen, fpsClock)
+                        playing = end_game_loop(screen, fpsClock)
+                        player.money+=50
                     boss.move(current_room.wall_list)
                     all_sprites_list.add(boss.bullet_list)
                     for bullet in boss.bullet_list:
@@ -644,7 +645,8 @@ def end_game_loop(screen, fpsClock):
     running = True
     click = False
     # créer les boutons
-    b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300, 'Quitter le jeu', GREEN)
+    b1 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200, 'Continuer', RED)
+    b2 = Bouton(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300, 'Quitter le jeu', GREEN)
 
     while running:
         # fermeture de la fenetre
@@ -660,10 +662,16 @@ def end_game_loop(screen, fpsClock):
         mx, my = pygame.mouse.get_pos()
 
         # Si l'utilisateur clique sur un bouton, on lance la fonction adaptée
-        if b1.hoover(mx, my):
+        if b2.hoover(mx, my):
             if click:
                 pygame.quit()
                 sys.exit()
+        if b1.hoover(mx, my):
+            if click:
+                all_sprites_list.empty()  # Détruit les sprite de la salle avant de changer de salle
+                all_sprites_list.add(player)  # Remet le joueur dans all_sprites_list our l'afficher dans la prochaine salle
+                initPartie()
+                running = False
 
         # affichage
         screen.fill((255, 255, 255))
@@ -673,12 +681,14 @@ def end_game_loop(screen, fpsClock):
                   SCREEN_WIDTH // 2, 300, True)
         # affiche les boutons
         b1.draw(screen, mx, my)
+        b2.draw(screen, mx, my)
         # on passe click a false pour pas que le jeu considère que l'utilisateur clique sans arrêt.
         click = False
 
         pygame.display.update()
         fpsClock.tick(FPS)
 
+    return False
 
 def dessineHealBouton(screen,player):
     image = pygame.image.load("./img/slots/heal.png")
