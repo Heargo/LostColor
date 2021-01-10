@@ -48,19 +48,19 @@ class ProfilIMG(pygame.sprite.Sprite):
 
 class Inventory(object):
 	"""docstring for Inventory"""
-	def __init__(self, size):
+	def __init__(self, size, x_slots=700, y_slots=180):
 		self.size = size
 		self.equipement ={"head":False,"chest":False,"glove":False,"boot":False,"weapon":False,"weaponbis":False,"earrings":False,"belt":False}
 		self.createEquipementSlot()
 		self.items = [False]*size
-		self.createSlots()
+		self.createSlots(x_slots,y_slots)
 
 
-	def createSlots(self):
+	def createSlots(self,x_slots,y_slots):
 		lsSlots=[]
 		for i in range(self.size):
-			x=i%8 * 60 +700
-			y=i//8 * 60 +180
+			x=i%8 * 60 + x_slots
+			y=i//8 * 60 + y_slots
 			lsSlots+=[Slot(i,x,y)]
 		self.slots= lsSlots
 
@@ -106,6 +106,13 @@ class Inventory(object):
 			if i !=False:
 				res+=1
 		return res
+	
+	def move_all_items(self):
+		for i in range(len(self.items)):
+			if self.items[i] != False:
+				self.items[i].move((self.slots[i].rect.x+5,self.slots[i].rect.y+5))
+
+
 
 
 
@@ -174,6 +181,76 @@ def generateLoot(x,y,loots_list,all_sprites_list):
 	#on le met dans la liste des loots
 	loots_list.add(item)
 	all_sprites_list.add(item)
+
+def checkMoveInShop(mx, my, spriteLocked, spritePosBeforeLock, playerslotslist, merchantslotslist, player, merchant, playerItemTaken):
+	"""Permet de verifier les déplacement des objet dans le shop"""
+	hoverASlot = False
+	for slot in playerslotslist:
+		if playerItemTaken:
+			if slot.hoover(mx, my) and player.inventaire.items[slot.id] == False:
+				# on l'enleve de la ou il était
+				player.inventaire.remove(spriteLocked)
+				player.inventaire.items[slot.id] = spriteLocked
+				spriteLocked.slot = slot.id
+				spriteLocked.move((slot.rect.x, slot.rect.y))
+				hoverASlot = True
+
+			# si on est au dessus du slot et qu'il est plein
+			elif slot.hoover(mx, my) and player.inventaire.items[slot.id] != False:
+				switched = switch(spriteLocked, player.inventaire.items[slot.id], player.inventaire)
+				if not switched:
+					spriteLocked.move(spritePosBeforeLock)
+				hoverASlot = True
+		else:
+			if slot.hoover(mx, my) and player.inventaire.items[slot.id] == False:
+				if player.money >= spriteLocked.price:
+					player.money = round(player.money-spriteLocked.price,2)
+					merchant.money = round(merchant.money+spriteLocked.price,2)
+					spriteLocked.price = round(spriteLocked.price * 0.75,1)
+					# on l'enleve de la ou il était
+					merchant.inventaire.remove(spriteLocked)
+					player.inventaire.items[slot.id] = spriteLocked
+					spriteLocked.slot = slot.id
+					spriteLocked.move((slot.rect.x, slot.rect.y))
+					hoverASlot = True
+	for slot in merchantslotslist:
+		if playerItemTaken:
+			if slot.hoover(mx, my) and merchant.inventaire.items[slot.id] == False:
+				if merchant.money >= spriteLocked.price:
+					# Le joueur vends l'objet le prix de l'objet monte car le marchand le revends plus cher
+					player.money = round(player.money+spriteLocked.price,2)
+					merchant.money = round(merchant.money-spriteLocked.price,2)
+					spriteLocked.price = round(spriteLocked.price * 2,2)
+					# on l'enleve de la ou il était
+					player.inventaire.remove(spriteLocked)
+					merchant.inventaire.items[slot.id] = spriteLocked
+					spriteLocked.slot = slot.id
+					spriteLocked.move((slot.rect.x, slot.rect.y))
+
+					hoverASlot = True
+		else:
+			if slot.hoover(mx, my) and merchant.inventaire.items[slot.id] == False:
+				# on l'enleve de la ou il était
+				merchant.inventaire.remove(spriteLocked)
+				merchant.inventaire.items[slot.id] = spriteLocked
+				spriteLocked.slot = slot.id
+				spriteLocked.move((slot.rect.x, slot.rect.y))
+				hoverASlot = True
+
+			# si on est au dessus du slot et qu'il est plein
+			elif slot.hoover(mx, my) and merchant.inventaire.items[slot.id] != False:
+				switched = switch(spriteLocked, merchant.inventaire.items[slot.id], merchant.inventaire)
+				if not switched:
+					spriteLocked.move(spritePosBeforeLock)
+				hoverASlot = True
+
+
+
+	if not hoverASlot:
+			spriteLocked.move(spritePosBeforeLock)
+
+
+
 
 
 def checkmoveInInv(mx,my,spriteLocked,spritePosBeforeLock,slotslist,itemlist,all_sprites,inventaire):
