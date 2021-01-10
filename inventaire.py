@@ -451,13 +451,14 @@ def invetoryScreen(screen,fpsClock,inventaire,player):
 			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
-			# Detection d'utilisation du clavier pour ajouter un item aléatoire (debug)
+			# Detection d'utilisation du clavier 
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_q and inventaire.numOfItems() < inventaire.size:
-					item=createRandomItem()
-					itemlist.add(item)
-					all_sprites.add(item)
-					inventaire.add(item)
+				#pour ajouter un item aléatoire (debug)
+				# if event.key == pygame.K_q and inventaire.numOfItems() < inventaire.size:
+				# 	item=createRandomItem()
+				# 	itemlist.add(item)
+				# 	all_sprites.add(item)
+				# 	inventaire.add(item)
 
 				if event.key == controls.C_INVENTAIRE or event.key == pygame.K_ESCAPE:
 					inventaireOn=False
