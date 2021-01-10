@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 		self.shot_speed = PLAYER_SHOOT_SPEED
 		self.speed = PLAYER_SPEED
 		self.colorbuff= GRAY
-		self.money = 5
+		self.money = 0.5
 
 		#cd
 		self.healed=0

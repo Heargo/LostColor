@@ -120,11 +120,17 @@ class Monstre1(pygame.sprite.Sprite):
     
     def checkdead(self,loots_list,all_sprites_list,lootEnable):
         res=False
+        money=0
         if self.HP <=0 and self.colorbuff!=GRAY and randint(0,100)<=LOOTPOURCENTAGE and lootEnable:
             generateLoot(self.rect.x,self.rect.y,loots_list,all_sprites_list)
+        if self.HP <=0 and lootEnable:
+            if self.colorbuff!=GRAY:
+                money = 0.05+((self.lvl*randint(1,10))/20)
+            else:
+                money = 0.05
         if self.HP <=0:
             res=True
-        return res
+        return res,money
 
 class Boss1(pygame.sprite.Sprite):
     """ Cette classe represente le premier Boss"""

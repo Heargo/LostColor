@@ -100,6 +100,8 @@ def draw_HUD(screen):
 
     # Affichage DPS
     draw_text(screen, "DPS : " + str(player.DMG*player.tps), 'fonts/RPGSystem.ttf', 20, BLACK, 25, 70, False)
+    # Affichage Argent du joueur
+    draw_text(screen, "Money : " + to_gold(player.money), 'fonts/RPGSystem.ttf', 20, BLACK, len(str(player.DMG*player.tps)*10)+80, 70, False)
 
 def bind_controles(screen,fpsClock):
     """Affichage et parametrage des controles"""
@@ -508,10 +510,10 @@ def game(screen,fpsClock,tutorial=False):
                         bullet_list.remove(bullet)
                         all_sprites_list.remove(bullet)
                         if tutorial:
-                            actions["kill"] = mob.checkdead(loots_list,all_sprites_list,TUTORIAL_DATA[current_room.id]["lootEnable"])
+                            actions["kill"] = mob.checkdead(loots_list,all_sprites_list,TUTORIAL_DATA[current_room.id]["lootEnable"])[0]
                         else:
                             if not (isinstance(mob, Boss1)):
-                                mob.checkdead(loots_list,all_sprites_list,True)
+                                player.money+=mob.checkdead(loots_list,all_sprites_list,True)[1]
 
 
                 # On supprime la balle de la liste des sprites si elle sort de l'écran

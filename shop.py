@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from inventaire import Slot, checkMoveInShop, drawItemOverlay
 from constants import *
-from tools import draw_text
+from tools import draw_text, to_gold
 from menu import *
 
 
@@ -162,5 +162,5 @@ def drawShop(screen, player, merchant):
     # puis les texts
     draw_text(screen, 'Inventaire du marchand', 'fonts/No_Color.ttf', 30, BLACK, (SCREEN_WIDTH-50-505)+505//2, 80, True)
     draw_text(screen, 'Votre inventaire', 'fonts/No_Color.ttf', 30, BLACK, 302, 80, True)
-    draw_text(screen, "Votre argent : " + str(player.money)+" CC", "fonts/SuperLegendBoy-4w8Y.ttf", 20, BLACK, 302, 120, True)
-    draw_text(screen, "Argent du marchand : " + str(merchant.money) + " CC", "fonts/SuperLegendBoy-4w8Y.ttf", 20, BLACK, (SCREEN_WIDTH-50-505)+505//2,120, True)
+    draw_text(screen,to_gold(player.money), "fonts/SuperLegendBoy-4w8Y.ttf", 20, BLACK, 302, 120, True)
+    draw_text(screen,to_gold(merchant.money), "fonts/SuperLegendBoy-4w8Y.ttf", 20, BLACK, (SCREEN_WIDTH-50-505)+505//2,120, True)

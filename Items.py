@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from constants import *
 from random import choice, choices, randint
-from tools import draw_text
+from tools import draw_text, to_gold, random_key
 
 class Item(pygame.sprite.Sprite):
 	"""docstring for Item"""
@@ -60,32 +60,6 @@ class Item(pygame.sprite.Sprite):
 		return infos
 		
 
-
-
-
-
-def to_gold(price,lang="fr",emojis="none"):
-	"""converted a float with 4 decimal max into gold, silver and bronze
-	1.4586 = 1 gold 45 silver and 86 bronze"""
-	gold = int(price//1)
-	silver = int(100*(price%1))
-	copper = round(((100*(price%1))%1)*100)
-	#print(gold,"gold",silver,"silver and",copper,"copper")
-	if lang=="fr":
-		res = str(gold)+" or "+str(silver)+" argent "+str(copper)+" cuivre "
-	elif lang=="eng":
-		res = str(gold)+" gold "+str(silver)+" silver "+str(copper)+" copper "
-	elif lang=="discord":
-		res = f"{gold} {emojis[0]}  {silver} {emojis[1]}  {copper} {emojis[2]}"
-	return res
-
-def random_key(dico):
-	"""pick a random key of a dictionary"""
-	liste=[]
-	for k in dico.keys():
-		liste+=[k]
-	return random.choice(liste)
-
 def createRandomItem(typeItem="default",gradeItem="default",categorie="default",itemname="default"):
 	WEAPONS=[Item(equipable=True,slotequipable="weapon",name="baguette",shortName="wand",image="./img/items/wand_commun.png",grade="commun",price=0.1,stats={"dmg":5,"tps":4,},description="Une baguette magique...")
 		]
@@ -94,12 +68,12 @@ def createRandomItem(typeItem="default",gradeItem="default",categorie="default",
 	#"weaponbis":WEAPONSBIS,
 	DICOEQUIPEMENT={
 			"weapon":WEAPONS,
-			"head": [Item(equipable=True,slotequipable="head",name="casque",shortName="casque",image="./img/items/head_commun.png",grade="commun",price=0.1,stats={"hp":10},description="Un casque...")],
-			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=0.1,stats={"hp":30},description="Un plastron...")],
-			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=0.1,stats={"hp":10,"tps":1},description="Une paire de gants...")],
-			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=0.1,stats={"hp":10,"speed":0.5},description="Des bottes...")],
+			"head": [Item(equipable=True,slotequipable="head",name="casque",shortName="casque",image="./img/items/head_commun.png",grade="commun",price=1,stats={"hp":10},description="Un casque...")],
+			"chest":[Item(equipable=True,slotequipable="chest",name="Plastron",shortName="Plastron",image="./img/items/chest_commun.png",grade="commun",price=1,stats={"hp":30},description="Un plastron...")],
+			"glove":[Item(equipable=True,slotequipable="glove",name="Gants",shortName="Gants",image="./img/items/glove_commun.png",grade="commun",price=1,stats={"hp":10,"tps":1},description="Une paire de gants...")],
+			"boot":[Item(equipable=True,slotequipable="boot",name="Bottes",shortName="Bottes",image="./img/items/boot_commun.png",grade="commun",price=1,stats={"hp":10,"speed":0.5},description="Des bottes...")],
 			"earrings":[Item(equipable=True,slotequipable="earrings",name="Boucles d'oreille",shortName="earrings",image="./img/items/earrings_commun.png",grade="commun",price=0.1,stats={"dmg":5},description="Un casque...")],
-			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=0.1,stats={"shot_speed":2},description="Un casque...")]
+			"belt":[Item(equipable=True,slotequipable="belt",name="Ceinture",shortName="Ceinture",image="./img/items/belt_commun.png",grade="commun",price=1,stats={"shot_speed":2},description="Un casque...")]
 			}
 	#on choisi si l'item sera un item equipable ou pas
 	if typeItem =="default":
@@ -156,10 +130,11 @@ def createRandomItem(typeItem="default",gradeItem="default",categorie="default",
 		if itemname == "default":
 			itemname=choice(dicNameImg[categorie])
 		#on set le prix
-		prix=randint(1,50)/100
+		prix=randint(5,15)/100
 		#on set les stats si possible
 		if categorie=="food":
 			stats={"heal":5}
+			prix*=3
 		else:
 			stats={}
 
@@ -244,6 +219,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 		draw_text(screen,itemHoover.grade, 'fonts/No_Color.ttf', 10, COLOR_OF_GRADE[itemHoover.grade], mx+(0.75*(decalXText//2)), my+50+decalY, True)
 
 		draw_text(screen,itemHoover.name, 'fonts/No_Color.ttf', 10, BLACK, mx+(factTextStat*200), my+80+decalY, False)
+		draw_text(screen,"prix : "+to_gold(itemHoover.price), 'fonts/No_Color.ttf', 10, BLACK, mx+(factTextStat*200), my+100+decalY, False)
 
 		#les stats
 		i=0
@@ -255,7 +231,7 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 					color = GREEN
 				elif inventaire.equipement[itemHoover.slotequipable]!=False and inventaire.equipement[itemHoover.slotequipable].stats[stat] > itemHoover.stats[stat]:
 					color = RED
-			draw_text(screen,txt, 'fonts/No_Color.ttf', 12, color, mx+(factTextStat*200), my+100+(i*15)+decalY, False)
+			draw_text(screen,txt, 'fonts/No_Color.ttf', 12, color, mx+(factTextStat*200), my+130+(i*15)+decalY, False)
 			i+=1
 
 		#la description
@@ -265,9 +241,9 @@ def drawItemOverlay(screen,mx, my,itemlist,inventaire):
 		for j in range(nblignes+2):
 			if j <nblignes:
 				if itemHoover.description[startletter+lenLigne]!=" ":
-					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne]+"-", 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne]+"-", 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+130+(i+2*15)+decalY+(j*15), False)
 				else:
-					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+					draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+130+(i+2*15)+decalY+(j*15), False)
 			else:
-				draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+100+(i+2*15)+decalY+(j*15), False)
+				draw_text(screen,itemHoover.description[startletter:startletter+lenLigne], 'fonts/No_Color.ttf', 12, BLACK, mx+(factTextStat*200), my+130+(i+2*15)+decalY+(j*15), False)
 			startletter+=lenLigne

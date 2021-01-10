@@ -63,3 +63,41 @@ def estDansEnsembleCercles(ensemble,M):
             bool = True
             break
     return bool
+
+def to_gold(price,lang="fr",emojis="none"):
+    """converted a float with 4 decimal max into gold, silver and bronze
+    1.4586 = 1 gold 45 silver and 86 bronze"""
+    gold = int(price//1)
+    silver = int(100*(price%1))
+    copper = round(((100*(price%1))%1)*100)
+
+    if gold >0:
+        Isgold=1
+    else:
+        Isgold=0
+    if silver >0:
+        Issilver=1
+    else:
+        Issilver=0
+    if copper >0:
+        Iscopper=1
+    else:
+        Iscopper=0
+
+
+
+    #print(gold,"gold",silver,"silver and",copper,"copper")
+    if lang=="fr":
+        res = Isgold*(str(gold)+" or ")+Issilver*(str(silver)+" argent ")+Iscopper*(str(copper)+" cuivre ")
+    elif lang=="eng":
+        res = str(gold)+" gold "+str(silver)+" silver "+str(copper)+" copper "
+    elif lang=="discord":
+        res = f"{gold} {emojis[0]}  {silver} {emojis[1]}  {copper} {emojis[2]}"
+    return res
+
+def random_key(dico):
+    """pick a random key of a dictionary"""
+    liste=[]
+    for k in dico.keys():
+        liste+=[k]
+    return random.choice(liste)
